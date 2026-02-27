@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Mail, Instagram, Linkedin, Twitter } from "lucide-react"
+import { ArrowRight, Mail, Instagram, Linkedin, Twitter, Link } from "lucide-react"
 
 export default function Home() {
   return (
@@ -19,6 +19,9 @@ export default function Home() {
               <Button variant="outline" className="border-white/20 hover:bg-white/10">
                 Contact
               </Button>
+              <Link href="/works" className="text-sm hover:text-white/60 transition">
+                Work
+              </Link>
             </div>
           </div>
         </div>
