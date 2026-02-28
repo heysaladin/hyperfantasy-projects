@@ -21,50 +21,46 @@ export async function GET() {
 
 // CREATE portfolio
 export async function POST(request: NextRequest) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  if (!user) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   try {
-    const body = await request.json()
-    console.log('Creating portfolio with data:', body)
+    console.log('POST started')
     
-    // Clean up data
-    const data: any = {
-      title: body.title,
-      description: body.description || null,
-      longDescription: body.longDescription || null,
-      imageUrl: body.imageUrl || null,
-      liveUrl: body.liveUrl || null,
-      githubUrl: body.githubUrl || null,
-      tags: body.tags || [],
-      stack: body.stack || [],
-      category: body.category || null,
-      complexity: body.complexity || null,
-      projectDate: body.projectDate ? new Date(body.projectDate) : null,
-      isVisible: body.isVisible || false,
-      isFeatured: body.isFeatured || false,
-      orderIndex: body.orderIndex || 0
+    const supabase = await createClient()
+    console.log('Supabase client created')
+    
+    const { data: { user } } = await supabase.auth.getUser()
+    console.log('User:', user?.email || 'Not logged in')
+    
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Only add relations if they exist
-    if (body.teamId) data.teamId = body.teamId
-    if (body.creatorId) data.creatorId = body.creatorId
-
+    const body = await request.json()
+    console.log('Body received:', body)
+    
+    // Simplest possible create
     const portfolio = await prisma.portfolio.create({
-      data
+      data: {
+        title: body.title,
+        tags: body.tags || [],
+        stack: body.stack || [],
+      }
     })
     
     console.log('Portfolio created:', portfolio.id)
-    return Response.json(portfolio, { status: 201 })
+    
+    return Response.json({ success: true, id: portfolio.id }, { status: 201 })
+    
   } catch (error: any) {
-    console.error('POST Error:', error)
+    console.error('=== POST ERROR ===')
+    console.error('Error name:', error.name)
+    console.error('Error message:', error.message)
+    console.error('Error stack:', error.stack)
+    console.error('==================')
+    
     return Response.json({ 
-      error: 'Failed to create portfolio',
-      details: error.message 
+      error: 'Server error',
+      details: error.message,
+      name: error.name
     }, { status: 500 })
   }
 }

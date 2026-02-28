@@ -15,7 +15,7 @@ export default function NewPortfolioPage() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    longDescription: '',
+    // longDescription: '',
     imageUrl: '',
     liveUrl: '',
     githubUrl: '',
@@ -34,29 +34,63 @@ export default function NewPortfolioPage() {
     setLoading(true)
 
     try {
-      const payload = {
-        ...formData,
-        tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
-        stack: formData.stack.split(',').map(s => s.trim()).filter(Boolean),
-        projectDate: formData.projectDate ? new Date(formData.projectDate) : null,
-        orderIndex: parseInt(formData.orderIndex.toString()) || 0
-      }
+        const payload = {
+        title: formData.title,
+        description: formData.description || null,
+        imageUrl: formData.imageUrl || null,
+        liveUrl: formData.liveUrl || null,
+        githubUrl: formData.githubUrl || null,
+        tags: formData.tags 
+            ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) 
+            : [],
+        stack: formData.stack 
+            ? formData.stack.split(',').map(s => s.trim()).filter(Boolean) 
+            : [],
+        complexity: formData.complexity || null,
+        category: formData.category || null,
+        projectDate: formData.projectDate || null,
+        isVisible: formData.isVisible,
+        isFeatured: formData.isFeatured,
+        orderIndex: parseInt(formData.orderIndex.toString()) || 0,
+        teamId: null,
+        creatorId: null
+        }
 
-      const res = await fetch('/api/portfolios', {
+        console.log('Sending payload:', payload)
+
+        const res = await fetch('/api/portfolios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      })
+        })
 
-      if (!res.ok) throw new Error('Failed to create')
+        // Check response before parsing JSON
+        console.log('Response status:', res.status)
+        console.log('Response headers:', res.headers)
+        
+        const text = await res.text()  // ← Get as text first
+        console.log('Response text:', text)
+        
+        if (!text) {
+        throw new Error('Empty response from server')
+        }
 
-      router.push('/admin/portfolios')
-      router.refresh()
-    } catch (error) {
-      alert('Error creating portfolio')
-      setLoading(false)
+        const data = JSON.parse(text)  // ← Then parse
+        
+        if (!res.ok) {
+        throw new Error(data.details || data.error || 'Failed to create')
+        }
+
+        console.log('Success:', data)
+        router.push('/admin/portfolios')
+        router.refresh()
+        
+    } catch (error: any) {
+        console.error('Submit error:', error)
+        alert(`Error: ${error.message}`)
+        setLoading(false)
     }
-  }
+    }
 
   return (
     <div className="p-8 max-w-4xl">
@@ -97,7 +131,7 @@ export default function NewPortfolioPage() {
           />
         </div>
 
-        {/* Long Description */}
+        {/* Long Description 
         <div>
           <Label htmlFor="longDescription">Long Description</Label>
           <Textarea
@@ -108,7 +142,7 @@ export default function NewPortfolioPage() {
             className="bg-white/5 border-white/10"
             placeholder="Detailed description for long projects"
           />
-        </div>
+        </div> */}
 
         {/* Image URL */}
         <div>
