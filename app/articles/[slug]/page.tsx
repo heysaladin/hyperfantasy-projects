@@ -36,7 +36,7 @@ export default async function ArticleDetailPage({
 
       <article className="max-w-3xl mx-auto px-6 lg:px-8 py-16">
         {/* Use ClientDate component */}
-        <ClientDate date={blog.createdAt.toISOString()} />
+        {blog.createdAt && <ClientDate date={blog.createdAt.toISOString()} />}
 
         <h1 className="text-4xl md:text-5xl font-bold mt-4 mb-8">
           {blog.title}
