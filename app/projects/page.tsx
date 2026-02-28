@@ -1,17 +1,32 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { ExternalLink, Github, X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
-async function getPortfolios() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/portfolios`, {
-    cache: 'no-store'
-  })
-  if (!res.ok) return []
-  const portfolios = await res.json()
-  return portfolios.filter((p: any) => p.isVisible)
-}
+export default function ProjectsPage() {
+  const [portfolios, setPortfolios] = useState([])
+  const [selectedPortfolio, setSelectedPortfolio] = useState<any>(null)
 
-export default async function WorksPage() {
-  const portfolios = await getPortfolios()
+  useEffect(() => {
+    fetch('/api/portfolios')
+      .then(res => res.json())
+      .then(data => {
+        const visible = data.filter((p: any) => p.isVisible)
+        setPortfolios(visible)
+      })
+  }, [])
+
+  const handleClick = (portfolio: any) => {
+    if (portfolio.complexity === 'short') {
+      setSelectedPortfolio(portfolio)
+    } else {
+      window.location.href = `/projects/${portfolio.id}`
+    }
+  }
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -20,7 +35,7 @@ export default async function WorksPage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
           <h1 className="text-5xl md:text-6xl font-bold mb-4">Our Work</h1>
           <p className="text-xl text-white/60">
-            Selected projects showcasing our expertise in design and development
+            Selected projects showcasing our expertise
           </p>
         </div>
       </div>
@@ -29,13 +44,12 @@ export default async function WorksPage() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {portfolios.map((portfolio: any) => (
-            <Link 
-              key={portfolio.id} 
-              href={`/projects/${portfolio.id}`}
-              className="group block"
+            <div
+              key={portfolio.id}
+              onClick={() => handleClick(portfolio)}
+              className="group block cursor-pointer"
             >
               <div className="overflow-hidden rounded-lg border border-white/10 bg-white/5 transition hover:border-white/20">
-                {/* Image */}
                 {portfolio.imageUrl && (
                   <div className="aspect-[16/10] overflow-hidden bg-white/5">
                     <Image
@@ -48,26 +62,32 @@ export default async function WorksPage() {
                   </div>
                 )}
                 
-                {/* Content */}
                 <div className="p-6">
-                  {/* Category */}
-                  {portfolio.category && (
-                    <span className="text-xs text-white/40 uppercase tracking-wider">
-                      {portfolio.category}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2 mb-2">
+                    {portfolio.category && (
+                      <span className="text-xs text-white/40 uppercase tracking-wider">
+                        {portfolio.category}
+                      </span>
+                    )}
+                    {portfolio.complexity && (
+                      <span className={`text-xs px-2 py-0.5 rounded ${
+                        portfolio.complexity === 'short'
+                          ? 'bg-blue-500/20 text-blue-400'
+                          : 'bg-purple-500/20 text-purple-400'
+                      }`}>
+                        {portfolio.complexity}
+                      </span>
+                    )}
+                  </div>
                   
-                  {/* Title */}
-                  <h3 className="mt-2 text-xl font-semibold group-hover:text-white/60 transition">
+                  <h3 className="text-xl font-semibold group-hover:text-white/60 transition">
                     {portfolio.title}
                   </h3>
                   
-                  {/* Description */}
                   <p className="mt-2 text-sm text-white/60 line-clamp-2">
                     {portfolio.description}
                   </p>
                   
-                  {/* Tags */}
                   {portfolio.tags && portfolio.tags.length > 0 && (
                     <div className="mt-4 flex flex-wrap gap-2">
                       {portfolio.tags.slice(0, 3).map((tag: string) => (
@@ -82,17 +102,106 @@ export default async function WorksPage() {
                   )}
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
-
-        {/* Empty state */}
-        {portfolios.length === 0 && (
-          <div className="text-center py-16">
-            <p className="text-white/40">No portfolios available yet.</p>
-          </div>
-        )}
       </div>
+
+      {/* Modal for short projects */}
+      <Dialog open={!!selectedPortfolio} onOpenChange={() => setSelectedPortfolio(null)}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-black border-white/20">
+          {selectedPortfolio && (
+            <div>
+              {/* Add DialogTitle - can be visually hidden if not needed */}
+              <DialogTitle className="sr-only">
+                {selectedPortfolio.title}
+              </DialogTitle>
+
+              {/* Image */}
+              {selectedPortfolio.imageUrl && (
+                <div className="aspect-video w-full overflow-hidden rounded-lg bg-white/5 mb-6">
+                  <Image
+                    src={selectedPortfolio.imageUrl}
+                    alt={selectedPortfolio.title}
+                    width={1200}
+                    height={675}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              )}
+
+              {/* Category */}
+              {selectedPortfolio.category && (
+                <span className="text-sm text-white/40 uppercase tracking-wider">
+                  {selectedPortfolio.category}
+                </span>
+              )}
+
+              {/* Title */}
+              <h2 className="text-3xl font-bold mt-2 mb-4">
+                {selectedPortfolio.title}
+              </h2>
+
+              {/* Links */}
+              <div className="flex gap-3 mb-6">
+                {selectedPortfolio.liveUrl && (
+                  <a href={selectedPortfolio.liveUrl} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" size="sm">
+                      <ExternalLink size={16} className="mr-2" />
+                      Live Site
+                    </Button>
+                  </a>
+                )}
+                {selectedPortfolio.githubUrl && (
+                  <a href={selectedPortfolio.githubUrl} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" size="sm">
+                      <Github size={16} className="mr-2" />
+                      Code
+                    </Button>
+                  </a>
+                )}
+              </div>
+
+              {/* Description */}
+              <p className="text-white/70 leading-relaxed mb-6">
+                {selectedPortfolio.description}
+              </p>
+
+              {/* Tech Stack */}
+              {selectedPortfolio.stack && selectedPortfolio.stack.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-white/40 mb-3">
+                    Tech Stack
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedPortfolio.stack.map((tech: string) => (
+                      <span key={tech} className="px-3 py-1 bg-white/10 rounded text-sm">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tags */}
+              {selectedPortfolio.tags && selectedPortfolio.tags.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-white/40 mb-3">
+                    Tags
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedPortfolio.tags.map((tag: string) => (
+                      <span key={tag} className="px-3 py-1 bg-white/10 rounded text-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
