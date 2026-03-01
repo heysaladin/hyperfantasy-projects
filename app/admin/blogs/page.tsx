@@ -59,12 +59,12 @@ export default function AdminBlogsPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-8 bg-white dark:bg-black text-slate-900 dark:text-white min-h-screen transition-colors\">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold">Blogs</h1>
-          <p className="text-white/60 text-sm mt-1">
+          <p className="text-slate-600 dark:text-white/60 text-sm mt-1">
             Total: {filteredBlogs.length} blogs
           </p>
         </div>
@@ -78,19 +78,19 @@ export default function AdminBlogsPage() {
 
       {/* Search */}
       <div className="mb-6 relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={20} />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40\" size={20} />
         <Input
           placeholder="Search by title or description..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-10 bg-white/5 border-white/10"
+          className="pl-10 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10"
         />
       </div>
 
       {/* Table */}
-      <div className="border border-white/10 rounded-lg overflow-hidden mb-6">
+      <div className="border border-slate-300 dark:border-white/10 rounded-lg overflow-hidden mb-6">
         <table className="w-full">
-          <thead className="bg-white/5 border-b border-white/10">
+          <thead className="bg-slate-100 dark:bg-white/5 border-b border-slate-300 dark:border-white/10\">
             <tr>
               <th className="text-left p-4 font-semibold">Title</th>
               <th className="text-left p-4 font-semibold">Slug</th>

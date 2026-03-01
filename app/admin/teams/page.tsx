@@ -22,7 +22,7 @@ export default function TeamsPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-8 bg-white dark:bg-black text-slate-900 dark:text-white min-h-screen transition-colors">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Team Members</h1>
         <Link href="/admin/teams/new">
@@ -35,7 +35,7 @@ export default function TeamsPage() {
       
       <div className="space-y-4">
         {teams.map((member: any) => (
-          <div key={member.id} className="p-4 border border-white/10 rounded-lg flex justify-between items-center">
+          <div key={member.id} className="p-4 border border-slate-300 dark:border-white/10 rounded-lg flex justify-between items-center hover:bg-slate-50 dark:hover:bg-white/5 transition">
             <div className="flex items-center gap-4">
               {member.avatarUrl && (
                 <img 
@@ -46,7 +46,7 @@ export default function TeamsPage() {
               )}
               <div>
                 <h3 className="font-semibold">{member.name}</h3>
-                <p className="text-sm text-white/60">{member.role}</p>
+                <p className="text-sm text-slate-600 dark:text-white/60">{member.role}</p>
               </div>
             </div>
             <div className="flex gap-2">

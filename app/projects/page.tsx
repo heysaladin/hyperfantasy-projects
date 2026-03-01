@@ -29,12 +29,12 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-white dark:bg-black text-slate-900 dark:text-white transition-colors">
       {/* Header */}
-      <div className="border-b border-white/10">
+      <div className="border-b border-slate-200 dark:border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
           <h1 className="text-5xl md:text-6xl font-bold mb-4">Our Work</h1>
-          <p className="text-xl text-white/60">
+          <p className="text-xl text-slate-600 dark:text-white/60">
             Selected projects showcasing our expertise
           </p>
         </div>
@@ -49,9 +49,9 @@ export default function ProjectsPage() {
               onClick={() => handleClick(portfolio)}
               className="group block cursor-pointer"
             >
-              <div className="overflow-hidden rounded-lg border border-white/10 bg-white/5 transition hover:border-white/20">
+              <div className="overflow-hidden rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 transition hover:border-slate-300 dark:hover:border-white/20">
                 {portfolio.imageUrl && (
-                  <div className="aspect-[16/10] overflow-hidden bg-white/5">
+                  <div className="aspect-[16/10] overflow-hidden bg-slate-200 dark:bg-white/5">
                     <Image
                       src={portfolio.imageUrl}
                       alt={portfolio.title}
@@ -65,26 +65,26 @@ export default function ProjectsPage() {
                 <div className="p-6">
                   <div className="flex items-center gap-2 mb-2">
                     {portfolio.category && (
-                      <span className="text-xs text-white/40 uppercase tracking-wider">
+                      <span className="text-xs text-slate-500 dark:text-white/40 uppercase tracking-wider">
                         {portfolio.category}
                       </span>
                     )}
                     {portfolio.complexity && (
                       <span className={`text-xs px-2 py-0.5 rounded ${
                         portfolio.complexity === 'short'
-                          ? 'bg-blue-500/20 text-blue-400'
-                          : 'bg-purple-500/20 text-purple-400'
+                          ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400'
+                          : 'bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400'
                       }`}>
                         {portfolio.complexity}
                       </span>
                     )}
                   </div>
                   
-                  <h3 className="text-xl font-semibold group-hover:text-white/60 transition">
+                  <h3 className="text-xl font-semibold group-hover:text-slate-600 dark:group-hover:text-white/60 transition">
                     {portfolio.title}
                   </h3>
                   
-                  <p className="mt-2 text-sm text-white/60 line-clamp-2">
+                  <p className="mt-2 text-sm text-slate-600 dark:text-white/60 line-clamp-2">
                     {portfolio.description}
                   </p>
                   
@@ -93,7 +93,7 @@ export default function ProjectsPage() {
                       {portfolio.tags.slice(0, 3).map((tag: string) => (
                         <span 
                           key={tag}
-                          className="text-xs px-2 py-1 bg-white/10 rounded"
+                          className="text-xs px-2 py-1 bg-slate-200 dark:bg-white/10 rounded"
                         >
                           {tag}
                         </span>
@@ -109,7 +109,7 @@ export default function ProjectsPage() {
 
       {/* Modal for short projects */}
       <Dialog open={!!selectedPortfolio} onOpenChange={() => setSelectedPortfolio(null)}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-black border-white/20">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white dark:bg-black border-slate-200 dark:border-white/20">
           {selectedPortfolio && (
             <div>
               {/* Add DialogTitle - can be visually hidden if not needed */}
@@ -119,7 +119,7 @@ export default function ProjectsPage() {
 
               {/* Image */}
               {selectedPortfolio.imageUrl && (
-                <div className="aspect-video w-full overflow-hidden rounded-lg bg-white/5 mb-6">
+                <div className="aspect-video w-full overflow-hidden rounded-lg bg-slate-200 dark:bg-white/5 mb-6">
                   <Image
                     src={selectedPortfolio.imageUrl}
                     alt={selectedPortfolio.title}
@@ -132,13 +132,13 @@ export default function ProjectsPage() {
 
               {/* Category */}
               {selectedPortfolio.category && (
-                <span className="text-sm text-white/40 uppercase tracking-wider">
+                <span className="text-sm text-slate-500 dark:text-white/40 uppercase tracking-wider">
                   {selectedPortfolio.category}
                 </span>
               )}
 
               {/* Title */}
-              <h2 className="text-3xl font-bold mt-2 mb-4">
+              <h2 className="text-3xl font-bold mt-2 mb-4 text-slate-900 dark:text-white">
                 {selectedPortfolio.title}
               </h2>
 
@@ -168,19 +168,19 @@ export default function ProjectsPage() {
               </div>
 
               {/* Description */}
-              <p className="text-white/70 leading-relaxed mb-6">
+              <p className="text-slate-700 dark:text-white/70 leading-relaxed mb-6">
                 {selectedPortfolio.description}
               </p>
 
               {/* Tech Stack */}
               {selectedPortfolio.stack && selectedPortfolio.stack.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold uppercase tracking-wider text-white/40 mb-3">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-white/40 mb-3">
                     Tech Stack
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {selectedPortfolio.stack.map((tech: string) => (
-                      <span key={tech} className="px-3 py-1 bg-white/10 rounded text-sm">
+                      <span key={tech} className="px-3 py-1 bg-slate-200 dark:bg-white/10 rounded text-sm">
                         {tech}
                       </span>
                     ))}
@@ -191,12 +191,12 @@ export default function ProjectsPage() {
               {/* Tags */}
               {selectedPortfolio.tags && selectedPortfolio.tags.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold uppercase tracking-wider text-white/40 mb-3">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-white/40 mb-3">
                     Tags
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {selectedPortfolio.tags.map((tag: string) => (
-                      <span key={tag} className="px-3 py-1 bg-white/10 rounded text-sm">
+                      <span key={tag} className="px-3 py-1 bg-slate-200 dark:bg-white/10 rounded text-sm">
                         {tag}
                       </span>
                     ))}

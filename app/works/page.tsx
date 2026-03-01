@@ -14,12 +14,12 @@ export default async function WorksPage() {
   const portfolios = await getPortfolios()
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-white dark:bg-black text-slate-900 dark:text-white transition-colors">
       {/* Header */}
-      <div className="border-b border-white/10">
+      <div className="border-b border-slate-200 dark:border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
           <h1 className="text-5xl md:text-6xl font-bold mb-4">Our Work</h1>
-          <p className="text-xl text-white/60">
+          <p className="text-xl text-slate-600 dark:text-white/60">
             Selected projects showcasing our expertise in design and development
           </p>
         </div>
@@ -34,10 +34,10 @@ export default async function WorksPage() {
               href={`/projects/${portfolio.id}`}
               className="group block"
             >
-              <div className="overflow-hidden rounded-lg border border-white/10 bg-white/5 transition hover:border-white/20">
+              <div className="overflow-hidden rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 transition hover:border-slate-300 dark:hover:border-white/20">
                 {/* Image */}
                 {portfolio.imageUrl && (
-                  <div className="aspect-[16/10] overflow-hidden bg-white/5">
+                  <div className="aspect-[16/10] overflow-hidden bg-slate-200 dark:bg-white/5">
                     <Image
                       src={portfolio.imageUrl}
                       alt={portfolio.title}
@@ -52,18 +52,18 @@ export default async function WorksPage() {
                 <div className="p-6">
                   {/* Category */}
                   {portfolio.category && (
-                    <span className="text-xs text-white/40 uppercase tracking-wider">
+                    <span className="text-xs text-slate-500 dark:text-white/40 uppercase tracking-wider">
                       {portfolio.category}
                     </span>
                   )}
                   
                   {/* Title */}
-                  <h3 className="mt-2 text-xl font-semibold group-hover:text-white/60 transition">
+                  <h3 className="mt-2 text-xl font-semibold group-hover:text-slate-600 dark:group-hover:text-white/60 transition">
                     {portfolio.title}
                   </h3>
                   
                   {/* Description */}
-                  <p className="mt-2 text-sm text-white/60 line-clamp-2">
+                  <p className="mt-2 text-sm text-slate-600 dark:text-white/60 line-clamp-2">
                     {portfolio.description}
                   </p>
                   
@@ -73,7 +73,7 @@ export default async function WorksPage() {
                       {portfolio.tags.slice(0, 3).map((tag: string) => (
                         <span 
                           key={tag}
-                          className="text-xs px-2 py-1 bg-white/10 rounded"
+                          className="text-xs px-2 py-1 bg-slate-200 dark:bg-white/10 rounded"
                         >
                           {tag}
                         </span>
@@ -89,7 +89,7 @@ export default async function WorksPage() {
         {/* Empty state */}
         {portfolios.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-white/40">No portfolios available yet.</p>
+            <p className="text-slate-500 dark:text-white/40">No portfolios available yet.</p>
           </div>
         )}
       </div>

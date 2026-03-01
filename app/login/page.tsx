@@ -40,12 +40,12 @@ export default function LoginPage() {
 }
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black text-slate-900 dark:text-white transition-colors">
       <form onSubmit={handleLogin} className="space-y-4 w-full max-w-sm">
         <h1 className="text-2xl font-bold">Admin Login</h1>
         
         {error && (
-          <div className="bg-red-500/10 text-red-500 p-3 rounded">
+          <div className="bg-red-500/10 dark:bg-red-500/10 text-red-600 dark:text-red-400 p-3 rounded">
             {error}
           </div>
         )}

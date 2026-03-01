@@ -65,10 +65,10 @@ export default function NewEnquiryPage() {
   }
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-8 max-w-4xl bg-white dark:bg-black text-slate-900 dark:text-white min-h-screen transition-colors">
       <Link 
         href="/"
-        className="inline-flex items-center text-white/60 hover:text-white transition mb-6"
+        className="inline-flex items-center text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition mb-6"
       >
         <ArrowLeft size={20} className="mr-2" />
         Back to Home
@@ -86,7 +86,7 @@ export default function NewEnquiryPage() {
             required
             value={formData.name}
             onChange={(e) => setFormData({...formData, name: e.target.value})}
-            className="bg-white/5 border-white/10"
+            className="bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10"
             placeholder="Your name"
           />
         </div>
@@ -100,7 +100,7 @@ export default function NewEnquiryPage() {
             required
             value={formData.email}
             onChange={(e) => setFormData({...formData, email: e.target.value})}
-            className="bg-white/5 border-white/10"
+            className="bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10"
             placeholder="your@email.com"
           />
         </div>
@@ -112,7 +112,7 @@ export default function NewEnquiryPage() {
             id="company"
             value={formData.company}
             onChange={(e) => setFormData({...formData, company: e.target.value})}
-            className="bg-white/5 border-white/10"
+            className="bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10"
             placeholder="Your company name"
           />
         </div>
@@ -124,7 +124,7 @@ export default function NewEnquiryPage() {
             id="budget"
             value={formData.budget}
             onChange={(e) => setFormData({...formData, budget: e.target.value})}
-            className="bg-white/5 border-white/10"
+            className="bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10"
             placeholder="e.g. $5000 - $10000"
           />
         </div>
@@ -138,7 +138,7 @@ export default function NewEnquiryPage() {
             rows={6}
             value={formData.message}
             onChange={(e) => setFormData({...formData, message: e.target.value})}
-            className="bg-white/5 border-white/10"
+            className="bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10"
             placeholder="Tell us about your project..."
           />
         </div>

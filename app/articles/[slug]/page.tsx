@@ -24,10 +24,10 @@ export default async function ArticleDetailPage({
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="border-b border-white/10">
+    <div className="min-h-screen bg-white dark:bg-black text-slate-900 dark:text-white transition-colors">
+      <div className="border-b border-slate-200 dark:border-white/10">
         <div className="max-w-3xl mx-auto px-6 lg:px-8 py-8">
-          <Link href="/articles" className="inline-flex items-center text-white/60 hover:text-white transition mb-8">
+          <Link href="/articles" className="inline-flex items-center text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition mb-8">
             <ArrowLeft size={20} className="mr-2" />
             Back to Articles
           </Link>
@@ -43,7 +43,7 @@ export default async function ArticleDetailPage({
         </h1>
 
         {blog.coverImage && (
-          <div className="aspect-video w-full overflow-hidden rounded-lg bg-white/5 mb-12">
+          <div className="aspect-video w-full overflow-hidden rounded-lg bg-slate-200 dark:bg-white/5 mb-12">
             <Image
               src={blog.coverImage}
               alt={blog.title}
@@ -54,19 +54,19 @@ export default async function ArticleDetailPage({
           </div>
         )}
 
-        <div className="prose prose-invert prose-lg max-w-none">
-          <div className="whitespace-pre-line leading-relaxed">
+        <div className="prose prose-slate dark:prose-invert prose-lg max-w-none">
+          <div className="whitespace-pre-line leading-relaxed text-slate-700 dark:text-white/80">
             {blog.content}
           </div>
         </div>
 
         {blog.tags && blog.tags.length > 0 && (
-          <div className="mt-12 pt-8 border-t border-white/10">
+          <div className="mt-12 pt-8 border-t border-slate-200 dark:border-white/10">
             <div className="flex flex-wrap gap-2">
               {blog.tags.map((tag: string) => (
                 <span 
                   key={tag}
-                  className="px-3 py-1 bg-white/10 rounded text-sm"
+                  className="px-3 py-1 bg-slate-200 dark:bg-white/10 rounded text-sm"
                 >
                   {tag}
                 </span>

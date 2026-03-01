@@ -40,7 +40,7 @@ export default function ProfilePage() {
   }, [router])
 
   if (loading) {
-    return <div className="p-8">Loading...</div>
+    return <div className="p-8 bg-white dark:bg-black text-slate-900 dark:text-white min-h-screen">Loading...</div>
   }
 
   if (!user) {
@@ -48,10 +48,10 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-8 bg-white dark:bg-black text-slate-900 dark:text-white min-h-screen transition-colors">
       <h1 className="text-2xl font-bold mb-4">Profile</h1>
-      <p className="text-white/60">Email: {user.email}</p>
-      <p className="text-white/60">ID: {user.id}</p>
+      <p className="text-slate-600 dark:text-white/60">Email: {user.email}</p>
+      <p className="text-slate-600 dark:text-white/60">ID: {user.id}</p>
     </div>
   )
 }

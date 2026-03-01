@@ -68,12 +68,12 @@ export default function AdminEnquiriesPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-8 bg-white dark:bg-black text-slate-900 dark:text-white min-h-screen transition-colors">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold">Enquiries</h1>
-          <p className="text-white/60 text-sm mt-1">
+          <p className="text-slate-600 dark:text-white/60 text-sm mt-1">
             Total: {filteredEnquiries.length} enquiries
           </p>
         </div>
@@ -81,19 +81,19 @@ export default function AdminEnquiriesPage() {
 
       {/* Search */}
       <div className="mb-6 relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={20} />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40" size={20} />
         <Input
           placeholder="Search by name or message..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-10 bg-white/5 border-white/10"
+          className="pl-10 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10"
         />
       </div>
 
       {/* Table */}
-      <div className="border border-white/10 rounded-lg overflow-hidden mb-6">
+      <div className="border border-slate-300 dark:border-white/10 rounded-lg overflow-hidden mb-6">
         <table className="w-full">
-          <thead className="bg-white/5 border-b border-white/10">
+          <thead className="bg-slate-100 dark:bg-white/5 border-b border-slate-300 dark:border-white/10">
             <tr>
               <th className="text-left p-4 font-semibold">Name</th>
               <th className="text-left p-4 font-semibold">Email</th>
@@ -104,18 +104,18 @@ export default function AdminEnquiriesPage() {
           </thead>
           <tbody>
             {paginatedData.map((enquiry: any) => (
-              <tr key={enquiry.id} className="border-b border-white/5 hover:bg-white/5">
+              <tr key={enquiry.id} className="border-b border-slate-200 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/5">
                 <td className="p-4">
                   <div>
                     <div className="font-medium">{enquiry.name}</div>
-                    <div className="text-sm text-white/60 line-clamp-1">
+                    <div className="text-sm text-slate-600 dark:text-white/60 line-clamp-1">
                       {enquiry.message}
                     </div>
                   </div>
                 </td>
-                <td className="p-4 text-white/60 capitalize">{enquiry.email || '-'}</td>
-                <td className="p-4 text-white/60 capitalize">{enquiry.date || '-'}</td>
-                <td className="p-4 text-white/60 capitalize">{enquiry.status || '-'}</td>
+                <td className="p-4 text-slate-600 dark:text-white/60 capitalize">{enquiry.email || '-'}</td>
+                <td className="p-4 text-slate-600 dark:text-white/60 capitalize">{enquiry.date || '-'}</td>
+                <td className="p-4 text-slate-600 dark:text-white/60 capitalize">{enquiry.status || '-'}</td>
                 {/* <td className="p-4">
                   <div className="flex gap-2 justify-end">
                     <Link href={`/admin/enquiries/${enquiry.id}/edit`}>
@@ -138,7 +138,7 @@ export default function AdminEnquiriesPage() {
         </table>
 
         {paginatedData.length === 0 && (
-          <div className="p-8 text-center text-white/40">
+          <div className="p-8 text-center text-slate-500 dark:text-white/40">
             No enquiries found
           </div>
         )}
