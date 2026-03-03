@@ -8,6 +8,7 @@ const nextConfig = {
       { protocol: 'https', hostname: '*.supabase.co' },
       { protocol: 'https', hostname: 'randomuser.me' },
       { protocol: 'https', hostname: 'miro.medium.com' },
+      { protocol: 'https', hostname: 'cdn.dribbble.com' },
     ],
   },
 }

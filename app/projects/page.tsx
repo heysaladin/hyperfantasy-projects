@@ -27,7 +27,7 @@ function useLazyVisible() {
     if (!el) return
     const obs = new IntersectionObserver(
       ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect() } },
-      { threshold: 0.08 }
+      { rootMargin: '0px 0px 120px 0px', threshold: 0 }
     )
     obs.observe(el)
     return () => obs.disconnect()
@@ -37,12 +37,15 @@ function useLazyVisible() {
 
 function PortfolioCard({ portfolio, index, onClick, showMeta }: { portfolio: any; index: number; onClick: () => void; showMeta: boolean }) {
   const { ref, visible } = useLazyVisible()
+  // Stagger only for the first page (initial load); scroll-in cards animate instantly
+  const delay = index < PAGE_SIZE ? index * 50 : 0
   return (
     <div ref={ref} onClick={onClick} className="group block cursor-pointer"
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(24px)',
-        transition: `opacity 0.45s ease ${(index % PAGE_SIZE) * 60}ms, transform 0.45s ease ${(index % PAGE_SIZE) * 60}ms`,
+        transform: visible ? 'translateY(0)' : 'translateY(16px)',
+        transition: `opacity 0.35s ease-out ${delay}ms, transform 0.35s ease-out ${delay}ms`,
+        willChange: 'opacity, transform',
       }}
     >
       <div className="overflow-hidden rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 transition hover:border-slate-300 dark:hover:border-white/20">
@@ -57,13 +60,6 @@ function PortfolioCard({ portfolio, index, onClick, showMeta }: { portfolio: any
             <div className="flex items-center gap-2 mb-2">
               {portfolio.category && (
                 <span className="text-xs text-slate-500 dark:text-white/40 uppercase tracking-wider">{portfolio.category}</span>
-              )}
-              {portfolio.complexity && (
-                <span className={`text-xs px-2 py-0.5 rounded ${
-                  portfolio.complexity === 'short'
-                    ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400'
-                    : 'bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400'
-                }`}>{portfolio.complexity}</span>
               )}
             </div>
             <h3 className="text-xl font-semibold group-hover:text-slate-600 dark:group-hover:text-white/60 transition">{portfolio.title}</h3>
@@ -126,7 +122,7 @@ export default function ProjectsPage() {
 
   // Fetch all visible portfolios once on mount
   useEffect(() => {
-    fetch('/api/portfolios?limit=200&offset=0&visible=true')
+    fetch('/api/portfolios?limit=500&offset=0&visible=true')
       .then(r => r.json())
       .then(data => setAllPortfolios(data.items || []))
       .catch(() => setAllPortfolios([]))
@@ -144,7 +140,6 @@ export default function ProjectsPage() {
         p.tags?.some((t: string) => t.toLowerCase().includes(q))
       )
     }
-
     switch (sort) {
       case 'newest':
         result.sort((a, b) => new Date(b.projectDate ?? 0).getTime() - new Date(a.projectDate ?? 0).getTime())
@@ -196,8 +191,7 @@ export default function ProjectsPage() {
   }, [hasMore]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClick = (portfolio: any) => {
-    if (portfolio.complexity === 'short') setSelectedPortfolio(portfolio)
-    else window.location.href = `/projects/${portfolio.id}`
+    setSelectedPortfolio(portfolio)
   }
 
   return (

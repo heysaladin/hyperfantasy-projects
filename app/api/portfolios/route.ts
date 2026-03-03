@@ -15,12 +15,13 @@ export async function GET(request: NextRequest) {
     const complexity = searchParams.get('complexity') || ''
     const sort = searchParams.get('sort') || 'order'
 
-    // Build where explicitly as any to avoid TS union type blocking property assignment
-    const where: any = {}
-    if (visibleOnly) where.isVisible = true
-    if (search)      where.title = { contains: search, mode: 'insensitive' }
-    if (category)    where.category = category
-    if (complexity)  where.complexity = complexity
+    // Build AND conditions so OR (for isVisible) never conflicts with other filters
+    const conditions: any[] = []
+    if (visibleOnly) conditions.push({ OR: [{ isVisible: true }, { isVisible: null }] })
+    if (search)      conditions.push({ title: { contains: search, mode: 'insensitive' } })
+    if (category)    conditions.push({ category })
+    if (complexity)  conditions.push({ complexity })
+    const where: any = conditions.length ? { AND: conditions } : {}
 
     const orderBy =
       sort === 'newest' ? { projectDate: 'desc' as const } :

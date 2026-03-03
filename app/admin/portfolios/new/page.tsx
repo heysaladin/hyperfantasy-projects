@@ -22,7 +22,7 @@ export default function NewPortfolioPage() {
     tags: '',
     stack: '',
     category: '',
-    complexity: 'short',
+    complexity: 'long',
     projectDate: '',
     isVisible: false,
     isFeatured: false,

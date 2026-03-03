@@ -57,7 +57,7 @@ export default function EditPortfolioPage({
           tags: portfolio.tags?.join(', ') || '',
           stack: portfolio.stack?.join(', ') || '',
           category: portfolio.category || '',
-          complexity: portfolio.complexity || 'short',
+          complexity: portfolio.complexity || 'long',
           projectDate: portfolio.projectDate 
             ? new Date(portfolio.projectDate).toISOString().split('T')[0] 
             : '',
