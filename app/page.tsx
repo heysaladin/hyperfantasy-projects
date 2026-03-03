@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { ArrowRight, Mail, Instagram, Linkedin, Twitter, Link } from "lucide-react"
+import { ArrowRight, Mail, Instagram, Linkedin, Twitter, Link, Star } from "lucide-react"
+import { testimonials } from "@/data/testimonials"
 
 export default function Home() {
   return (
@@ -171,6 +172,58 @@ export default function Home() {
                 measurable results.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section id="testimonials" className="py-32 px-6 lg:px-8 bg-slate-50 dark:bg-white/5">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-sm uppercase tracking-widest text-slate-500 dark:text-white/40 mb-4">Testimonials</h2>
+          <h3 className="text-5xl md:text-6xl font-bold mb-16 text-slate-900 dark:text-white">
+            What our clients say
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {testimonials.map((testimonial) => (
+              <div 
+                key={testimonial.id} 
+                className="bg-white dark:bg-white/10 rounded-lg p-8 border border-slate-200 dark:border-white/10 hover:shadow-lg dark:hover:shadow-lg/20 transition-shadow"
+              >
+                <div className="flex items-center gap-4 mb-6">
+                  {testimonial.image && (
+                    <img 
+                      src={testimonial.image} 
+                      alt={testimonial.name}
+                      className="w-14 h-14 rounded-full object-cover"
+                    />
+                  )}
+                  <div>
+                    <h4 className="font-semibold text-slate-900 dark:text-white">{testimonial.name}</h4>
+                    <p className="text-sm text-slate-600 dark:text-white/60">{testimonial.role}</p>
+                    <p className="text-xs text-slate-500 dark:text-white/40">{testimonial.company}</p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-1 mb-4">
+                  {Array.from({ length: testimonial.rating }).map((_, i) => (
+                    <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" aria-hidden="true" />
+                  ))}
+                </div>
+                
+                <p className="text-slate-600 dark:text-white/70 leading-relaxed">
+                  "{testimonial.content}"
+                </p>
+                
+                <p className="text-xs text-slate-500 dark:text-white/40 mt-4">
+                  {new Date(testimonial.date).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
