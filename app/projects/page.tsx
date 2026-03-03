@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
-import { ArrowDownAZ, ArrowDownWideNarrow, ArrowUpNarrowWide, ExternalLink, Github, LayoutGrid, Search, X } from 'lucide-react'
+import { ArrowDownAZ, ArrowDownWideNarrow, ArrowUpNarrowWide, ExternalLink, Github, Image, LayoutGrid, Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { resolveContent, resolveContentAsText } from '@/lib/tiptap-content'
 import { ArticleContent } from '@/components/article-content'
@@ -35,7 +35,7 @@ function useLazyVisible() {
   return { ref, visible }
 }
 
-function PortfolioCard({ portfolio, index, onClick }: { portfolio: any; index: number; onClick: () => void }) {
+function PortfolioCard({ portfolio, index, onClick, showMeta }: { portfolio: any; index: number; onClick: () => void; showMeta: boolean }) {
   const { ref, visible } = useLazyVisible()
   return (
     <div ref={ref} onClick={onClick} className="group block cursor-pointer"
@@ -52,52 +52,56 @@ function PortfolioCard({ portfolio, index, onClick }: { portfolio: any; index: n
               className="object-cover w-full h-full transition group-hover:scale-105" />
           </div>
         )}
-        <div className="p-6">
-          <div className="flex items-center gap-2 mb-2">
-            {portfolio.category && (
-              <span className="text-xs text-slate-500 dark:text-white/40 uppercase tracking-wider">{portfolio.category}</span>
-            )}
-            {portfolio.complexity && (
-              <span className={`text-xs px-2 py-0.5 rounded ${
-                portfolio.complexity === 'short'
-                  ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400'
-                  : 'bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400'
-              }`}>{portfolio.complexity}</span>
+        {showMeta && (
+          <div className="p-6">
+            <div className="flex items-center gap-2 mb-2">
+              {portfolio.category && (
+                <span className="text-xs text-slate-500 dark:text-white/40 uppercase tracking-wider">{portfolio.category}</span>
+              )}
+              {portfolio.complexity && (
+                <span className={`text-xs px-2 py-0.5 rounded ${
+                  portfolio.complexity === 'short'
+                    ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400'
+                    : 'bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400'
+                }`}>{portfolio.complexity}</span>
+              )}
+            </div>
+            <h3 className="text-xl font-semibold group-hover:text-slate-600 dark:group-hover:text-white/60 transition">{portfolio.title}</h3>
+            <p className="mt-2 text-sm text-slate-600 dark:text-white/60 line-clamp-2">{resolveContentAsText(portfolio.description)}</p>
+            {portfolio.tags?.length > 0 && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {portfolio.tags.slice(0, 3).map((tag: string) => (
+                  <span key={tag} className="text-xs px-2 py-1 bg-slate-200 dark:bg-white/10 rounded">{tag}</span>
+                ))}
+              </div>
             )}
           </div>
-          <h3 className="text-xl font-semibold group-hover:text-slate-600 dark:group-hover:text-white/60 transition">{portfolio.title}</h3>
-          <p className="mt-2 text-sm text-slate-600 dark:text-white/60 line-clamp-2">{resolveContentAsText(portfolio.description)}</p>
-          {portfolio.tags?.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {portfolio.tags.slice(0, 3).map((tag: string) => (
-                <span key={tag} className="text-xs px-2 py-1 bg-slate-200 dark:bg-white/10 rounded">{tag}</span>
-              ))}
-            </div>
-          )}
-        </div>
+        )}
       </div>
     </div>
   )
 }
 
-function SkeletonCard() {
+function SkeletonCard({ showMeta }: { showMeta: boolean }) {
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5">
       <div className="aspect-[16/10] bg-slate-200 dark:bg-white/10 animate-pulse" />
-      <div className="p-6 space-y-4">
-        <div className="flex gap-2">
-          <div className="h-4 w-16 bg-slate-200 dark:bg-white/10 rounded animate-pulse" />
-          <div className="h-4 w-12 bg-slate-200 dark:bg-white/10 rounded animate-pulse" />
+      {showMeta && (
+        <div className="p-6 space-y-4">
+          <div className="flex gap-2">
+            <div className="h-4 w-16 bg-slate-200 dark:bg-white/10 rounded animate-pulse" />
+            <div className="h-4 w-12 bg-slate-200 dark:bg-white/10 rounded animate-pulse" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-5 bg-slate-200 dark:bg-white/10 rounded animate-pulse" />
+            <div className="h-5 w-3/4 bg-slate-200 dark:bg-white/10 rounded animate-pulse" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-3.5 bg-slate-200 dark:bg-white/10 rounded animate-pulse" />
+            <div className="h-3.5 w-5/6 bg-slate-200 dark:bg-white/10 rounded animate-pulse" />
+          </div>
         </div>
-        <div className="space-y-2">
-          <div className="h-5 bg-slate-200 dark:bg-white/10 rounded animate-pulse" />
-          <div className="h-5 w-3/4 bg-slate-200 dark:bg-white/10 rounded animate-pulse" />
-        </div>
-        <div className="space-y-2">
-          <div className="h-3.5 bg-slate-200 dark:bg-white/10 rounded animate-pulse" />
-          <div className="h-3.5 w-5/6 bg-slate-200 dark:bg-white/10 rounded animate-pulse" />
-        </div>
-      </div>
+      )}
     </div>
   )
 }
@@ -111,6 +115,7 @@ export default function ProjectsPage() {
 
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('order')
+  const [showMeta, setShowMeta] = useState(true)
 
   // How many filtered results to display (infinite scroll)
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE)
@@ -211,8 +216,9 @@ export default function ProjectsPage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4">
 
           <div className="flex items-center justify-between gap-3">
-            {/* Search — left */}
-            <div className="relative w-full max-w-sm">
+            {/* Search + meta toggle — left */}
+            <div className="flex items-center gap-2 w-full max-w-sm">
+            <div className="relative flex-1">
               <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30" />
               <input
                 type="text"
@@ -227,6 +233,18 @@ export default function ProjectsPage() {
                   <X size={14} />
                 </button>
               )}
+            </div>
+            <button
+              title={showMeta ? 'Image only' : 'Show details'}
+              onClick={() => setShowMeta(v => !v)}
+              className={`p-2 rounded-lg transition flex-shrink-0 ${
+                !showMeta
+                  ? 'bg-slate-900 dark:bg-white text-white dark:text-black'
+                  : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-white/40 hover:bg-slate-200 dark:hover:bg-white/10'
+              }`}
+            >
+              <Image size={15} />
+            </button>
             </div>
 
             {/* Sort icons — right */}
@@ -254,9 +272,9 @@ export default function ProjectsPage() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {isLoading
-            ? Array.from({ length: PAGE_SIZE }).map((_, i) => <SkeletonCard key={i} />)
+            ? Array.from({ length: PAGE_SIZE }).map((_, i) => <SkeletonCard key={i} showMeta={showMeta} />)
             : displayed.map((portfolio, index) => (
-                <PortfolioCard key={portfolio.id} portfolio={portfolio} index={index} onClick={() => handleClick(portfolio)} />
+                <PortfolioCard key={portfolio.id} portfolio={portfolio} index={index} onClick={() => handleClick(portfolio)} showMeta={showMeta} />
               ))}
         </div>
 
