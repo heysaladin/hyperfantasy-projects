@@ -10,6 +10,11 @@ import { ArticleContent } from '@/components/article-content'
 
 const PAGE_SIZE = 9
 
+const COMPLEXITIES = [
+  { value: 'short', label: 'Short' },
+  { value: 'long',  label: 'Long'  },
+]
+
 const SORT_OPTIONS = [
   { value: 'order',  label: 'Default', icon: LayoutGrid },
   { value: 'newest', label: 'Newest',  icon: ArrowDownWideNarrow },
@@ -162,6 +167,7 @@ export default function ProjectsPage() {
 
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('order')
+  const [complexity, setComplexity] = useState('')
   const [showMeta, setShowMeta] = useState(true)
   const [yearRange, setYearRange] = useState<[number, number] | null>(null)
 
@@ -211,6 +217,10 @@ export default function ProjectsPage() {
       )
     }
 
+    if (complexity) result = result.filter(p =>
+      complexity === 'long' ? p.complexity !== 'short' : p.complexity === complexity
+    )
+
     if (yearRange && dataYears && (yearRange[0] > dataYears.min || yearRange[1] < dataYears.max)) {
       result = result.filter(p => {
         if (!p.projectDate) return false
@@ -238,12 +248,12 @@ export default function ProjectsPage() {
     }
 
     return result
-  }, [allPortfolios, search, sort, yearRange, dataYears])
+  }, [allPortfolios, search, sort, complexity, yearRange, dataYears])
 
   // Reset display count when filters change
   useEffect(() => {
     setDisplayCount(PAGE_SIZE)
-  }, [search, sort, yearRange])
+  }, [search, sort, complexity, yearRange])
 
   const displayed = filtered.slice(0, displayCount)
   const hasMore = displayCount < filtered.length
@@ -322,6 +332,23 @@ export default function ProjectsPage() {
             >
               <Image size={15} />
             </button>
+            </div>
+
+            {/* Complexity pills — centre */}
+            <div className="flex items-center gap-1">
+              {COMPLEXITIES.map(c => (
+                <button
+                  key={c.value}
+                  onClick={() => setComplexity(v => v === c.value ? '' : c.value)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                    complexity === c.value
+                      ? 'bg-slate-900 dark:bg-white text-white dark:text-black'
+                      : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white/60 hover:bg-slate-200 dark:hover:bg-white/10'
+                  }`}
+                >
+                  {c.label}
+                </button>
+              ))}
             </div>
 
             {/* Sort icons — right */}
