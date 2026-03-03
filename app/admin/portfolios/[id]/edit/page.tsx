@@ -229,8 +229,10 @@ export default function EditPortfolioPage({
               className="w-full p-2 bg-white/5 border border-white/10 rounded-md"
             >
               <option value="">Select category</option>
-              <option value="illustration">Illustration</option>
               <option value="ui-ux">UI/UX</option>
+              <option value="graphic-design">Graphic Design</option>
+              <option value="branding">Branding</option>
+              <option value="illustration">Illustration</option>
               <option value="development">Development</option>
             </select>
           </div>

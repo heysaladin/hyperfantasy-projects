@@ -10,7 +10,17 @@ import { ArticleContent } from '@/components/article-content'
 
 const PAGE_SIZE = 9
 
+const CATEGORIES = [
+  { value: '',                label: 'All'},
+  { value: 'UI-UX',           label: 'UI/UX'},
+  { value: 'Illustration',    label: 'Illustration'},
+  { value: 'Graphic Design',  label: 'Graphic Design'},
+  { value: 'Branding',        label: 'Branding'},
+  { value: 'Development',     label: 'Development'},
+]
+
 const COMPLEXITIES = [
+  { value: '',      label: 'All'   },
   { value: 'short', label: 'Short' },
   { value: 'long',  label: 'Long'  },
 ]
@@ -167,6 +177,7 @@ export default function ProjectsPage() {
 
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('order')
+  const [category, setCategory] = useState('')
   const [complexity, setComplexity] = useState('')
   const [showMeta, setShowMeta] = useState(true)
   const [yearRange, setYearRange] = useState<[number, number] | null>(null)
@@ -217,6 +228,7 @@ export default function ProjectsPage() {
       )
     }
 
+    if (category)   result = result.filter(p => p.category === category)
     if (complexity) result = result.filter(p =>
       complexity === 'long' ? p.complexity !== 'short' : p.complexity === complexity
     )
@@ -248,12 +260,12 @@ export default function ProjectsPage() {
     }
 
     return result
-  }, [allPortfolios, search, sort, complexity, yearRange, dataYears])
+  }, [allPortfolios, search, sort, category, complexity, yearRange, dataYears])
 
   // Reset display count when filters change
   useEffect(() => {
     setDisplayCount(PAGE_SIZE)
-  }, [search, sort, complexity, yearRange])
+  }, [search, sort, category, complexity, yearRange])
 
   const displayed = filtered.slice(0, displayCount)
   const hasMore = displayCount < filtered.length
@@ -339,7 +351,7 @@ export default function ProjectsPage() {
               {COMPLEXITIES.map(c => (
                 <button
                   key={c.value}
-                  onClick={() => setComplexity(v => v === c.value ? '' : c.value)}
+                  onClick={() => setComplexity(c.value)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                     complexity === c.value
                       ? 'bg-slate-900 dark:bg-white text-white dark:text-black'
@@ -368,6 +380,23 @@ export default function ProjectsPage() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Category pills */}
+          <div className="mt-3 flex items-center gap-1">
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat.value}
+                onClick={() => setCategory(cat.value)}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                  category === cat.value
+                    ? 'bg-slate-900 dark:bg-white text-white dark:text-black'
+                    : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white/60 hover:bg-slate-200 dark:hover:bg-white/10'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
           </div>
 
           {/* Date range slider */}
