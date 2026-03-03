@@ -2,15 +2,69 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { NextRequest } from 'next/server'
 
-// GET all portfolios
-export async function GET() {
+// GET portfolios — supports ?limit=&offset=&visible=true for pagination
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url)
+    const limitParam = searchParams.get('limit')
+    const offsetParam = searchParams.get('offset')
+    const visibleOnly = searchParams.get('visible') === 'true'
+
+    const search = searchParams.get('search')?.trim() || ''
+    const category = searchParams.get('category') || ''
+    const complexity = searchParams.get('complexity') || ''
+    const sort = searchParams.get('sort') || 'order'
+
+    // Build where explicitly as any to avoid TS union type blocking property assignment
+    const where: any = {}
+    if (visibleOnly) where.isVisible = true
+    if (search)      where.title = { contains: search, mode: 'insensitive' }
+    if (category)    where.category = category
+    if (complexity)  where.complexity = complexity
+
+    const orderBy =
+      sort === 'newest' ? { projectDate: 'desc' as const } :
+      sort === 'oldest' ? { projectDate: 'asc' as const } :
+      sort === 'title'  ? { title: 'asc' as const } :
+      { orderIndex: 'asc' as const }
+
+    if (limitParam !== null) {
+      const limit = Math.min(parseInt(limitParam) || 9, 500)
+      const offset = parseInt(offsetParam || '0') || 0
+
+      const [items, total] = await Promise.all([
+        prisma.portfolio.findMany({
+          where,
+          orderBy,
+          take: limit,
+          skip: offset,
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            imageUrl: true,
+            category: true,
+            complexity: true,
+            tags: true,
+            stack: true,
+            liveUrl: true,
+            copyright: true,
+            projectDate: true,
+            isVisible: true,
+            isFeatured: true,
+            orderIndex: true,
+          },
+        }),
+        prisma.portfolio.count({ where }),
+      ])
+
+      return Response.json({ items, total })
+    }
+
+    // Default: return all with relations (used by admin)
     const portfolios = await prisma.portfolio.findMany({
       orderBy: { orderIndex: 'asc' },
-      include: {
-        creator: true,
-        team: true
-      }
+      include: { creator: true, team: true },
     })
     return Response.json(portfolios || [])
   } catch (error) {

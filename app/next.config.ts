@@ -13,7 +13,15 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '*.supabase.co', // For Supabase storage
+        hostname: '*.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'randomuser.me',
+      },
+      {
+        protocol: 'https',
+        hostname: 'miro.medium.com',
       },
     ],
   },

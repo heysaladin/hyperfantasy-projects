@@ -38,8 +38,8 @@ export default async function AdminDashboard() {
 
         <Link href="/admin/teams">
           <div className="p-6 border border-slate-300 dark:border-white/10 rounded-lg hover:border-slate-400 dark:hover:border-white/40 transition">
-            <h2 className="text-xl font-semibold mb-2">Users</h2>
-            <p className="text-slate-600 dark:text-white/60">View all users</p>
+            <h2 className="text-xl font-semibold mb-2">Teams</h2>
+            <p className="text-slate-600 dark:text-white/60">View all teams</p>
           </div>
         </Link>
 

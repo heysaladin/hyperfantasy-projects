@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
+import { TiptapEditor } from '@/components/tiptap-editor'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
@@ -150,13 +150,11 @@ export default function EditPortfolioPage({
 
         {/* Description */}
         <div>
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            rows={3}
+          <Label>Description</Label>
+          <TiptapEditor
             value={formData.description}
-            onChange={(e) => setFormData({...formData, description: e.target.value})}
-            className="bg-white/5 border-white/10"
+            onChange={(json) => setFormData({ ...formData, description: json })}
+            placeholder="Description of the project…"
           />
         </div>
 

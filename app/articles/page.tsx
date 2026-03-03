@@ -1,6 +1,9 @@
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import Image from 'next/image'
+import { resolveCoverImage } from '@/lib/cover-image'
+import { resolveContent } from '@/lib/tiptap-content'
+import { ArticleContent } from '@/components/article-content'
 
 async function getBlogs() {
   return await prisma.blog.findMany({
@@ -35,17 +38,15 @@ export default async function ArticlesPage() {
             >
               <article className="flex flex-col md:flex-row gap-8">
                 {/* Cover Image */}
-                {blog.coverImage && (
-                  <div className="md:w-1/3 aspect-video overflow-hidden rounded-lg bg-slate-200 dark:bg-white/5">
-                    <Image
-                      src={blog.coverImage}
-                      alt={blog.title}
-                      width={400}
-                      height={225}
-                      className="object-cover w-full h-full group-hover:scale-105 transition"
-                    />
-                  </div>
-                )}
+                <div className="md:w-1/3 aspect-video overflow-hidden rounded-lg bg-slate-200 dark:bg-white/5">
+                  <Image
+                    src={resolveCoverImage(blog.coverImage, blog.id)}
+                    alt={blog.title}
+                    width={400}
+                    height={225}
+                    className="object-cover w-full h-full group-hover:scale-105 transition"
+                  />
+                </div>
 
                 {/* Content */}
                 <div className="flex-1">
@@ -61,9 +62,10 @@ export default async function ArticlesPage() {
                     {blog.title}
                   </h2>
                   
-                  <p className="text-slate-600 dark:text-white/60 line-clamp-2">
-                    {blog.excerpt}
-                  </p>
+                  <ArticleContent
+                    html={resolveContent(blog.excerpt)}
+                    className="prose prose-slate dark:prose-invert prose-sm max-w-none line-clamp-3 text-slate-600 dark:text-white/60"
+                  />
 
                   {/* Tags */}
                   {blog.tags && blog.tags.length > 0 && (

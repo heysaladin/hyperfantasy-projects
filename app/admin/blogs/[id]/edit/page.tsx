@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
+import { TiptapEditor } from '@/components/tiptap-editor'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
@@ -154,14 +154,11 @@ export default function EditBlogPage({
 
         {/* Content */}
         <div>
-          <Label htmlFor="content">Content</Label>
-          <Textarea
-            id="content"
-            rows={6}
+          <Label>Content</Label>
+          <TiptapEditor
             value={formData.content}
-            onChange={(e) => setFormData({...formData, content: e.target.value})}
-            className="bg-white/5 border-white/10"
-            placeholder="Full blog content"
+            onChange={(html) => setFormData({ ...formData, content: html })}
+            placeholder="Full blog content…"
           />
         </div>
 

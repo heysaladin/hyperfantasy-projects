@@ -3,6 +3,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, ExternalLink, Github } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { resolveContent } from '@/lib/tiptap-content'
+import { ArticleContent } from '@/components/article-content'
 
 async function getPortfolio(id: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/portfolios`, {
@@ -86,18 +88,10 @@ export default async function PortfolioDetailPage({
         )}
 
         {/* Description */}
-        <div className="prose prose-slate dark:prose-invert max-w-none mb-12">
-          <p className="text-lg text-slate-700 dark:text-white/80 leading-relaxed">
-            {portfolio.description}
-          </p>
-          
-          {/* Long Description */}
-          {portfolio.longDescription && (
-            <div className="mt-8 text-slate-600 dark:text-white/70 leading-relaxed whitespace-pre-line">
-              {portfolio.longDescription}
-            </div>
-          )}
-        </div>
+        <ArticleContent
+          html={resolveContent(portfolio.description)}
+          className="prose prose-slate dark:prose-invert prose-lg max-w-none mb-12"
+        />
 
         {/* Meta Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-12 border-t border-slate-200 dark:border-white/10">

@@ -3,7 +3,10 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
-import { ClientDate } from '@/components/client-date'  // ← Import
+import { ClientDate } from '@/components/client-date'
+import { resolveCoverImage } from '@/lib/cover-image'
+import { resolveContent } from '@/lib/tiptap-content'
+import { ArticleContent } from '@/components/article-content'
 
 async function getBlog(slug: string) {
   return await prisma.blog.findFirst({
@@ -42,23 +45,20 @@ export default async function ArticleDetailPage({
           {blog.title}
         </h1>
 
-        {blog.coverImage && (
-          <div className="aspect-video w-full overflow-hidden rounded-lg bg-slate-200 dark:bg-white/5 mb-12">
-            <Image
-              src={blog.coverImage}
-              alt={blog.title}
-              width={1200}
-              height={675}
-              className="object-cover w-full h-full"
-            />
-          </div>
-        )}
-
-        <div className="prose prose-slate dark:prose-invert prose-lg max-w-none">
-          <div className="whitespace-pre-line leading-relaxed text-slate-700 dark:text-white/80">
-            {blog.content}
-          </div>
+        <div className="aspect-video w-full overflow-hidden rounded-lg bg-slate-200 dark:bg-white/5 mb-12">
+          <Image
+            src={resolveCoverImage(blog.coverImage, blog.id)}
+            alt={blog.title}
+            width={1200}
+            height={675}
+            className="object-cover w-full h-full"
+          />
         </div>
+
+        <ArticleContent
+          html={resolveContent(blog.content)}
+          className="prose prose-slate dark:prose-invert prose-lg max-w-none"
+        />
 
         {blog.tags && blog.tags.length > 0 && (
           <div className="mt-12 pt-8 border-t border-slate-200 dark:border-white/10">
