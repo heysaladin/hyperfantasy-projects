@@ -102,6 +102,57 @@ function SkeletonCard({ showMeta }: { showMeta: boolean }) {
   )
 }
 
+// ---------- date range slider ----------
+
+function RangeSlider({ min, max, value, onChange }: {
+  min: number; max: number; value: [number, number]; onChange: (v: [number, number]) => void
+}) {
+  const trackRef = useRef<HTMLDivElement>(null)
+  const dragging = useRef<0 | 1 | null>(null)
+
+  const span = max - min || 1
+  // Inverted: newest (max) on left, oldest (min) on right
+  const l = ((max - value[1]) / span) * 100   // left thumb = max/newest
+  const r = ((max - value[0]) / span) * 100   // right thumb = min/oldest
+
+  const yearFromPointer = (e: React.PointerEvent) => {
+    const rect = trackRef.current!.getBoundingClientRect()
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
+    return Math.round(max - pct * span)  // inverted
+  }
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (dragging.current === null) return
+    const y = yearFromPointer(e)
+    if (dragging.current === 0) onChange([value[0], Math.max(y, value[0])])  // left = maxYear
+    else                        onChange([Math.min(y, value[1]), value[1]])  // right = minYear
+  }
+
+  const thumb = (idx: 0 | 1, pct: number) => (
+    <div
+      className="absolute w-4 h-4 rounded-full bg-white border-2 border-slate-700 dark:border-white/70 -translate-x-1/2 shadow cursor-grab active:cursor-grabbing touch-none"
+      style={{ left: `${pct}%`, zIndex: idx === 1 ? 4 : 3 }}
+      onPointerDown={e => {
+        e.preventDefault()
+        dragging.current = idx
+        ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+      }}
+      onPointerMove={onPointerMove}
+      onPointerUp={() => { dragging.current = null }}
+    />
+  )
+
+  return (
+    <div ref={trackRef} className="relative h-5 flex items-center select-none">
+      <div className="absolute inset-x-0 h-[3px] rounded-full bg-slate-200 dark:bg-white/10" />
+      <div className="absolute h-[3px] rounded-full bg-slate-700 dark:bg-white/50"
+        style={{ left: `${l}%`, right: `${100 - r}%` }} />
+      {thumb(0, l)}
+      {thumb(1, r)}
+    </div>
+  )
+}
+
 // ---------- main page ----------
 
 export default function ProjectsPage() {
@@ -110,8 +161,9 @@ export default function ProjectsPage() {
   const [isLoading, setIsLoading] = useState(true)
 
   const [search, setSearch] = useState('')
-  const [sort, setSort] = useState('order')
+  const [sort, setSort] = useState('newest')
   const [showMeta, setShowMeta] = useState(true)
+  const [yearRange, setYearRange] = useState<[number, number] | null>(null)
 
   // How many filtered results to display (infinite scroll)
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE)
@@ -124,10 +176,28 @@ export default function ProjectsPage() {
   useEffect(() => {
     fetch('/api/portfolios?limit=500&offset=0&visible=true')
       .then(r => r.json())
-      .then(data => setAllPortfolios(data.items || []))
+      .then(data => {
+        const items: any[] = data.items || []
+        setAllPortfolios(items)
+        const years = items
+          .filter(p => p.projectDate)
+          .map(p => new Date(p.projectDate).getFullYear())
+        if (years.length >= 2) {
+          const mn = Math.min(...years), mx = Math.max(...years)
+          if (mn < mx) setYearRange([mn, mx])
+        }
+      })
       .catch(() => setAllPortfolios([]))
       .finally(() => setIsLoading(false))
   }, [])
+
+  // Stable slider bounds (full date range of all portfolios)
+  const dataYears = useMemo(() => {
+    const years = allPortfolios.filter(p => p.projectDate).map(p => new Date(p.projectDate).getFullYear())
+    if (!years.length) return null
+    const mn = Math.min(...years), mx = Math.max(...years)
+    return mn < mx ? { min: mn, max: mx } : null
+  }, [allPortfolios])
 
   // Client-side filter + sort (instant, no network)
   const filtered = useMemo(() => {
@@ -140,6 +210,15 @@ export default function ProjectsPage() {
         p.tags?.some((t: string) => t.toLowerCase().includes(q))
       )
     }
+
+    if (yearRange && dataYears && (yearRange[0] > dataYears.min || yearRange[1] < dataYears.max)) {
+      result = result.filter(p => {
+        if (!p.projectDate) return false
+        const y = new Date(p.projectDate).getFullYear()
+        return y >= yearRange[0] && y <= yearRange[1]
+      })
+    }
+
     switch (sort) {
       case 'newest':
         result.sort((a, b) => new Date(b.projectDate ?? 0).getTime() - new Date(a.projectDate ?? 0).getTime())
@@ -155,12 +234,12 @@ export default function ProjectsPage() {
     }
 
     return result
-  }, [allPortfolios, search, sort])
+  }, [allPortfolios, search, sort, yearRange, dataYears])
 
   // Reset display count when filters change
   useEffect(() => {
     setDisplayCount(PAGE_SIZE)
-  }, [search, sort])
+  }, [search, sort, yearRange])
 
   const displayed = filtered.slice(0, displayCount)
   const hasMore = displayCount < filtered.length
@@ -259,6 +338,34 @@ export default function ProjectsPage() {
               ))}
             </div>
           </div>
+
+          {/* Date range slider */}
+          {dataYears && yearRange && (
+            <div className="mt-3 flex items-center gap-3">
+              <span className="text-xs tabular-nums text-slate-500 dark:text-white/40 w-10 text-right shrink-0">
+                {yearRange[1]}
+              </span>
+              <div className="flex-1">
+                <RangeSlider
+                  min={dataYears.min}
+                  max={dataYears.max}
+                  value={yearRange}
+                  onChange={setYearRange}
+                />
+              </div>
+              <span className="text-xs tabular-nums text-slate-500 dark:text-white/40 w-10 shrink-0">
+                {yearRange[0]}
+              </span>
+              {(yearRange[0] > dataYears.min || yearRange[1] < dataYears.max) && (
+                <button
+                  onClick={() => setYearRange([dataYears.min, dataYears.max])}
+                  className="text-xs text-slate-400 hover:text-slate-700 dark:text-white/30 dark:hover:text-white/70 transition shrink-0"
+                >
+                  Reset
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
