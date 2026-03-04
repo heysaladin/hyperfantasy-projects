@@ -53,15 +53,17 @@ export function Navbar() {
       style={{ transform: 'translateY(var(--nav-offset, 0px))' }}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center h-16">
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 hover:opacity-70 transition">
-            <Image src="/logo-pictogram.svg" alt="Hyperfantasy" width={24} height={24} />
-            <span className="text-lg font-bold tracking-tight">HYPERFANTASY</span>
-          </Link>
+          {/* Logo — flex-1 so it mirrors the right side width */}
+          <div className="flex-1">
+            <Link href="/" className="inline-flex items-center gap-2 hover:opacity-70 transition">
+              <Image src="/logo-pictogram.svg" alt="Hyperfantasy" width={24} height={24} />
+              <span className="text-lg font-bold tracking-tight">HYPERFANTASY</span>
+            </Link>
+          </div>
 
-          {/* Desktop links */}
+          {/* Desktop links — centered */}
           <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
             {NAV_LINKS.map(({ label, href }) => (
               <Link
@@ -79,8 +81,8 @@ export function Navbar() {
             ))}
           </nav>
 
-          {/* Right: theme toggle + admin + hamburger */}
-          <div className="flex items-center gap-2">
+          {/* Right: theme toggle + admin + hamburger — flex-1 justify-end */}
+          <div className="flex-1 flex items-center justify-end gap-2">
             <ThemeToggle />
             {user && (
               <Link

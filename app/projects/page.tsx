@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Dialog as RadixDialog } from 'radix-ui'
-import { ArrowDownAZ, ArrowDownWideNarrow, ArrowUpNarrowWide, ChevronDown, ExternalLink, Image, LayoutGrid, Search, SlidersHorizontal, X } from 'lucide-react'
+import { ArrowDownAZ, ArrowDownWideNarrow, ArrowUpDown, ArrowUpNarrowWide, ChevronDown, ExternalLink, Image, LayoutGrid, LayoutPanelTop, Search, SlidersHorizontal, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { resolveContent, resolveContentAsText } from '@/lib/tiptap-content'
 import { ArticleContent } from '@/components/article-content'
@@ -446,7 +446,7 @@ export default function ProjectsPage() {
                     : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-white/40 border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10'
                 }`}
               >
-                <Image size={15} aria-hidden="true" />
+                {showMeta ? <Image size={15} aria-hidden="true" /> : <LayoutPanelTop size={15} aria-hidden="true" />}
               </button>
             </div>
 
@@ -457,13 +457,14 @@ export default function ProjectsPage() {
                 aria-controls="sort-panel"
                 aria-haspopup="listbox"
                 onClick={() => { setIsSortOpen(v => !v); setIsFilterOpen(false) }}
-                className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg border transition ${
+                className={`flex items-center gap-2 px-3 py-3 text-sm rounded-lg border transition ${
                   isSortOpen || activeSortCount > 0
                     ? 'bg-slate-900 dark:bg-white text-white dark:text-black border-slate-900 dark:border-white'
                     : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white/60 border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10'
                 }`}
               >
-                <span>Sort</span>
+                <ArrowUpDown size={14} aria-hidden="true" />
+                <span className="hidden md:inline">Sort</span>
                 {activeSortCount > 0 && (
                   <span className="flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                     {activeSortCount}
@@ -503,14 +504,14 @@ export default function ProjectsPage() {
                 aria-controls="filter-panel"
                 aria-haspopup="dialog"
                 onClick={() => { setIsFilterOpen(v => !v); setIsSortOpen(false) }}
-                className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg border transition ${
+                className={`flex items-center gap-2 px-3 py-3 text-sm rounded-lg border transition ${
                   isFilterOpen || activeFilterCount > 0
                     ? 'bg-slate-900 dark:bg-white text-white dark:text-black border-slate-900 dark:border-white'
                     : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white/60 border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10'
                 }`}
               >
-                <SlidersHorizontal size={14} />
-                <span>Filter</span>
+                <SlidersHorizontal size={14} aria-hidden="true" />
+                <span className="hidden md:inline">Filter</span>
                 {activeFilterCount > 0 && (
                   <span className="flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                     {activeFilterCount}
