@@ -184,6 +184,7 @@ export default function ProjectsPage() {
   const [complexity, setComplexity] = useState('')
   const [showMeta, setShowMeta] = useState(true)
   const [yearRange, setYearRange] = useState<[number, number] | null>(null)
+  const [showHiddenOnly, setShowHiddenOnly] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [isSortOpen, setIsSortOpen] = useState(false)
 
@@ -241,6 +242,8 @@ export default function ProjectsPage() {
       complexity === 'long' ? p.complexity !== 'short' : p.complexity === complexity
     )
 
+    if (showHiddenOnly) result = result.filter(p => !p.isVisible)
+
     if (yearRange && dataYears && (yearRange[0] > dataYears.min || yearRange[1] < dataYears.max)) {
       result = result.filter(p => {
         if (!p.projectDate) return false
@@ -270,12 +273,12 @@ export default function ProjectsPage() {
     }
 
     return result
-  }, [allPortfolios, search, sort, category, complexity, yearRange, dataYears])
+  }, [allPortfolios, search, sort, category, complexity, yearRange, dataYears, showHiddenOnly])
 
   // Reset display count when filters change
   useEffect(() => {
     setDisplayCount(PAGE_SIZE)
-  }, [search, sort, category, complexity, yearRange])
+  }, [search, sort, category, complexity, yearRange, showHiddenOnly])
 
   const displayed = filtered.slice(0, displayCount)
   const hasMore = displayCount < filtered.length
@@ -355,6 +358,7 @@ export default function ProjectsPage() {
   const resetAll = () => {
     setCategory('')
     setComplexity('')
+    setShowHiddenOnly(false)
     if (dataYears) setYearRange([dataYears.min, dataYears.max])
   }
 
@@ -362,6 +366,7 @@ export default function ProjectsPage() {
   const activeFilterCount = [
     category !== '',
     complexity !== '',
+    showHiddenOnly,
     dataYears && yearRange && (yearRange[0] > dataYears.min || yearRange[1] < dataYears.max),
   ].filter(Boolean).length
 
@@ -523,6 +528,21 @@ export default function ProjectsPage() {
                         </button>
                       ))}
                     </div>
+                  </div>
+
+                  {/* Visibility section */}
+                  <div className="p-4 border-b border-slate-100 dark:border-white/10">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-white/30 mb-3">Visibility</p>
+                    <button
+                      onClick={() => setShowHiddenOnly(v => !v)}
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                        showHiddenOnly
+                          ? 'bg-slate-900 dark:bg-white text-white dark:text-black'
+                          : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white/60 hover:bg-slate-200 dark:hover:bg-white/10'
+                      }`}
+                    >
+                      Hidden only
+                    </button>
                   </div>
 
                   {/* Date range section */}

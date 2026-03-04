@@ -5,9 +5,11 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { createClient } from '@/lib/supabase/client'
+import type { User } from '@supabase/supabase-js'
 
 const NAV_LINKS = [
-  { label: 'Works',    href: '/projects'  },
+  { label: 'Projects', href: '/projects'  },
   { label: 'Articles', href: '/articles'  },
   { label: 'About',   href: '/about'     },
   { label: 'Enquiry', href: '/enquiry'   },
@@ -16,6 +18,16 @@ const NAV_LINKS = [
 export function Navbar() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => setUser(user))
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      setUser(session?.user ?? null)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
 
   // Reset offset when leaving /projects
   useEffect(() => {
@@ -43,8 +55,9 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link href="/" className="text-lg font-bold tracking-tight hover:opacity-70 transition">
-            HYPERFANTASY
+          <Link href="/" className="flex items-center gap-2 hover:opacity-70 transition">
+            <img src="/logo-pictogram.svg" alt="Hyperfantasy" className="h-6 w-auto" />
+            <span className="text-lg font-bold tracking-tight">HYPERFANTASY</span>
           </Link>
 
           {/* Desktop links */}
@@ -64,9 +77,17 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* Right: theme toggle + hamburger */}
+          {/* Right: theme toggle + admin + hamburger */}
           <div className="flex items-center gap-2">
             <ThemeToggle />
+            {user && (
+              <Link
+                href="/admin"
+                className="px-3 py-1.5 rounded-lg text-sm font-medium border border-slate-200 dark:border-white/10 text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition"
+              >
+                Admin
+              </Link>
+            )}
             <button
               onClick={() => setMenuOpen(v => !v)}
               className="md:hidden p-2 rounded-lg text-slate-600 dark:text-white/60 hover:bg-slate-100 dark:hover:bg-white/5 transition"

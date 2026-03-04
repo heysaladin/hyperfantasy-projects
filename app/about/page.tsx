@@ -46,8 +46,8 @@ export default function AboutPage() {
               <div className="text-slate-600 dark:text-white/40">Years Experience</div>
             </div>
             <div>
-              <div className="text-5xl md:text-6xl font-bold mb-2">3</div>
-              <div className="text-slate-600 dark:text-white/40">Studio Locations</div>
+              <div className="text-5xl md:text-6xl font-bold mb-2">5</div>
+              <div className="text-slate-600 dark:text-white/40">Interchangeable Teams</div>
             </div>
           </div>
         </div>
