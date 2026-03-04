@@ -6,8 +6,8 @@ import { testimonials } from '@/data/testimonials'
 import { resolveContentAsText } from '@/lib/tiptap-content'
 import { prisma } from '@/lib/prisma'
 
-const HomeAboutCarousel = dynamic(() => import('@/components/home-about-carousel').then(m => ({ default: m.HomeAboutCarousel })), { ssr: false })
-const HomeFloatingCTA   = dynamic(() => import('@/components/home-floating-cta').then(m => ({ default: m.HomeFloatingCTA })), { ssr: false })
+const HomeAboutCarousel = dynamic(() => import('@/components/home-about-carousel').then(m => ({ default: m.HomeAboutCarousel })))
+const HomeFloatingCTA   = dynamic(() => import('@/components/home-floating-cta').then(m => ({ default: m.HomeFloatingCTA })))
 
 /* ── Design tokens ────────────────────────────────────────────────────── */
 const BG       = '#030017'
