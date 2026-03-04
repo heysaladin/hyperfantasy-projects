@@ -650,17 +650,17 @@ export default function ProjectsPage() {
           {/* Content wrapper */}
           <RadixDialog.Content
             aria-describedby={undefined}
-            className="fixed inset-0 z-50 flex items-start justify-center pt-10 px-4 pb-4 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+            className="fixed inset-0 z-50 flex items-end sm:items-start justify-center sm:pt-10 sm:px-4 sm:pb-4 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
           >
             {selectedPortfolio && (
               <>
                 <RadixDialog.Title className="sr-only">{selectedPortfolio.title}</RadixDialog.Title>
 
                   {/* ── Info panel ── */}
-                  <div className="w-full max-w-4xl bg-white dark:bg-zinc-900 flex flex-col rounded-2xl overflow-hidden shadow-2xl max-h-[88vh]">
+                  <div className="w-full max-w-4xl bg-white dark:bg-zinc-900 flex flex-col rounded-none sm:rounded-2xl overflow-hidden shadow-2xl h-full sm:h-auto sm:max-h-[88vh]">
 
                     {/* Panel header */}
-                    <div className="flex items-start justify-between gap-3 px-8 py-4 border-b border-slate-100 dark:border-white/10 flex-shrink-0">
+                    <div className="flex items-start justify-between gap-3 px-6 sm:px-8 py-4 border-b border-slate-100 dark:border-white/10 flex-shrink-0">
                       <div className="min-w-0">
                         {selectedPortfolio.category && (
                           <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-white/30 mb-1">
@@ -677,7 +677,7 @@ export default function ProjectsPage() {
                     </div>
 
                     {/* Scrollable body */}
-                    <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6 min-h-0">
+                    <div className="flex-1 overflow-y-auto px-6 sm:px-8 py-6 space-y-6 min-h-0">
 
                       {selectedPortfolio.description && (
                         <ArticleContent

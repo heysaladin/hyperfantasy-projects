@@ -156,11 +156,13 @@ export default function EditBlogPage({
         {/* Content */}
         <div className="flex flex-col gap-2">
           <Label>Content</Label>
-          <TiptapEditor
-            value={formData.content}
-            onChange={(html) => setFormData({ ...formData, content: html })}
-            placeholder="Full blog content…"
-          />
+          <div className="medium-editor">
+            <TiptapEditor
+              value={formData.content}
+              onChange={(html) => setFormData({ ...formData, content: html })}
+              placeholder="Full blog content…"
+            />
+          </div>
         </div>
 
         {/* Cover Image URL */}
