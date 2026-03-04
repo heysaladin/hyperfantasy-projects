@@ -31,7 +31,7 @@ export default async function ArticleDetailPage({
       <div className="border-b border-slate-200 dark:border-white/10">
         <div className="max-w-3xl mx-auto px-6 lg:px-8 py-8">
           <Link href="/articles" className="inline-flex items-center text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition mb-8">
-            <ArrowLeft size={20} className="mr-2" />
+            <ArrowLeft size={20} className="mr-2" aria-hidden="true" />
             Back to Articles
           </Link>
         </div>

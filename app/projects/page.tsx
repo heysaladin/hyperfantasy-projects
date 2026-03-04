@@ -144,19 +144,40 @@ function RangeSlider({ min, max, value, onChange }: {
     else                        onChange([Math.min(y, value[1]), value[1]])  // right = minYear
   }
 
-  const thumb = (idx: 0 | 1, pct: number) => (
-    <div
-      className="absolute w-4 h-4 rounded-full bg-white border-2 border-slate-700 dark:border-white/70 -translate-x-1/2 shadow cursor-grab active:cursor-grabbing touch-none"
-      style={{ left: `${pct}%`, zIndex: idx === 1 ? 4 : 3 }}
-      onPointerDown={e => {
-        e.preventDefault()
-        dragging.current = idx
-        ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
-      }}
-      onPointerMove={onPointerMove}
-      onPointerUp={() => { dragging.current = null }}
-    />
-  )
+  const thumb = (idx: 0 | 1, pct: number) => {
+    const isLeftThumb = idx === 0
+    const currentValue = isLeftThumb ? value[1] : value[0]
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      const inc = (e.key === 'ArrowUp' || e.key === 'ArrowRight') ? 1 : (e.key === 'ArrowDown' || e.key === 'ArrowLeft') ? -1 : 0
+      if (!inc) return
+      e.preventDefault()
+      if (isLeftThumb) {
+        onChange([value[0], Math.max(Math.min(value[1] + inc, max), value[0])])
+      } else {
+        onChange([Math.max(Math.min(value[0] + inc, value[1]), min), value[1]])
+      }
+    }
+    return (
+      <div
+        role="slider"
+        aria-label={isLeftThumb ? 'Newest year' : 'Oldest year'}
+        aria-valuemin={isLeftThumb ? value[0] : min}
+        aria-valuemax={isLeftThumb ? max : value[1]}
+        aria-valuenow={currentValue}
+        tabIndex={0}
+        className="absolute w-4 h-4 rounded-full bg-white border-2 border-slate-700 dark:border-white/70 -translate-x-1/2 shadow cursor-grab active:cursor-grabbing touch-none focus:outline-none focus:ring-2 focus:ring-slate-700 dark:focus:ring-white focus:ring-offset-1"
+        style={{ left: `${pct}%`, zIndex: idx === 1 ? 4 : 3 }}
+        onKeyDown={handleKeyDown}
+        onPointerDown={e => {
+          e.preventDefault()
+          dragging.current = idx
+          ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+        }}
+        onPointerMove={onPointerMove}
+        onPointerUp={() => { dragging.current = null }}
+      />
+    )
+  }
 
   return (
     <div ref={trackRef} className="relative h-5 flex items-center select-none">
@@ -398,23 +419,26 @@ export default function ProjectsPage() {
             {/* Left: Search + meta toggle */}
             <div className="flex items-center gap-2 flex-1">
               <div className="relative w-full max-w-sm">
-                <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30" />
+                <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30" aria-hidden="true" />
+                <label htmlFor="project-search" className="sr-only">Search projects</label>
                 <input
-                  type="text"
+                  id="project-search"
+                  type="search"
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search projects…"
                   className="w-full pl-9 pr-8 py-2 text-sm bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg outline-none focus:border-slate-400 dark:focus:border-white/30 transition placeholder:text-slate-400 dark:placeholder:text-white/30"
                 />
                 {search && (
-                  <button onClick={() => setSearch('')}
+                  <button onClick={() => setSearch('')} aria-label="Clear search"
                     className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-white/30 dark:hover:text-white/60 transition">
-                    <X size={14} />
+                    <X size={14} aria-hidden="true" />
                   </button>
                 )}
               </div>
               <button
-                title={showMeta ? 'Image only' : 'Show details'}
+                aria-label={showMeta ? 'Switch to image-only view' : 'Switch to detailed view'}
+                aria-pressed={!showMeta}
                 onClick={() => setShowMeta(v => !v)}
                 className={`px-2.5 py-2.5 rounded-lg border transition flex-shrink-0 ${
                   !showMeta
@@ -422,13 +446,16 @@ export default function ProjectsPage() {
                     : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-white/40 border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10'
                 }`}
               >
-                <Image size={15} />
+                <Image size={15} aria-hidden="true" />
               </button>
             </div>
 
             {/* Right: Sort dropdown */}
             <div className="relative flex-shrink-0" ref={sortPanelRef}>
               <button
+                aria-expanded={isSortOpen}
+                aria-controls="sort-panel"
+                aria-haspopup="listbox"
                 onClick={() => { setIsSortOpen(v => !v); setIsFilterOpen(false) }}
                 className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg border transition ${
                   isSortOpen || activeSortCount > 0
@@ -442,15 +469,17 @@ export default function ProjectsPage() {
                     {activeSortCount}
                   </span>
                 )}
-                <ChevronDown size={13} className={`transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={13} className={`transition-transform ${isSortOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
               </button>
 
               {isSortOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-zinc-900 rounded-xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden z-20">
+                <div id="sort-panel" role="listbox" aria-label="Sort options" className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-zinc-900 rounded-xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden z-20">
                   <div className="p-3 space-y-1">
                     {SORT_OPTIONS.map(({ value, label, icon: Icon }) => (
                       <button
                         key={value}
+                        role="option"
+                        aria-selected={sort === value}
                         onClick={() => { setSort(value); setIsSortOpen(false) }}
                         className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition ${
                           sort === value
@@ -458,7 +487,7 @@ export default function ProjectsPage() {
                             : 'text-slate-600 dark:text-white/60 hover:bg-slate-100 dark:hover:bg-white/5'
                         }`}
                       >
-                        <Icon size={13} />
+                        <Icon size={13} aria-hidden="true" />
                         {label}
                       </button>
                     ))}
@@ -470,6 +499,9 @@ export default function ProjectsPage() {
             {/* Filter dropdown */}
             <div className="relative flex-shrink-0" ref={filterPanelRef}>
               <button
+                aria-expanded={isFilterOpen}
+                aria-controls="filter-panel"
+                aria-haspopup="dialog"
                 onClick={() => { setIsFilterOpen(v => !v); setIsSortOpen(false) }}
                 className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg border transition ${
                   isFilterOpen || activeFilterCount > 0
@@ -484,11 +516,11 @@ export default function ProjectsPage() {
                     {activeFilterCount}
                   </span>
                 )}
-                <ChevronDown size={13} className={`transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={13} className={`transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
               </button>
 
               {isFilterOpen && (
-                <div className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-zinc-900 rounded-xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden z-20">
+                <div id="filter-panel" role="dialog" aria-label="Filter projects" className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-zinc-900 rounded-xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden z-20">
 
                   {/* Category section */}
                   <div className="p-4 border-b border-slate-100 dark:border-white/10">

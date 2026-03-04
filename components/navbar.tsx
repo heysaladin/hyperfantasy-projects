@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
@@ -56,16 +57,17 @@ export function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 hover:opacity-70 transition">
-            <img src="/logo-pictogram.svg" alt="Hyperfantasy" className="h-6 w-auto" />
+            <Image src="/logo-pictogram.svg" alt="Hyperfantasy" width={24} height={24} />
             <span className="text-lg font-bold tracking-tight">HYPERFANTASY</span>
           </Link>
 
           {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
             {NAV_LINKS.map(({ label, href }) => (
               <Link
                 key={href}
                 href={href}
+                aria-current={isActive(href) ? 'page' : undefined}
                 className={`px-3 py-1.5 rounded-lg text-sm transition ${
                   isActive(href)
                     ? 'bg-slate-900 dark:bg-white text-white dark:text-black'
@@ -75,7 +77,7 @@ export function Navbar() {
                 {label}
               </Link>
             ))}
-          </div>
+          </nav>
 
           {/* Right: theme toggle + admin + hamburger */}
           <div className="flex items-center gap-2">
@@ -91,9 +93,11 @@ export function Navbar() {
             <button
               onClick={() => setMenuOpen(v => !v)}
               className="md:hidden p-2 rounded-lg text-slate-600 dark:text-white/60 hover:bg-slate-100 dark:hover:bg-white/5 transition"
-              aria-label="Toggle menu"
+              aria-label="Toggle navigation menu"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
             >
-              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+              {menuOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
             </button>
           </div>
 
@@ -102,7 +106,7 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-slate-200 dark:border-white/5 bg-white/95 dark:bg-black/95 backdrop-blur-md">
+        <div id="mobile-menu" className="md:hidden border-t border-slate-200 dark:border-white/5 bg-white/95 dark:bg-black/95 backdrop-blur-md" role="navigation" aria-label="Mobile navigation">
           <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-1">
             {NAV_LINKS.map(({ label, href }) => (
               <Link

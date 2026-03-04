@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 
 export function TeamImageFlicker({ src, alt }: { src: string; alt: string }) {
   const [color, setColor] = useState(() => Math.random() > 0.5)
@@ -19,15 +20,30 @@ export function TeamImageFlicker({ src, alt }: { src: string; alt: string }) {
     return () => { if (timerRef.current) clearTimeout(timerRef.current) }
   }, [])
 
+  const style = {
+    filter: color ? 'grayscale(0)' : 'grayscale(1)',
+    transition: 'filter 0.5s ease-in-out',
+  }
+
+  if (src.startsWith('data:')) {
+    return (
+      <img
+        src={src}
+        alt={alt}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        style={style}
+      />
+    )
+  }
+
   return (
-    <img
+    <Image
       src={src}
       alt={alt}
-      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-      style={{
-        filter: color ? 'grayscale(0)' : 'grayscale(1)',
-        transition: 'filter 0.5s ease-in-out',
-      }}
+      fill
+      sizes="(max-width: 768px) 100vw, 33vw"
+      className="object-cover group-hover:scale-105 transition-transform duration-500"
+      style={style}
     />
   )
 }

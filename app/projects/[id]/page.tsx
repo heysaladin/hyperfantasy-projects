@@ -31,7 +31,7 @@ export default async function PortfolioDetailPage({
       <div className="border-b border-slate-200 dark:border-white/10">
         <div className="max-w-3xl mx-auto px-6 lg:px-8 py-8">
           <Link href="/projects" className="inline-flex items-center text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition">
-            <ArrowLeft size={20} className="mr-2" />
+            <ArrowLeft size={20} className="mr-2" aria-hidden="true" />
             Back to Works
           </Link>
         </div>
@@ -61,7 +61,7 @@ export default async function PortfolioDetailPage({
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white transition mb-8"
           >
-            <ExternalLink size={14} />
+            <ExternalLink size={14} aria-hidden="true" />
             View Live Site
           </a>
         )}

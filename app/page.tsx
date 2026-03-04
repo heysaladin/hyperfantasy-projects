@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight, Mail, Star, Monitor, Smile, ImageIcon, Box, Printer, Gem, Globe, Smartphone, PlayCircle } from 'lucide-react'
 import { testimonials } from '@/data/testimonials'
 import { resolveContentAsText } from '@/lib/tiptap-content'
@@ -90,7 +91,7 @@ export default async function Home() {
       <div className="hf-page">
 
         {/* ── HERO ─────────────────────────────────────────────── */}
-        <section className="pt-40 pb-32 px-6 lg:px-8 text-center">
+        <section className="pt-40 pb-32 px-6 lg:px-8 text-center" aria-label="Hero">
           <div className="max-w-5xl mx-auto">
             <h1 style={{ fontSize: 'clamp(40px,7vw,86px)', fontWeight: 600, lineHeight: '135%' }}
               className="mb-10 dark:text-white text-slate-900">
@@ -99,7 +100,7 @@ export default async function Home() {
             </h1>
             <p className="text-lg dark:text-white/60 text-slate-600 mb-10">Have any fantasy?</p>
             <Link href="/enquiry">
-              <button className="grad-btn">Let&apos;s talk! <ArrowRight size={18} /></button>
+              <button className="grad-btn">Let&apos;s talk! <ArrowRight size={18} aria-hidden="true" /></button>
             </Link>
           </div>
         </section>
@@ -185,9 +186,9 @@ export default async function Home() {
                           </p>
                         </div>
                         {/* Image — always order-2 on mobile; even→col2, odd→col1 on desktop */}
-                        <div className={`aspect-[4/3] rounded-2xl overflow-hidden bg-white/5 ${isEven ? 'order-2 lg:order-2' : 'order-2 lg:order-1'}`}>
+                        <div className={`aspect-[4/3] rounded-2xl overflow-hidden bg-white/5 relative ${isEven ? 'order-2 lg:order-2' : 'order-2 lg:order-1'}`}>
                           {p.imageUrl
-                            ? <img src={p.imageUrl} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            ? <Image src={p.imageUrl} alt={p.title} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                             : <div className="w-full h-full flex items-center justify-center text-6xl font-bold dark:text-white/10 text-slate-200">{String(i + 1).padStart(2, '0')}</div>
                           }
                         </div>
@@ -212,11 +213,12 @@ export default async function Home() {
               {shots.map((p, i) => (
                 <Link key={p.id} href={`/projects/${p.id}`}>
                   <div style={{ borderRadius: 8 }}
-                    className="aspect-square overflow-hidden hf-card border border-black/10 dark:border-white/10"
+                    className="aspect-square overflow-hidden hf-card border border-black/10 dark:border-white/10 relative"
                   >
                     {p.imageUrl && (
-                      <img src={p.imageUrl} alt={p.title}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                      <Image src={p.imageUrl} alt={p.title} fill
+                        sizes="(max-width: 640px) 100vw, 33vw"
+                        className="object-cover hover:scale-105 transition-transform duration-500"
                       />
                     )}
                   </div>
@@ -225,7 +227,7 @@ export default async function Home() {
             </div>
             <div className="flex justify-center mt-12">
               <Link href="/projects">
-                <button className="ghost-btn">View Portfolio <ArrowRight size={16} /></button>
+                <button className="ghost-btn">View Portfolio <ArrowRight size={16} aria-hidden="true" /></button>
               </Link>
             </div>
           </div>
@@ -237,9 +239,9 @@ export default async function Home() {
             <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16">
               {CLIENTS.map(({ name, logo }) => (
                 <div key={name} className="flex items-center justify-center" style={{ height: 56 }}>
-                  <img src={logo} alt={name}
-                    className="max-h-full w-auto object-contain dark:invert dark:opacity-60 opacity-60 hover:opacity-100 dark:hover:opacity-90 transition-opacity"
-                    style={{ maxWidth: 160 }}
+                  <Image src={logo} alt={name} width={160} height={56}
+                    className="object-contain dark:invert dark:opacity-60 opacity-60 hover:opacity-100 dark:hover:opacity-90 transition-opacity"
+                    style={{ maxWidth: 160, height: 'auto' }}
                   />
                 </div>
               ))}
@@ -264,9 +266,9 @@ export default async function Home() {
                 <div key={i} className="hf-card border border-black/10 dark:border-white/10 rounded-2xl p-8 shrink-0"
                   style={{ width: 380 }}
                 >
-                  <div className="flex gap-0.5 mb-5">
+                  <div className="flex gap-0.5 mb-5" aria-label={`Rating: ${t.rating} out of 5 stars`}>
                     {Array.from({ length: t.rating }).map((_, j) => (
-                      <Star key={j} size={14} className="fill-yellow-400 text-yellow-400" />
+                      <Star key={j} size={14} className="fill-yellow-400 text-yellow-400" aria-hidden="true" />
                     ))}
                   </div>
                   <p style={{ fontSize: 16, fontWeight: 400, lineHeight: '160%' }}
@@ -275,7 +277,7 @@ export default async function Home() {
                   </p>
                   <div className="flex items-center gap-3 pt-4 border-t border-black/10 dark:border-white/10">
                     {t.image && (
-                      <img src={t.image} alt={t.name} className="w-12 h-12 rounded-2xl object-cover shrink-0" />
+                      <Image src={t.image} alt={t.name} width={48} height={48} className="rounded-2xl object-cover shrink-0" />
                     )}
                     <div>
                       <p style={{ fontSize: 16, fontWeight: 500 }} className="dark:text-white text-slate-900">{t.name}</p>
@@ -296,7 +298,7 @@ export default async function Home() {
                 Have any awesome fantasy?
               </h2>
               <Link href="/enquiry">
-                <button id="hf-cta-btn" className="grad-btn"><Mail size={18} /> Let&apos;s talk!</button>
+                <button id="hf-cta-btn" className="grad-btn"><Mail size={18} aria-hidden="true" /> Let&apos;s talk!</button>
               </Link>
             </div>
           </div>

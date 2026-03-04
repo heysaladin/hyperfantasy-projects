@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { team } from "@/data/team"
@@ -24,6 +25,7 @@ export default async function TeamPage() {
             aria-label="Back to About"
           >
             <ArrowLeft size={16} aria-hidden="true" />
+
             About
           </Link>
           <p className="text-sm uppercase tracking-widest text-slate-500 dark:text-white/40 mb-6">The Team</p>
@@ -51,7 +53,9 @@ export default async function TeamPage() {
                   {member.image ? (
                     index >= 1 && index <= 5
                       ? <TeamImageFlicker src={member.image} alt={member.name} />
-                      : <img src={member.image} alt={member.name} className={`${index > 5 ? 'grayscale' : ''} w-full h-full object-cover group-hover:scale-105 transition-transform duration-500`} />
+                      : member.image?.startsWith('data:')
+                        ? <img src={member.image} alt={member.name} className={`${index > 5 ? 'grayscale' : ''} w-full h-full object-cover group-hover:scale-105 transition-transform duration-500`} />
+                        : <Image src={member.image!} alt={member.name} fill sizes="(max-width: 768px) 100vw, 33vw" className={`${index > 5 ? 'grayscale' : ''} object-cover group-hover:scale-105 transition-transform duration-500`} />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-5xl font-bold text-slate-300 dark:text-white/10 select-none">
                       {member.name.charAt(0)}
