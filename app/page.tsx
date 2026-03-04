@@ -72,7 +72,10 @@ export default async function Home() {
         .grad-btn:hover { opacity:.88; }
         .ghost-btn      { border:1px solid rgba(0,0,0,.3); border-radius:24px; padding:10px 24px; font-size:14px; font-weight:500; display:inline-flex; align-items:center; gap:8px; color:inherit; background:transparent; }
         .dark .ghost-btn { border-color:rgba(255,255,255,.4); }
-        .before-title   { color:${ACCENT}; display:block; font-size:14px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; margin-bottom:16px; text-align:center; }
+        .before-title   { color:#7c3aed; display:block; font-size:14px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; margin-bottom:16px; text-align:center; }
+        .dark .before-title { color:${ACCENT}; }
+        .hf-accent-text { color:#7c3aed; }
+        .dark .hf-accent-text { color:${ACCENT}; }
         .dark .hf-card  { background:${CARD}; }
         .hf-card        { background:#f1f0ff; }
         .dark .hf-action { background:${CARD}; }

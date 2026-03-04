@@ -68,7 +68,7 @@ export function HomeAboutCarousel() {
       </div>
 
       {/* Navigation dots */}
-      <div className="flex justify-center gap-2 absolute" style={{ bottom: -32, left: 0, right: 0 }} role="tablist" aria-label="Image navigation">
+      <div className="flex justify-center gap-0 absolute" style={{ bottom: -50, left: 0, right: 0 }} role="tablist" aria-label="Image navigation">
         {IMAGES.map((_, i) => (
           <button
             key={i}
@@ -77,14 +77,19 @@ export function HomeAboutCarousel() {
             aria-label={`Show image ${i + 1} of ${IMAGES.length}`}
             onClick={() => goTo(i)}
             style={{
-              width: 8, height: 8, borderRadius: '50%', border: 'none', cursor: 'pointer',
+              width: 44, height: 44,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: 'none', background: 'transparent', cursor: 'pointer', outline: 'none',
+            }}
+            onFocus={e => { (e.currentTarget as HTMLElement).style.outline = `2px solid ${ACCENT}`; (e.currentTarget as HTMLElement).style.outlineOffset = '-4px'; (e.currentTarget as HTMLElement).style.borderRadius = '50%' }}
+            onBlur={e => { (e.currentTarget as HTMLElement).style.outline = 'none' }}
+          >
+            <span style={{
+              width: 8, height: 8, borderRadius: '50%', display: 'block',
               background: active === i ? ACCENT : 'rgba(179,148,244,0.5)',
               transition: 'background .3s',
-              outline: 'none',
-            }}
-            onFocus={e => { (e.currentTarget as HTMLElement).style.outline = `2px solid ${ACCENT}`; (e.currentTarget as HTMLElement).style.outlineOffset = '3px' }}
-            onBlur={e => { (e.currentTarget as HTMLElement).style.outline = 'none' }}
-          />
+            }} />
+          </button>
         ))}
       </div>
     </div>
