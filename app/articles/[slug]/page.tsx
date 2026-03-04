@@ -70,7 +70,7 @@ export default async function ArticleDetailPage({
             font-size: 21px;
             line-height: 1.58;
             letter-spacing: -0.003em;
-            color: #242424;
+            color: #242424 !important;
           }
           .dark .medium-prose {
             color: rgba(255,255,255,0.84);

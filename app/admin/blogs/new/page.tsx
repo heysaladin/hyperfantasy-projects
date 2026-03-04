@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import dynamic from 'next/dynamic'
-const TiptapEditor = dynamic(() => import('@/components/tiptap-editor').then(m => ({ default: m.TiptapEditor })), { ssr: false, loading: () => <div className="h-64 rounded-md border border-slate-200 dark:border-white/10 bg-white/5 animate-pulse" /> })
+const TiptapEditor = dynamic(() => import('@/components/tiptap-editor').then(m => ({ default: m.TiptapEditor })), { ssr: false, loading: () => <div className="h-64 rounded-md border border-slate-200 dark:border-white/30 bg-white/5 animate-pulse" /> })
 import { Checkbox } from '@/components/ui/checkbox'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
@@ -90,7 +90,7 @@ export default function NewBlogPage() {
 
       <h1 className="text-3xl font-bold mb-8">Add New Blog</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="admin-form space-y-6">
         
         {/* Title */}
         <div className="flex flex-col gap-2">
@@ -100,7 +100,7 @@ export default function NewBlogPage() {
             required
             value={formData.title}
             onChange={(e) => setFormData({...formData, title: e.target.value})}
-            className="bg-white/5 border-white/10"
+            className="bg-slate-50 dark:bg-white/5"
           />
         </div>
 
@@ -112,7 +112,7 @@ export default function NewBlogPage() {
             required
             value={formData.slug}
             onChange={(e) => setFormData({...formData, slug: e.target.value})}
-            className="bg-white/5 border-white/10"
+            className="bg-slate-50 dark:bg-white/5"
             placeholder="url-friendly-title"
           />
         </div>
@@ -124,7 +124,7 @@ export default function NewBlogPage() {
             id="excerpt"
             value={formData.excerpt}
             onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
-            className="bg-white/5 border-white/10"
+            className="bg-slate-50 dark:bg-white/5"
             placeholder="Brief summary (100-200 characters)"
           />
         </div>
@@ -149,7 +149,7 @@ export default function NewBlogPage() {
             type="url"
             value={formData.coverImage}
             onChange={(e) => setFormData({...formData, coverImage: e.target.value})}
-            className="bg-white/5 border-white/10"
+            className="bg-slate-50 dark:bg-white/5"
             placeholder="https://images.unsplash.com/..."
           />
         </div>
@@ -161,7 +161,7 @@ export default function NewBlogPage() {
             id="tags"
             value={formData.tags}
             onChange={(e) => setFormData({...formData, tags: e.target.value})}
-            className="bg-white/5 border-white/10"
+            className="bg-slate-50 dark:bg-white/5"
             placeholder="tag1, tag2, tag3"
           />
         </div>

@@ -29,7 +29,7 @@ export default async function PortfolioDetailPage({
   return (
     <div className="min-h-screen bg-white dark:bg-black text-slate-900 dark:text-white transition-colors pt-16">
       <div className="border-b border-slate-200 dark:border-white/10">
-        <div className="max-w-3xl mx-auto px-6 lg:px-8 py-8">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8 py-6">
           <Link href="/projects" className="inline-flex items-center text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition">
             <ArrowLeft size={20} className="mr-2" aria-hidden="true" />
             Back to Projects
@@ -37,7 +37,7 @@ export default async function PortfolioDetailPage({
         </div>
       </div>
 
-      <article className="max-w-3xl mx-auto px-6 lg:px-8 py-16">
+      <article className="max-w-3xl mx-auto px-6 lg:px-8 pt-10 pb-12">
         <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-white/40">
           {portfolio.category && (
             <span className="uppercase tracking-wider">{portfolio.category}</span>

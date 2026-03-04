@@ -28,7 +28,7 @@ export default function AdminNav() {
           >
             <Home size={18} />
           </Link>
-          <h1 className="text-xl font-bold text-slate-900 dark:text-white">Admin Panel</h1>
+          <Link href="/admin" className="text-xl font-bold text-slate-900 dark:text-white hover:opacity-70 transition">Admin Panel</Link>
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />

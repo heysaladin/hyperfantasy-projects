@@ -215,3 +215,15 @@
 .dark .tiptap p.is-editor-empty:first-child::before {
   color: rgba(255, 255, 255, 0.3);
 }
+/* Admin form borders + focus ring — light & dark */
+.admin-form input,
+.admin-form textarea,
+.admin-form [data-slot="select-trigger"] {
+  border-color: var(--border);
+}
+.admin-form input:focus-visible,
+.admin-form textarea:focus-visible,
+.admin-form [data-slot="select-trigger"]:focus-visible {
+  border-color: color-mix(in oklab, var(--ring) 50%, transparent);
+  outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+}

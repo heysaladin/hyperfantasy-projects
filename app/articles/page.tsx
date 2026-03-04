@@ -73,7 +73,7 @@ export default function ArticlesPage() {
 
       {/* Header */}
       <div className="border-b border-slate-200 dark:border-white/10">
-        <div className="max-w-5xl mx-auto px-6 lg:px-8 pt-8 pb-8">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8 pt-16 pb-16">
           <h1 className="text-5xl md:text-6xl font-bold mb-4">Articles</h1>
           <p className="text-xl text-slate-600 dark:text-white/60">
             Thoughts on design, development, and everything in between
@@ -110,7 +110,7 @@ export default function ArticlesPage() {
       </div>
 
       {/* Blog list */}
-      <div className="max-w-5xl mx-auto px-6 lg:px-8 pt-8 pb-16">
+      <div className="max-w-5xl mx-auto px-6 lg:px-8 pt-12 pb-16">
 
         {isLoading ? (
           <div className="space-y-12">

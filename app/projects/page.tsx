@@ -413,7 +413,7 @@ export default function ProjectsPage() {
       {/* Search + Sort & Filter */}
       <div ref={filterBarRef} className="border-b border-slate-200 dark:border-white/10 sticky z-10 bg-white/95 dark:bg-black/95 backdrop-blur-sm transition-[top] duration-300"
         style={{ top: 'calc(var(--nav-offset, 0px) + 64px)' }}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-3">
           <div className="flex items-center gap-3">
 
             {/* Left: Search + meta toggle */}
@@ -616,7 +616,7 @@ export default function ProjectsPage() {
       </div>
 
       {/* Grid */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-12 pb-16">
         <div className="columns-1 md:columns-2 lg:columns-3 gap-8">
           {isLoading
             ? Array.from({ length: PAGE_SIZE }).map((_, i) => <SkeletonCard key={i} showMeta={showMeta} />)

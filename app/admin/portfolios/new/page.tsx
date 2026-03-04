@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import dynamic from 'next/dynamic'
-const TiptapEditor = dynamic(() => import('@/components/tiptap-editor').then(m => ({ default: m.TiptapEditor })), { ssr: false, loading: () => <div className="h-64 rounded-md border border-slate-200 dark:border-white/10 bg-white/5 animate-pulse" /> })
+const TiptapEditor = dynamic(() => import('@/components/tiptap-editor').then(m => ({ default: m.TiptapEditor })), { ssr: false, loading: () => <div className="h-64 rounded-md border border-slate-200 dark:border-white/30 bg-white/5 animate-pulse" /> })
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ArrowLeft } from 'lucide-react'
@@ -106,7 +106,7 @@ export default function NewPortfolioPage() {
 
       <h1 className="text-3xl font-bold mb-8">Add New Portfolio</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="admin-form space-y-6">
         
         {/* Title */}
         <div className="flex flex-col gap-2">
@@ -116,7 +116,7 @@ export default function NewPortfolioPage() {
             required
             value={formData.title}
             onChange={(e) => setFormData({...formData, title: e.target.value})}
-            className="bg-white/5 border-white/10"
+            className="bg-slate-50 dark:bg-white/5"
           />
         </div>
 
@@ -138,7 +138,7 @@ export default function NewPortfolioPage() {
             type="url"
             value={formData.imageUrl}
             onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
-            className="bg-white/5 border-white/10"
+            className="bg-slate-50 dark:bg-white/5"
             placeholder="https://images.unsplash.com/..."
           />
         </div>
@@ -152,7 +152,7 @@ export default function NewPortfolioPage() {
               type="url"
               value={formData.liveUrl}
               onChange={(e) => setFormData({...formData, liveUrl: e.target.value})}
-              className="bg-white/5 border-white/10"
+              className="bg-slate-50 dark:bg-white/5"
               placeholder="https://example.com"
             />
           </div>
@@ -162,7 +162,7 @@ export default function NewPortfolioPage() {
               id="copyright"
               value={formData.copyright}
               onChange={(e) => setFormData({...formData, copyright: e.target.value})}
-              className="bg-white/5 border-white/10"
+              className="bg-slate-50 dark:bg-white/5"
               placeholder="© 2025 Studio Name"
             />
           </div>
@@ -176,7 +176,7 @@ export default function NewPortfolioPage() {
               id="tags"
               value={formData.tags}
               onChange={(e) => setFormData({...formData, tags: e.target.value})}
-              className="bg-white/5 border-white/10"
+              className="bg-slate-50 dark:bg-white/5"
               placeholder="Web, Mobile, E-commerce (comma separated)"
             />
           </div>
@@ -186,7 +186,7 @@ export default function NewPortfolioPage() {
               id="stack"
               value={formData.stack}
               onChange={(e) => setFormData({...formData, stack: e.target.value})}
-              className="bg-white/5 border-white/10"
+              className="bg-slate-50 dark:bg-white/5"
               placeholder="Next.js, React, Tailwind (comma separated)"
             />
           </div>
@@ -200,7 +200,7 @@ export default function NewPortfolioPage() {
               value={formData.category}
               onValueChange={(val) => setFormData({...formData, category: val})}
             >
-              <SelectTrigger id="category">
+              <SelectTrigger id="category" className="bg-slate-50 dark:bg-white/5">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
@@ -218,7 +218,7 @@ export default function NewPortfolioPage() {
               value={formData.complexity}
               onValueChange={(val) => setFormData({...formData, complexity: val})}
             >
-              <SelectTrigger id="complexity">
+              <SelectTrigger id="complexity" className="bg-slate-50 dark:bg-white/5">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -238,7 +238,7 @@ export default function NewPortfolioPage() {
               type="date"
               value={formData.projectDate}
               onChange={(e) => setFormData({...formData, projectDate: e.target.value})}
-              className="bg-white/5 border-white/10"
+              className="bg-slate-50 dark:bg-white/5"
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -248,7 +248,7 @@ export default function NewPortfolioPage() {
               type="number"
               value={formData.orderIndex}
               onChange={(e) => setFormData({...formData, orderIndex: parseInt(e.target.value) || 0})}
-              className="bg-white/5 border-white/10"
+              className="bg-slate-50 dark:bg-white/5"
               placeholder="0"
             />
           </div>
