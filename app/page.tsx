@@ -1,275 +1,307 @@
-'use client';
+import Link from 'next/link'
+import { ArrowRight, Mail, Star, Monitor, Smile, ImageIcon, Box, Printer, Gem, Globe, Smartphone, PlayCircle } from 'lucide-react'
+import { testimonials } from '@/data/testimonials'
+import { resolveContentAsText } from '@/lib/tiptap-content'
+import { prisma } from '@/lib/prisma'
+import { HomeAboutCarousel } from '@/components/home-about-carousel'
 
-import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { ArrowRight, Mail, Instagram, Linkedin, Twitter, Star } from "lucide-react"
+/* ── Design tokens ────────────────────────────────────────────────────── */
+const BG       = '#030017'
+const CARD     = '#181346'
+const ACCENT   = '#b394f4'
+const GRADIENT = 'linear-gradient(256.86deg,#0cf1d7 -37.8%,#114ef7 58.71%,#a91bff 102.4%,#fc7541 123.84%)'
 
-import { testimonials } from "@/data/testimonials"
-import { resolveContentAsText } from "@/lib/tiptap-content"
-
-const GRADIENTS = [
-  'from-purple-900/20 to-blue-900/20',
-  'from-orange-900/20 to-red-900/20',
-  'from-green-900/20 to-teal-900/20',
-  'from-pink-900/20 to-purple-900/20',
+/* ── Hardcoded project IDs ────────────────────────────────────────────── */
+const WORKS_IDS = [
+  '0836a3b1-b559-4aac-9a14-ade27fade055',
+  '66aa2874-eb23-4ce9-b520-932afefff90e',
+  '9969f4b8-0147-4f4d-bb39-2157ee0d79cb',
+]
+const SHOTS_IDS = [
+  'e0f2e536-4b60-4fce-ae18-02de8df964ae',
+  '77c71f38-f6c7-4721-8190-3805758820e7',
+  'd2ae0651-0693-42c3-b2d0-5d87760d2564',
 ]
 
-export default function Home() {
-  const [portfolios, setPortfolios] = useState<any[]>([])
-  const [teams, setTeams] = useState<any[]>([])
+const SERVICES = [
+  { icon: Monitor,    label: 'UI Design'       },
+  { icon: Smile,      label: 'UX Design'       },
+  { icon: ImageIcon,  label: 'Illustration'    },
+  { icon: Box,        label: '3D Design'       },
+  { icon: Printer,    label: 'Graphic Design'  },
+  { icon: Gem,        label: 'Brand Identity'  },
+  { icon: Globe,      label: 'Web Dev.'         },
+  { icon: Smartphone, label: 'Mobile App Dev.' },
+  { icon: PlayCircle, label: 'Micro Motion'    },
+]
 
-  useEffect(() => {
-    fetch('/api/portfolios')
-      .then(res => res.json())
-      .then(data => {
-        const list = Array.isArray(data) ? data : []
-        const visible = list.filter((p: any) => p.isVisible)
-        const featured = visible.filter((p: any) => p.isFeatured)
-        setPortfolios((featured.length ? featured : visible).slice(0, 4))
-      })
-      .catch(() => setPortfolios([]))
+const CLIENTS = [
+  { name: 'EZ Laundry', logo: '/logos/logo-ezlaundry.png' },
+  { name: 'Greatsoft',  logo: '/logos/logo-greatsoft.png'  },
+  { name: 'Tresnan',    logo: '/logos/logo-tresnan.png'    },
+  { name: 'Akasia',     logo: '/logos/logo-akasia.png'     },
+  { name: 'Tammwel',    logo: '/logos/logo-tammwel.png'    },
+  { name: 'Sigmatech',  logo: '/logos/logo-sigmatech.png'  },
+]
 
-    fetch('/api/teams')
-      .then(res => res.json())
-      .then(data => {
-        const list = Array.isArray(data) ? data : []
-        setTeams(list.filter((t: any) => t.isVisible))
-      })
-      .catch(() => setTeams([]))
-  }, [])
+async function getProjects(ids: string[]) {
+  const rows = await prisma.portfolio.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, title: true, description: true, imageUrl: true, category: true },
+  })
+  // preserve caller-defined order
+  return ids.map(id => rows.find(r => r.id === id)).filter(Boolean) as typeof rows
+}
+
+export default async function Home() {
+  const [portfolios, shots] = await Promise.all([
+    getProjects(WORKS_IDS),
+    getProjects(SHOTS_IDS),
+  ])
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white transition-colors">
-      
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="max-w-4xl">
-            <h1 className="text-6xl md:text-8xl font-bold leading-tight mb-8">
-              We craft digital
-              <br />
-              <span className="text-slate-500 dark:text-white/40">experiences</span>
+    <div style={{ fontFamily: 'var(--font-sora, sans-serif)' }}
+      className="min-h-screen bg-white dark:text-white transition-colors"
+    >
+      <style>{`
+        .dark .hf-page  { background-color: ${BG}; }
+        .hf-page        { background-color: #ffffff; }
+        .grad-btn       { background: ${GRADIENT}; color:#fff; border:none; border-radius:48px; padding:14px 32px; font-size:16px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:opacity .2s; }
+        .grad-btn:hover { opacity:.88; }
+        .ghost-btn      { border:1px solid rgba(0,0,0,.3); border-radius:24px; padding:10px 24px; font-size:14px; font-weight:500; display:inline-flex; align-items:center; gap:8px; color:inherit; background:transparent; }
+        .dark .ghost-btn { border-color:rgba(255,255,255,.4); }
+        .before-title   { color:${ACCENT}; display:block; font-size:14px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; margin-bottom:16px; text-align:center; }
+        .dark .hf-card  { background:${CARD}; }
+        .hf-card        { background:#f1f0ff; }
+        .dark .hf-action { background:${CARD}; }
+        .hf-action      { background:#1a1560; }
+        @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+        .marquee-track  { animation: marquee 40s linear infinite; display:flex; gap:24px; width:max-content; }
+        .marquee-track:hover { animation-play-state: paused; }
+        .dark .hf-fade-l { background: linear-gradient(to right, ${BG}, transparent); }
+        .dark .hf-fade-r { background: linear-gradient(to left,  ${BG}, transparent); }
+        .hf-fade-l { background: linear-gradient(to right, #ffffff, transparent); }
+        .hf-fade-r { background: linear-gradient(to left,  #ffffff, transparent); }
+        .hf-work-card { padding: 20px 16px; display:grid; grid-template-columns:1fr; gap:16px; align-items:center; }
+        @media (min-width:1024px) { .hf-work-card { padding:40px 48px; grid-template-columns:1fr 1fr; gap:32px; } }
+      `}</style>
+
+      <div className="hf-page">
+
+        {/* ── HERO ─────────────────────────────────────────────── */}
+        <section className="pt-40 pb-32 px-6 lg:px-8 text-center">
+          <div className="max-w-5xl mx-auto">
+            <h1 style={{ fontSize: 'clamp(40px,7vw,86px)', fontWeight: 600, lineHeight: '135%' }}
+              className="mb-10 dark:text-white text-slate-900">
+              Leveraging design<br />&amp; tech to bring<br />
+              <span className="dark:text-white/30 text-slate-400">your fantasy life!</span>
             </h1>
-            <p className="text-xl text-slate-600 dark:text-white/60 mb-12 max-w-2xl">
-              A creative studio specializing in design, development, and digital strategy. 
-              We help brands stand out in the digital landscape.
-            </p>
-            <Button size="lg" className="bg-slate-900 text-white dark:bg-white dark:text-black hover:bg-slate-800 dark:hover:bg-white/90 group" aria-label="View our portfolio and recent projects">
-              View Our Work
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition" size={20} aria-hidden="true" />
-            </Button>
+            <p className="text-lg dark:text-white/60 text-slate-600 mb-10">Have any fantasy?</p>
+            <Link href="/enquiry">
+              <button className="grad-btn">Let&apos;s talk! <ArrowRight size={18} /></button>
+            </Link>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Featured Work Section */}
-      <section id="work" className="py-20 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-sm uppercase tracking-widest text-slate-500 dark:text-white/40 mb-12">Selected Work</h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {portfolios.map((portfolio, index) => (
-              <article key={portfolio.id} className="group cursor-pointer" onClick={() => window.location.href = `/projects/${portfolio.id}`}>
-                <div className={`aspect-[4/3] bg-gradient-to-br ${GRADIENTS[index % GRADIENTS.length]} rounded-lg mb-6 overflow-hidden border border-slate-200 dark:border-white/5`}>
-                  {portfolio.imageUrl ? (
-                    <img
-                      src={portfolio.imageUrl}
-                      alt={portfolio.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-300 dark:text-white/10 text-6xl font-bold group-hover:scale-105 transition-transform duration-500" aria-hidden="true">
-                      {String(index + 1).padStart(2, '0')}
-                    </div>
-                  )}
-                </div>
-                <h3 className="text-2xl font-semibold mb-2 group-hover:text-slate-700 dark:group-hover:text-white/60 transition text-slate-900 dark:text-white">
-                  {portfolio.title}
-                </h3>
-                <p className="text-slate-600 dark:text-white/40 line-clamp-2">
-                  {resolveContentAsText(portfolio.description)}
+        {/* ── ABOUT ────────────────────────────────────────────── */}
+        <section className="py-24 px-6 lg:px-8 border-t border-black/10 dark:border-white/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+              <HomeAboutCarousel />
+              <div>
+                <span className="before-title" style={{ textAlign: 'left' }}>About Us</span>
+                <h2 style={{ fontSize: 'clamp(28px,4vw,48px)', fontWeight: 500, lineHeight: '135%' }}
+                  className="dark:text-white text-slate-900 mb-6">
+                  We are Hyperfantasy<br />Let&apos;s work together!
+                </h2>
+                <p style={{ fontSize: 18, fontWeight: 300, lineHeight: '150%' }}
+                  className="dark:text-white/70 text-slate-600 mb-8">
+                  We are a creative team that loves to solve problems &amp; building awesome digital products.
                 </p>
-              </article>
-            ))}
+                <p style={{ fontSize: 20, fontWeight: 400, lineHeight: '150%' }}
+                  className="dark:text-white text-slate-800">
+                  Listening&nbsp;<span className="dark:text-white/40 text-slate-400">+</span>&nbsp;Design Thinking&nbsp;<span className="dark:text-white/40 text-slate-400">+</span>&nbsp;Creative Solution
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* About Section */}
-      <section id="about" className="py-32 px-6 lg:px-8 bg-slate-50 dark:bg-white/5">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-5xl md:text-6xl font-bold mb-8 text-slate-900 dark:text-white">
-                We believe in
-                <br />
-                <span className="text-slate-500 dark:text-white/40">creative excellence</span>
-              </h2>
+        {/* ── WHAT WE DO ───────────────────────────────────────── */}
+        <section className="py-24 px-6 lg:px-8 border-t border-black/10 dark:border-white/5">
+          <div className="max-w-7xl mx-auto text-center">
+            <span className="before-title">What We Do</span>
+            <h2 style={{ fontSize: 'clamp(24px,3vw,36px)', fontWeight: 600, marginBottom: 64 }}
+              className="dark:text-white text-slate-900">
+              Some of the solutions we offer
+            </h2>
+            <div className="flex flex-wrap justify-center gap-6">
+              {SERVICES.map(({ icon: Icon, label }) => (
+                <div key={label} style={{ width: '18%', minWidth: 80, maxWidth: 120 }}
+                  className="flex flex-col items-center gap-3 group"
+                >
+                  <div className="w-14 h-14 rounded-2xl hf-card flex items-center justify-center group-hover:opacity-80 transition border border-black/10 dark:border-white/10">
+                    <Icon size={24} className="dark:text-white/80 text-slate-700" />
+                  </div>
+                  <span style={{ fontSize: 14, fontWeight: 500 }} className="dark:text-white text-slate-700 text-center leading-tight">{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-              {teams.length > 0 ? (
-                <div className="space-y-6">
-                  {teams.slice(0, 2).map((member) => (
-                    <div key={member.id} className="flex items-start gap-4">
-                      {member.avatarUrl && (
-                        <img
-                          src={member.avatarUrl}
-                          alt={member.name}
-                          className="w-10 h-10 rounded-full object-cover shrink-0 mt-1"
-                        />
-                      )}
-                      <div>
-                        <p className="text-sm font-medium text-slate-900 dark:text-white mb-1">{member.name}</p>
-                        <p className="text-slate-600 dark:text-white/60 text-sm leading-relaxed line-clamp-3">
-                          {resolveContentAsText(member.bio)}
-                        </p>
+        {/* ── OUR WORKS ────────────────────────────────────────── */}
+        {portfolios.length > 0 && (
+          <section className="py-24 px-6 lg:px-8 border-t border-black/10 dark:border-white/5">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-16">
+                <span className="before-title">Our Works</span>
+                <h2 style={{ fontSize: 'clamp(24px,3vw,36px)', fontWeight: 600 }}
+                  className="dark:text-white text-slate-900">
+                  Our case study &amp; projects
+                </h2>
+              </div>
+              <div className="flex flex-col gap-4 lg:gap-8">
+                {portfolios.map((p, i) => {
+                  const isEven = i % 2 === 0
+                  return (
+                    <Link key={p.id} href={`/projects/${p.id}`}>
+                      <div className="hf-card hf-work-card rounded-3xl group cursor-pointer hover:opacity-90 transition-opacity">
+                        {/* Text — always order-1 on mobile; even→col1, odd→col2 on desktop */}
+                        <div className={isEven ? 'order-1 text-left lg:order-1' : 'order-1 text-left lg:order-2 lg:text-right'}>
+                          {p.category && (
+                            <span style={{ color: ACCENT, fontSize: 16, fontWeight: 400, display: 'block', marginBottom: 10 }}>
+                              {p.category}
+                            </span>
+                          )}
+                          <h3 style={{ fontSize: 28, fontWeight: 600, lineHeight: '40px', margin: '8px 0 8px' }}
+                            className="dark:text-white text-slate-900 group-hover:opacity-70 transition">
+                            {p.title}
+                          </h3>
+                          <p style={{ fontSize: 16, fontWeight: 400, lineHeight: '170%' }}
+                            className="dark:text-white/70 text-slate-600 line-clamp-3">
+                            {resolveContentAsText(p.description)}
+                          </p>
+                        </div>
+                        {/* Image — always order-2 on mobile; even→col2, odd→col1 on desktop */}
+                        <div className={`aspect-[4/3] rounded-2xl overflow-hidden bg-white/5 ${isEven ? 'order-2 lg:order-2' : 'order-2 lg:order-1'}`}>
+                          {p.imageUrl
+                            ? <img src={p.imageUrl} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            : <div className="w-full h-full flex items-center justify-center text-6xl font-bold dark:text-white/10 text-slate-200">{String(i + 1).padStart(2, '0')}</div>
+                          }
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ── OUR SHOTS ────────────────────────────────────────── */}
+        <section className="py-24 px-6 lg:px-8 border-t border-black/10 dark:border-white/5">
+          <div className="max-w-7xl mx-auto text-center">
+            <span className="before-title">Our Shots</span>
+            <h2 style={{ fontSize: 'clamp(24px,3vw,36px)', fontWeight: 600, marginBottom: 64 }}
+              className="dark:text-white text-slate-900">
+              Some of our design explorations
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+              {shots.map((p, i) => (
+                <Link key={p.id} href={`/projects/${p.id}`}>
+                  <div style={{ borderRadius: 8 }}
+                    className="aspect-square overflow-hidden hf-card border border-black/10 dark:border-white/10"
+                  >
+                    {p.imageUrl && (
+                      <img src={p.imageUrl} alt={p.title}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                      />
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="flex justify-center mt-12">
+              <Link href="/projects">
+                <button className="ghost-btn">View Portfolio <ArrowRight size={16} /></button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ── CLIENTS ──────────────────────────────────────────── */}
+        <section className="py-20 px-6 lg:px-8 border-t border-black/10 dark:border-white/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16">
+              {CLIENTS.map(({ name, logo }) => (
+                <div key={name} className="flex items-center justify-center" style={{ height: 56 }}>
+                  <img src={logo} alt={name}
+                    className="max-h-full w-auto object-contain dark:invert dark:opacity-60 opacity-60 hover:opacity-100 dark:hover:opacity-90 transition-opacity"
+                    style={{ maxWidth: 160 }}
+                  />
                 </div>
-              ) : (
-                <p className="text-lg text-slate-600 dark:text-white/60 leading-relaxed">
-                  Hyperfantasy is a creative studio founded on the belief that great design
-                  can transform businesses. We combine strategic thinking with beautiful
-                  execution to create digital experiences that resonate.
-                </p>
-              )}
-            </div>
-            <div className="space-y-8">
-              <div>
-                <div className="text-6xl font-bold mb-2 text-slate-900 dark:text-white">50+</div>
-                <div className="text-slate-600 dark:text-white/40">Projects Completed</div>
-              </div>
-              <div>
-                <div className="text-6xl font-bold mb-2 text-slate-900 dark:text-white">30+</div>
-                <div className="text-slate-600 dark:text-white/40">Happy Clients</div>
-              </div>
-              <div>
-                <div className="text-6xl font-bold mb-2 text-slate-900 dark:text-white">5+</div>
-                <div className="text-slate-600 dark:text-white/40">Years Experience</div>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Services Section */}
-      <section id="services" className="py-32 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-sm uppercase tracking-widest text-slate-500 dark:text-white/40 mb-16">What We Do</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="space-y-4">
-              <div className="text-4xl" aria-label="Palette icon representing design">🎨</div>
-              <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">Brand Design</h3>
-              <p className="text-slate-600 dark:text-white/60">
-                Creating distinctive visual identities that capture the essence of your brand 
-                and resonate with your audience.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div className="text-4xl" aria-label="Laptop icon representing web development">💻</div>
-              <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">Web Development</h3>
-              <p className="text-slate-600 dark:text-white/60">
-                Building fast, beautiful, and responsive websites using modern technologies 
-                and best practices.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div className="text-4xl" aria-label="Mobile phone icon representing digital strategy">📱</div>
-              <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">Digital Strategy</h3>
-              <p className="text-slate-600 dark:text-white/60">
-                Crafting comprehensive digital strategies that drive growth and deliver 
-                measurable results.
-              </p>
-            </div>
+        {/* ── TESTIMONIALS ─────────────────────────────────────── */}
+        <section className="py-24 border-t border-black/10 dark:border-white/5 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center mb-16">
+            <span className="before-title">Testimonials</span>
+            <h2 style={{ fontSize: 'clamp(24px,3vw,36px)', fontWeight: 600 }}
+              className="dark:text-white text-slate-900">
+              What they said about us
+            </h2>
           </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section id="testimonials" className="py-32 bg-slate-50 dark:bg-white/5 overflow-hidden">
-        <style>{`
-          @keyframes marquee {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-50%); }
-          }
-        `}</style>
-
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <h2 className="text-sm uppercase tracking-widest text-slate-500 dark:text-white/40 mb-4">Testimonials</h2>
-          <h3 className="text-5xl md:text-6xl font-bold mb-16 text-slate-900 dark:text-white">
-            What our clients say
-          </h3>
-        </div>
-
-        {/* Marquee track */}
-        <div className="relative">
-          {/* Fade edges */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-32 z-10 bg-gradient-to-r from-slate-50 dark:from-[#0d0d0d] to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-32 z-10 bg-gradient-to-l from-slate-50 dark:from-[#0d0d0d] to-transparent" />
-
-          <div
-            style={{ animation: 'marquee 35s linear infinite', display: 'flex', gap: '24px', width: 'max-content' }}
-            onMouseEnter={e => (e.currentTarget.style.animationPlayState = 'paused')}
-            onMouseLeave={e => (e.currentTarget.style.animationPlayState = 'running')}
-          >
-            {[...testimonials, ...testimonials].map((testimonial, i) => (
-              <div
-                key={i}
-                className="w-80 shrink-0 bg-white dark:bg-white/10 rounded-lg p-6 border border-slate-200 dark:border-white/10"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  {testimonial.image && (
-                    <img
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      className="w-10 h-10 rounded-full object-cover shrink-0"
-                    />
-                  )}
-                  <div>
-                    <h4 className="font-semibold text-slate-900 dark:text-white text-sm">{testimonial.name}</h4>
-                    <p className="text-xs text-slate-600 dark:text-white/60">{testimonial.role}</p>
-                    <p className="text-xs text-slate-500 dark:text-white/40">{testimonial.company}</p>
+          <div className="relative">
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-24 z-10 hf-fade-l" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-24 z-10 hf-fade-r" />
+            <div className="marquee-track">
+              {[...testimonials, ...testimonials].map((t, i) => (
+                <div key={i} className="hf-card border border-black/10 dark:border-white/10 rounded-2xl p-8 shrink-0"
+                  style={{ width: 380 }}
+                >
+                  <div className="flex gap-0.5 mb-5">
+                    {Array.from({ length: t.rating }).map((_, j) => (
+                      <Star key={j} size={14} className="fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p style={{ fontSize: 16, fontWeight: 400, lineHeight: '160%' }}
+                    className="dark:text-white/70 text-slate-700 mb-6">
+                    &ldquo;{t.content}&rdquo;
+                  </p>
+                  <div className="flex items-center gap-3 pt-4 border-t border-black/10 dark:border-white/10">
+                    {t.image && (
+                      <img src={t.image} alt={t.name} className="w-12 h-12 rounded-2xl object-cover shrink-0" />
+                    )}
+                    <div>
+                      <p style={{ fontSize: 16, fontWeight: 500 }} className="dark:text-white text-slate-900">{t.name}</p>
+                      <p style={{ fontSize: 14 }} className="dark:text-white/50 text-slate-500">{t.role}, {t.company}</p>
+                    </div>
                   </div>
                 </div>
-
-                <div className="flex gap-0.5 mb-3">
-                  {Array.from({ length: testimonial.rating }).map((_, j) => (
-                    <Star key={j} size={13} className="fill-yellow-400 text-yellow-400" aria-hidden="true" />
-                  ))}
-                </div>
-
-                <p className="text-sm text-slate-600 dark:text-white/70 leading-relaxed line-clamp-4">
-                  "{testimonial.content}"
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA Section */}
-      <section className="py-32 px-6 lg:px-8 bg-slate-900 dark:bg-white text-white dark:text-black">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl md:text-7xl font-bold mb-8">
-            Let's create something
-            <br />
-            amazing together
-          </h2>
-          <p className="text-xl text-white/60 dark:text-black/60 mb-12">
-            Have a project in mind? We'd love to hear about it.
-          </p>
-          <Button size="lg" className="bg-white dark:bg-black text-black dark:text-white hover:bg-white/90 dark:hover:bg-black/90 group" aria-label="Get in touch with us via email">
-            <Mail className="mr-2" size={20} aria-hidden="true" />
-            Get in Touch
-            <ArrowRight className="ml-2 group-hover:translate-x-1 transition" size={20} aria-hidden="true" />
-          </Button>
-        </div>
-      </section>
+        {/* ── CTA ──────────────────────────────────────────────── */}
+        <section className="py-24 px-6 lg:px-8 border-t border-black/10 dark:border-white/5">
+          <div className="max-w-5xl mx-auto">
+            <div className="hf-action rounded-3xl text-center text-white" style={{ padding: '100px 64px' }}>
+              <h2 style={{ fontSize: 'clamp(32px,5vw,48px)', fontWeight: 600, lineHeight: '150%', marginBottom: 40 }}>
+                Have any awesome fantasy?
+              </h2>
+              <Link href="/enquiry">
+                <button className="grad-btn"><Mail size={18} /> Let&apos;s talk!</button>
+              </Link>
+            </div>
+          </div>
+        </section>
 
-
+      </div>
     </div>
-  );
+  )
 }

@@ -24,9 +24,11 @@ export async function GET(request: NextRequest) {
     const where: any = conditions.length ? { AND: conditions } : {}
 
     const orderBy =
-      sort === 'newest' ? { projectDate: 'desc' as const } :
-      sort === 'oldest' ? { projectDate: 'asc' as const } :
-      sort === 'title'  ? { title: 'asc' as const } :
+      sort === 'newest'     ? { projectDate: 'desc' as const } :
+      sort === 'oldest'     ? { projectDate: 'asc' as const } :
+      sort === 'title'      ? { title: 'asc' as const } :
+      sort === 'updated'    ? { updatedAt: 'desc' as const } :
+      sort === 'order_desc' ? { orderIndex: 'desc' as const } :
       { orderIndex: 'asc' as const }
 
     if (limitParam !== null) {

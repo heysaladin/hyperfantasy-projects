@@ -2,35 +2,15 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { resolveContentAsText } from "@/lib/tiptap-content"
+import { team } from "@/data/team"
+import { TeamImageFlicker } from "@/components/team-image-flicker"
 
 export const metadata: Metadata = {
   title: "Team — Hyperfantasy Creative Studio",
   description: "Meet the designers, engineers, and strategists behind Hyperfantasy Creative Studio.",
 }
 
-const GRADIENTS = [
-  'from-purple-900/20 to-blue-900/20',
-  'from-orange-900/20 to-red-900/20',
-  'from-green-900/20 to-teal-900/20',
-  'from-pink-900/20 to-purple-900/20',
-  'from-yellow-900/20 to-orange-900/20',
-  'from-blue-900/20 to-cyan-900/20',
-]
-
-async function getTeam() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/teams`, { cache: 'no-store' })
-    if (!res.ok) return []
-    const data = await res.json()
-    return Array.isArray(data) ? data.filter((t: any) => t.isVisible) : []
-  } catch {
-    return []
-  }
-}
-
 export default async function TeamPage() {
-  const team = await getTeam()
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white transition-colors pt-16">
@@ -62,38 +42,31 @@ export default async function TeamPage() {
       {/* Team Grid */}
       <section className="py-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          {team.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-              {team.map((member: any, index: number) => (
-                <article key={member.id} className="group">
-                  {/* Avatar */}
-                  <div className={`aspect-square bg-gradient-to-br ${GRADIENTS[index % GRADIENTS.length]} rounded-lg mb-6 overflow-hidden border border-slate-200 dark:border-white/5`}>
-                    {member.avatarUrl ? (
-                      <img
-                        src={member.avatarUrl}
-                        alt={member.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-5xl font-bold text-slate-300 dark:text-white/10 select-none" aria-hidden="true">
-                        {member.name.charAt(0)}
-                      </div>
-                    )}
-                  </div>
-
-                  <h2 className="text-xl font-semibold mb-5">{member.name}</h2>
-
-                  {member.bio && (
-                    <p className="text-slate-600 dark:text-white/60 leading-relaxed text-sm">
-                      {resolveContentAsText(member.bio)}
-                    </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            {team.map((member, index) => {
+              const opacity = index === team.length - 1 ? 'opacity-25' : index === team.length - 2 ? 'opacity-50' : ''
+              return (
+              <article key={member.id} className={`group ${opacity}`}>
+                <div className={`aspect-square bg-gradient-to-br ${member.gradient} rounded-lg mb-6 overflow-hidden border border-slate-200 dark:border-white/5`}>
+                  {member.image ? (
+                    index >= 1 && index <= 5
+                      ? <TeamImageFlicker src={member.image} alt={member.name} />
+                      : <img src={member.image} alt={member.name} className={`${index > 5 ? 'grayscale' : ''} w-full h-full object-cover group-hover:scale-105 transition-transform duration-500`} />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-5xl font-bold text-slate-300 dark:text-white/10 select-none">
+                      {member.name.charAt(0)}
+                    </div>
                   )}
-                </article>
-              ))}
-            </div>
-          ) : (
-            <p className="text-slate-500 dark:text-white/40">No team members found.</p>
-          )}
+                </div>
+                <h2 className="text-xl font-semibold mb-1">{member.name}</h2>
+                <p className="text-sm text-slate-500 dark:text-white/40 mb-3">
+                  {member.interchangeable ? 'Project-based Team' : member.role}
+                </p>
+                {member.bio && <p className="text-slate-600 dark:text-white/60 leading-relaxed text-sm">{member.bio}</p>}
+              </article>
+              )
+            })}
+          </div>
         </div>
       </section>
 
@@ -101,20 +74,22 @@ export default async function TeamPage() {
       <section className="py-32 px-6 lg:px-8 bg-slate-900 dark:bg-white text-white dark:text-black">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl md:text-7xl font-bold mb-8">
-            Want to join
+            Let's work
             <br />
-            the team?
+            together
           </h2>
           <p className="text-xl text-white/60 dark:text-black/60 mb-12">
-            We're always looking for talented people who care about their craft.
+            Have a project in mind? We'd love to hear about it.
           </p>
-          <Button
-            size="lg"
-            className="bg-white dark:bg-black text-black dark:text-white hover:bg-white/90 dark:hover:bg-black/90"
-            aria-label="Get in touch about joining the team"
-          >
-            Get in Touch
-          </Button>
+          <Link href="/enquiry">
+            <Button
+              size="lg"
+              className="bg-white dark:bg-black text-black dark:text-white hover:bg-white/90 dark:hover:bg-black/90"
+              aria-label="Get in touch about joining the team"
+            >
+              Get in Touch
+            </Button>
+          </Link>
         </div>
       </section>
 

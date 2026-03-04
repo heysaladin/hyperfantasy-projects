@@ -11,7 +11,7 @@ export default function TeamsPage() {
   useEffect(() => {
     fetch('/api/teams')
       .then(res => res.json())
-      .then(setTeams)
+      .then(data => setTeams(Array.isArray(data) ? data : (data.items ?? [])))
   }, [])
 
   const handleDelete = async (id: string) => {
@@ -38,8 +38,8 @@ export default function TeamsPage() {
           <div key={member.id} className="p-4 border border-slate-300 dark:border-white/10 rounded-lg flex justify-between items-center hover:bg-slate-50 dark:hover:bg-white/5 transition">
             <div className="flex items-center gap-4">
               {member.avatarUrl && (
-                <img 
-                  src={member.avatarUrl} 
+                <img
+                  src={member.avatarUrl}
                   alt={member.name}
                   className="w-12 h-12 rounded-full"
                 />
