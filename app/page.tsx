@@ -11,7 +11,7 @@ import { HomeFloatingCTA } from '@/components/home-floating-cta'
 const BG       = '#030017'
 const CARD     = '#181346'
 const ACCENT   = '#b394f4'
-const GRADIENT = 'linear-gradient(256.86deg,#0cf1d7 -37.8%,#114ef7 58.71%,#a91bff 102.4%,#fc7541 123.84%)'
+const GRADIENT = 'linear-gradient(256.86deg,#1e40af 0%,#7c3aed 55%,#be185d 100%)'
 
 /* ── Hardcoded project IDs ────────────────────────────────────────────── */
 const WORKS_IDS = [
@@ -70,7 +70,7 @@ export default async function Home() {
         .hf-page        { background-color: #ffffff; }
         .grad-btn       { background: ${GRADIENT}; color:#fff; border:none; border-radius:48px; padding:14px 32px; font-size:16px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:opacity .2s; }
         .grad-btn:hover { opacity:.88; }
-        .ghost-btn      { border:1px solid rgba(0,0,0,.3); border-radius:24px; padding:10px 24px; font-size:14px; font-weight:500; display:inline-flex; align-items:center; gap:8px; color:inherit; background:transparent; }
+        .ghost-btn      { border:1px solid rgba(0,0,0,.3); border-radius:24px; padding:13px 24px; font-size:14px; font-weight:500; display:inline-flex; align-items:center; gap:8px; color:inherit; background:transparent; min-height:44px; }
         .dark .ghost-btn { border-color:rgba(255,255,255,.4); }
         .before-title   { color:#7c3aed; display:block; font-size:14px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; margin-bottom:16px; text-align:center; }
         .dark .before-title { color:${ACCENT}; }
@@ -102,9 +102,7 @@ export default async function Home() {
               <span className="dark:text-white/30 text-slate-400">your fantasy life!</span>
             </h1>
             <p className="text-lg dark:text-white/60 text-slate-600 mb-10">Have any fantasy?</p>
-            <Link href="/enquiry">
-              <button className="grad-btn">Let&apos;s talk! <ArrowRight size={18} aria-hidden="true" /></button>
-            </Link>
+            <Link href="/enquiry" className="grad-btn">Let&apos;s talk! <ArrowRight size={18} aria-hidden="true" /></Link>
           </div>
         </section>
 
@@ -229,9 +227,7 @@ export default async function Home() {
               ))}
             </div>
             <div className="flex justify-center mt-12">
-              <Link href="/projects">
-                <button className="ghost-btn">View Portfolio <ArrowRight size={16} aria-hidden="true" /></button>
-              </Link>
+              <Link href="/projects" className="ghost-btn">View Portfolio <ArrowRight size={16} aria-hidden="true" /></Link>
             </div>
           </div>
         </section>
@@ -269,7 +265,7 @@ export default async function Home() {
                 <div key={i} className="hf-card border border-black/10 dark:border-white/10 rounded-2xl p-8 shrink-0"
                   style={{ width: 380 }}
                 >
-                  <div className="flex gap-0.5 mb-5" aria-label={`Rating: ${t.rating} out of 5 stars`}>
+                  <div className="flex gap-0.5 mb-5" role="img" aria-label={`Rating: ${t.rating} out of 5 stars`}>
                     {Array.from({ length: t.rating }).map((_, j) => (
                       <Star key={j} size={14} className="fill-yellow-400 text-yellow-400" aria-hidden="true" />
                     ))}
@@ -300,9 +296,7 @@ export default async function Home() {
               <h2 style={{ fontSize: 'clamp(32px,5vw,48px)', fontWeight: 600, lineHeight: '150%', marginBottom: 40 }}>
                 Have any awesome fantasy?
               </h2>
-              <Link href="/enquiry">
-                <button id="hf-cta-btn" className="grad-btn"><Mail size={18} aria-hidden="true" /> Let&apos;s talk!</button>
-              </Link>
+              <Link href="/enquiry" id="hf-cta-btn" className="grad-btn"><Mail size={18} aria-hidden="true" /> Let&apos;s talk!</Link>
             </div>
           </div>
         </section>

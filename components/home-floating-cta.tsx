@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
-const GRADIENT = 'linear-gradient(256.86deg,#0cf1d7 -37.8%,#114ef7 58.71%,#a91bff 102.4%,#fc7541 123.84%)'
+const GRADIENT = 'linear-gradient(256.86deg,#1e40af 0%,#7c3aed 55%,#be185d 100%)'
 
 export function HomeFloatingCTA({ ctaBtnId }: { ctaBtnId: string }) {
   const [visible, setVisible] = useState(false)
@@ -45,25 +45,22 @@ export function HomeFloatingCTA({ ctaBtnId }: { ctaBtnId: string }) {
       transition:  'transform 0.5s cubic-bezier(0.34,1.56,0.64,1)',
       pointerEvents: visible ? 'auto' : 'none',
     }}>
-      <Link href="/enquiry">
-        <button style={{
-          background:  GRADIENT,
-          color:       '#fff',
-          border:      'none',
-          borderRadius: 48,
-          padding:     '13px 24px',
-          fontSize:     15,
-          fontWeight:   600,
-          cursor:      'pointer',
-          display:     'inline-flex',
-          alignItems:  'center',
-          gap:          8,
-          boxShadow:   '0 8px 32px rgba(0,0,0,0.3)',
-          fontFamily:  'var(--font-sora, sans-serif)',
-          whiteSpace:  'nowrap',
-        }}>
-          Let&apos;s talk! <ArrowRight size={16} />
-        </button>
+      <Link href="/enquiry" style={{
+        background:  GRADIENT,
+        color:       '#fff',
+        borderRadius: 48,
+        padding:     '13px 24px',
+        fontSize:     15,
+        fontWeight:   600,
+        display:     'inline-flex',
+        alignItems:  'center',
+        gap:          8,
+        boxShadow:   '0 8px 32px rgba(0,0,0,0.3)',
+        fontFamily:  'var(--font-sora, sans-serif)',
+        whiteSpace:  'nowrap',
+        textDecoration: 'none',
+      }}>
+        Let&apos;s talk! <ArrowRight size={16} />
       </Link>
     </div>
   )
