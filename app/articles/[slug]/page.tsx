@@ -2,10 +2,8 @@ import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
-import Image from 'next/image'
 import { Source_Serif_4 } from 'next/font/google'
 import { ClientDate } from '@/components/client-date'
-import { resolveCoverImage } from '@/lib/cover-image'
 import { resolveContent } from '@/lib/tiptap-content'
 import { ArticleContent } from '@/components/article-content'
 
@@ -53,15 +51,6 @@ export default async function ArticleDetailPage({
           {blog.title}
         </h1>
 
-        <div className="aspect-video w-full overflow-hidden rounded-lg bg-slate-200 dark:bg-white/5 mb-12">
-          <Image
-            src={resolveCoverImage(blog.coverImage, blog.id)}
-            alt={blog.title}
-            width={1200}
-            height={675}
-            className="object-cover w-full h-full"
-          />
-        </div>
 
         {/* Medium-style prose wrapper */}
         <style>{`
@@ -70,7 +59,7 @@ export default async function ArticleDetailPage({
             font-size: 21px;
             line-height: 1.58;
             letter-spacing: -0.003em;
-            color: #242424 !important;
+            color: #242424;
           }
           .dark .medium-prose {
             color: rgba(255,255,255,0.84);

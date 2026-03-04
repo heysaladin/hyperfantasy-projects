@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Search, X, ChevronLeft, ChevronRight } from 'lucide-react'
-import { resolveCoverImage } from '@/lib/cover-image'
 import { ArticleContent } from '@/components/article-content'
 import { resolveContent } from '@/lib/tiptap-content'
 
@@ -128,18 +127,22 @@ export default function ArticlesPage() {
             ))}
           </div>
         ) : paginated.length > 0 ? (
-          <div className="space-y-12">
+          <div className="divide-y divide-slate-200 dark:divide-white/10">
             {paginated.map((blog: any) => (
-              <Link key={blog.id} href={`/articles/${blog.slug}`} className="block group">
+              <Link key={blog.id} href={`/articles/${blog.slug}`} className="block group py-10 first:pt-0">
                 <article className="flex flex-col md:flex-row gap-8">
-                  <div className="md:w-2/5 aspect-video overflow-hidden rounded-lg bg-slate-200 dark:bg-white/5">
-                    <Image
-                      src={resolveCoverImage(blog.coverImage, blog.id)}
-                      alt={blog.title}
-                      width={400}
-                      height={225}
-                      className="object-cover w-full h-full group-hover:scale-105 transition"
-                    />
+                  <div className="md:w-2/5 aspect-video overflow-hidden rounded-lg bg-slate-200 dark:bg-white/5 flex-shrink-0">
+                    {blog.coverImage?.startsWith('https://') ? (
+                      <Image
+                        src={blog.coverImage}
+                        alt={blog.title}
+                        width={400}
+                        height={225}
+                        className="object-cover w-full h-full group-hover:scale-105 transition"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-slate-200 dark:bg-white/5" />
+                    )}
                   </div>
                   <div className="flex-1">
                     <time className="text-sm text-slate-500 dark:text-white/40">
@@ -157,7 +160,7 @@ export default function ArticlesPage() {
                     {blog.tags?.length > 0 && (
                       <div className="mt-4 flex flex-wrap gap-2">
                         {blog.tags.slice(0, 3).map((tag: string) => (
-                          <span key={tag} className="text-xs px-2 py-1 bg-slate-200 dark:bg-white/10 rounded">
+                          <span key={tag} className="text-xs px-2 py-1 bg-slate-200 dark:bg-white/10 text-slate-700 dark:text-white/70 rounded">
                             {tag}
                           </span>
                         ))}

@@ -1,12 +1,26 @@
 export function applyImageRule(img: HTMLImageElement) {
   const { naturalWidth: w, naturalHeight: h } = img
   if (!w || !h) return
-  const widthPct = w >= h ? 100 : Math.max(20, Math.round((w / h) * 100))
+
   img.style.setProperty('display', 'block', 'important')
-  img.style.setProperty('width', `${widthPct}%`, 'important')
-  img.style.setProperty('height', 'auto', 'important')
   img.style.setProperty('margin-left', 'auto', 'important')
   img.style.setProperty('margin-right', 'auto', 'important')
+
+  if (w >= h) {
+    // Landscape: full width, natural proportions
+    img.style.setProperty('width', '100%', 'important')
+    img.style.setProperty('height', 'auto', 'important')
+    img.style.removeProperty('aspect-ratio')
+    img.style.setProperty('object-fit', 'cover', 'important')
+  } else {
+    // Portrait: width narrows proportionally to how tall it is, natural height
+    const widthPct = Math.max(20, Math.round((w / h) * 100))
+    img.style.setProperty('width', `${widthPct}%`, 'important')
+    img.style.setProperty('height', 'auto', 'important')
+    img.style.removeProperty('aspect-ratio')
+    img.style.removeProperty('object-fit')
+    img.style.removeProperty('object-position')
+  }
 }
 
 export function applyImageRulesToContainer(container: Element, selector = 'img') {

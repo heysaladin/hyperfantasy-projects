@@ -12,7 +12,7 @@ export function ArticleContent({ html, className }: ArticleContentProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (ref.current) applyImageRulesToContainer(ref.current, 'img[data-responsive-img]')
+    if (ref.current) applyImageRulesToContainer(ref.current, 'img')
   }, [html])
 
   return (
