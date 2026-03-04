@@ -405,7 +405,7 @@ export default function ProjectsPage() {
       {/* Header */}
       <div className="border-b border-slate-200 dark:border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">Our Work</h1>
+          <h1 className="text-5xl md:text-6xl font-bold mb-4">Hyperfantasy&apos;s Projects</h1>
           <p className="text-xl text-slate-600 dark:text-white/60">Selected projects showcasing our expertise</p>
         </div>
       </div>
