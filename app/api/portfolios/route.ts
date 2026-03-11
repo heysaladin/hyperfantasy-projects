@@ -56,6 +56,8 @@ export async function GET(request: NextRequest) {
             isVisible: true,
             isFeatured: true,
             orderIndex: true,
+            colorHex: true,
+            colorGroup: true,
           },
         }),
         prisma.portfolio.count({ where }),
@@ -106,6 +108,8 @@ export async function POST(request: NextRequest) {
       isFeatured: Boolean(body.isFeatured),
       orderIndex: typeof body.orderIndex === 'number' ? body.orderIndex : 0,
       projectDate: body.projectDate ? new Date(body.projectDate) : null,
+      colorHex: body.colorHex || null,
+      colorGroup: body.colorGroup || null,
     }
 
     // Add foreign keys - CRITICAL: Check for non-empty string

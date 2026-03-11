@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Plus, Pencil, Trash2, Search } from 'lucide-react'
 import Link from 'next/link'
 import { resolveContentAsText } from '@/lib/tiptap-content'
@@ -17,12 +18,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
+const PAGE_SIZE_OPTIONS = [5, 10, 20, 50]
+
 function getPageNumbers(current: number, total: number): (number | '...')[] {
   if (total <= 10) return Array.from({ length: total }, (_, i) => i + 1)
   const pages = new Set<number>()
-  for (let i = 1; i <= 5; i++) pages.add(i)
-  for (let i = total - 4; i <= total; i++) pages.add(i)
-  if (current > 5 && current < total - 4) {
+  for (let i = 1; i <= 3; i++) pages.add(i)
+  for (let i = total - 2; i <= total; i++) pages.add(i)
+  if (current > 3 && current < total - 2) {
     pages.add(current - 1)
     pages.add(current)
     pages.add(current + 1)
@@ -40,8 +43,9 @@ export default function AdminPortfoliosPage() {
   const [portfolios, setPortfolios] = useState<any[]>([])
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [jumpInput, setJumpInput] = useState('')
   const [deleteId, setDeleteId] = useState<string | null>(null)
-  const itemsPerPage = 10
 
   useEffect(() => {
     fetchPortfolios()
@@ -50,10 +54,16 @@ export default function AdminPortfoliosPage() {
   const fetchPortfolios = async () => {
     const res = await fetch('/api/portfolios')
     const data = await res.json()
-    setPortfolios(Array.isArray(data) ? data : [])
+    const list: any[] = Array.isArray(data) ? data : []
+    // Sort: orderIndex desc, then projectDate desc
+    list.sort((a, b) => {
+      const oDiff = (b.orderIndex ?? 0) - (a.orderIndex ?? 0)
+      if (oDiff !== 0) return oDiff
+      return new Date(b.projectDate ?? 0).getTime() - new Date(a.projectDate ?? 0).getTime()
+    })
+    setPortfolios(list)
   }
 
-  // Derived: filter and paginate
   const filtered = portfolios.filter((p: any) => {
     if (!search) return true
     const q = search.toLowerCase()
@@ -68,17 +78,32 @@ export default function AdminPortfoliosPage() {
   const startIndex = (safePage - 1) * itemsPerPage
   const paginatedData = filtered.slice(startIndex, startIndex + itemsPerPage)
 
+  const goToPage = (page: number) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)))
+  }
+
   const handleSearch = (value: string) => {
     setSearch(value)
     setCurrentPage(1)
   }
 
+  const handleItemsPerPage = (value: string) => {
+    setItemsPerPage(Number(value))
+    setCurrentPage(1)
+  }
+
+  const handleJump = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter') return
+    const n = parseInt(jumpInput)
+    if (!isNaN(n)) goToPage(n)
+    setJumpInput('')
+  }
+
   const handleDelete = async () => {
     if (!deleteId) return
     await fetch(`/api/portfolios/${deleteId}`, { method: 'DELETE' })
-    await fetchPortfolios()
     setDeleteId(null)
-    // Clamp page after deletion
+    await fetchPortfolios()
     const newTotal = Math.max(1, Math.ceil((filtered.length - 1) / itemsPerPage))
     if (currentPage > newTotal) setCurrentPage(newTotal)
   }
@@ -103,15 +128,27 @@ export default function AdminPortfoliosPage() {
         </Link>
       </div>
 
-      {/* Search */}
-      <div className="mb-6 relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40" size={20} />
-        <Input
-          placeholder="Search by title or description..."
-          value={search}
-          onChange={(e) => handleSearch(e.target.value)}
-          className="pl-10 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10"
-        />
+      {/* Search + per-page */}
+      <div className="flex gap-3 mb-6">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40" size={16} />
+          <Input
+            placeholder="Search by title or description..."
+            value={search}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="pl-9 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10"
+          />
+        </div>
+        <Select value={String(itemsPerPage)} onValueChange={handleItemsPerPage}>
+          <SelectTrigger className="w-32 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {PAGE_SIZE_OPTIONS.map(n => (
+              <SelectItem key={n} value={String(n)}>{n} / page</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Table */}
@@ -137,7 +174,7 @@ export default function AdminPortfoliosPage() {
                     </div>
                   </div>
                 </td>
-                <td className="p-4 text-slate-600 dark:text-white/60 capitalize">{portfolio.category || '-'}</td>
+                <td className="p-4 text-slate-600 dark:text-white/60">{portfolio.category || '-'}</td>
                 <td className="p-4">
                   <span className={`px-2 py-1 text-xs rounded capitalize ${
                     portfolio.complexity === 'short'
@@ -159,15 +196,9 @@ export default function AdminPortfoliosPage() {
                 <td className="p-4">
                   <div className="flex gap-2 justify-end">
                     <Link href={`/admin/portfolios/${portfolio.id}/edit`}>
-                      <Button variant="outline" size="sm">
-                        <Pencil size={16} />
-                      </Button>
+                      <Button variant="outline" size="sm"><Pencil size={16} /></Button>
                     </Link>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setDeleteId(portfolio.id)}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => setDeleteId(portfolio.id)}>
                       <Trash2 size={16} />
                     </Button>
                   </div>
@@ -186,44 +217,66 @@ export default function AdminPortfoliosPage() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-            disabled={safePage === 1}
-          >
-            Previous
-          </Button>
+        <div className="flex flex-wrap items-center justify-between gap-4">
 
-          <div className="flex gap-1">
+          {/* Page info */}
+          <p className="text-sm text-slate-500 dark:text-white/40 shrink-0">
+            Page {safePage} of {totalPages} &mdash; {filtered.length} items
+          </p>
+
+          {/* Page buttons */}
+          <div className="flex items-center gap-1.5">
+            <Button variant="outline" size="sm" onClick={() => goToPage(safePage - 1)} disabled={safePage === 1}>
+              Previous
+            </Button>
+
             {getPageNumbers(safePage, totalPages).map((page, i) =>
               page === '...' ? (
-                <span key={`ellipsis-${i}`} className="flex items-center px-2 text-slate-400 dark:text-white/40">
-                  …
-                </span>
+                <span key={`e-${i}`} className="px-1 text-slate-400 dark:text-white/40 select-none">…</span>
               ) : (
                 <Button
                   key={page}
                   variant={safePage === page ? 'default' : 'outline'}
                   size="sm"
-                  onClick={() => setCurrentPage(page)}
-                  className="min-w-10"
+                  onClick={() => goToPage(page)}
+                  className="min-w-9"
                 >
                   {page}
                 </Button>
               )
             )}
+
+            <Button variant="outline" size="sm" onClick={() => goToPage(safePage + 1)} disabled={safePage === totalPages}>
+              Next
+            </Button>
           </div>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-            disabled={safePage === totalPages}
-          >
-            Next
-          </Button>
+          {/* Jump to page */}
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-sm text-slate-500 dark:text-white/40">Go to</span>
+            <Input
+              type="number"
+              min={1}
+              max={totalPages}
+              value={jumpInput}
+              onChange={e => setJumpInput(e.target.value)}
+              onKeyDown={handleJump}
+              placeholder={String(safePage)}
+              className="w-16 text-center bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const n = parseInt(jumpInput)
+                if (!isNaN(n)) goToPage(n)
+                setJumpInput('')
+              }}
+            >
+              Go
+            </Button>
+          </div>
+
         </div>
       )}
 
@@ -233,8 +286,7 @@ export default function AdminPortfoliosPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete this portfolio
-              from the database.
+              This action cannot be undone. This will permanently delete this portfolio from the database.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

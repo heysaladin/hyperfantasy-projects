@@ -18,6 +18,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
       { protocol: 'https', hostname: 'pps.services.adobe.com' },
       { protocol: 'https', hostname: 'mir-s3-cdn-cf.behance.net' },
+      { protocol: 'https', hostname: 'mir-cdn.behance.net' },
     ],
   },
 }

@@ -2,6 +2,20 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { NextRequest } from 'next/server'
 
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params
+  try {
+    const portfolio = await prisma.portfolio.findUnique({ where: { id } })
+    if (!portfolio) return Response.json({ error: 'Not found' }, { status: 404 })
+    return Response.json(portfolio)
+  } catch (error: any) {
+    return Response.json({ error: error.message }, { status: 500 })
+  }
+}
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -33,6 +47,8 @@ export async function PUT(
       isFeatured: Boolean(body.isFeatured),
       orderIndex: typeof body.orderIndex === 'number' ? body.orderIndex : 0,
       projectDate: body.projectDate ? new Date(body.projectDate) : null,
+      colorHex: body.colorHex || null,
+      colorGroup: body.colorGroup || null,
     }
 
     const portfolio = await prisma.portfolio.update({

@@ -2,6 +2,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import AdminColorMap from '@/components/admin-color-map'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -43,6 +44,11 @@ export default async function AdminDashboard() {
           </div>
         </Link>
 
+      </div>
+
+      {/* Color Map Section */}
+      <div className="mt-12 border-t border-slate-200 dark:border-white/10 pt-10">
+        <AdminColorMap />
       </div>
     </div>
   )

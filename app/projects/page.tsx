@@ -7,6 +7,7 @@ import { Dialog as RadixDialog } from 'radix-ui'
 import { ArrowDownAZ, ArrowDownWideNarrow, ArrowUpDown, ArrowUpNarrowWide, ChevronDown, ExternalLink, Image, LayoutGrid, LayoutPanelTop, Search, SlidersHorizontal, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { resolveContent, resolveContentAsText } from '@/lib/tiptap-content'
+import { colorGroupFromHex } from '@/lib/color-group'
 import { ArticleContent } from '@/components/article-content'
 import { HomeFloatingCTA } from '@/components/home-floating-cta'
 
@@ -33,6 +34,27 @@ const SORT_OPTIONS = [
   { value: 'oldest', label: 'Oldest',  icon: ArrowUpNarrowWide },
   { value: 'title',  label: 'A–Z',     icon: ArrowDownAZ },
 ]
+
+const COLOR_GROUPS = [
+  { value: 'Red',    label: 'Red',    hex: '#E63946' },
+  { value: 'Orange', label: 'Orange', hex: '#F4A261' },
+  { value: 'Yellow', label: 'Yellow', hex: '#FFD166' },
+  { value: 'Green',  label: 'Green',  hex: '#2D6A4F' },
+  { value: 'Blue',   label: 'Blue',   hex: '#118AB2' },
+  { value: 'Purple', label: 'Purple', hex: '#9B5DE5' },
+  { value: 'Pink',   label: 'Pink',   hex: '#FF69B4' },
+  { value: 'Brown',  label: 'Brown',  hex: '#8B4513' },
+  { value: 'Black',  label: 'Black',  hex: '#1A1A1A' },
+  { value: 'White',  label: 'White',  hex: '#F5F5F5' },
+  { value: 'Grey',   label: 'Grey',   hex: '#9E9E9E' },
+]
+
+// Resolve colorGroup — use DB value if present, otherwise derive from colorHex
+function resolveColorGroup(p: any): string | null {
+  if (p.colorGroup) return p.colorGroup
+  if (!p.colorHex) return null
+  return colorGroupFromHex(p.colorHex)
+}
 
 // ---------- masonry ----------
 
@@ -300,6 +322,7 @@ export default function ProjectsPage() {
   const [complexity, setComplexity] = useState('')
   const [showMeta, setShowMeta] = useState(true)
   const [yearRange, setYearRange] = useState<[number, number] | null>(null)
+  const [colorGroup, setColorGroup] = useState('')
   const [showHiddenOnly, setShowHiddenOnly] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [isSortOpen, setIsSortOpen] = useState(false)
@@ -357,6 +380,7 @@ export default function ProjectsPage() {
     if (complexity) result = result.filter(p =>
       complexity === 'long' ? p.complexity !== 'short' : p.complexity === complexity
     )
+    if (colorGroup) result = result.filter(p => resolveColorGroup(p) === colorGroup)
 
     if (showHiddenOnly) result = result.filter(p => !p.isVisible)
 
@@ -389,12 +413,12 @@ export default function ProjectsPage() {
     }
 
     return result
-  }, [allPortfolios, search, sort, category, complexity, yearRange, dataYears, showHiddenOnly])
+  }, [allPortfolios, search, sort, category, complexity, colorGroup, yearRange, dataYears, showHiddenOnly])
 
   // Reset display count when filters change
   useEffect(() => {
     setDisplayCount(PAGE_SIZE)
-  }, [search, sort, category, complexity, yearRange, showHiddenOnly])
+  }, [search, sort, category, complexity, colorGroup, yearRange, showHiddenOnly])
 
   const displayed = filtered.slice(0, displayCount)
   const hasMore = displayCount < filtered.length
@@ -474,6 +498,7 @@ export default function ProjectsPage() {
   const resetAll = () => {
     setCategory('')
     setComplexity('')
+    setColorGroup('')
     setShowHiddenOnly(false)
     if (dataYears) setYearRange([dataYears.min, dataYears.max])
   }
@@ -482,6 +507,7 @@ export default function ProjectsPage() {
   const activeFilterCount = [
     category !== '',
     complexity !== '',
+    colorGroup !== '',
     showHiddenOnly,
     dataYears && yearRange && (yearRange[0] > dataYears.min || yearRange[1] < dataYears.max),
   ].filter(Boolean).length
@@ -518,7 +544,7 @@ export default function ProjectsPage() {
                 <label htmlFor="project-search" className="sr-only">Search projects</label>
                 <input
                   id="project-search"
-                  type="search"
+                  type="text"
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search projects…"
@@ -671,6 +697,38 @@ export default function ProjectsPage() {
                     >
                       Hidden only
                     </button>
+                  </div>
+
+                  {/* Color group section */}
+                  <div className="p-4 border-b border-slate-100 dark:border-white/10">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-white/30 mb-3">Color</p>
+                    <div className="flex flex-wrap gap-2 items-center">
+                      <button
+                        onClick={() => setColorGroup('')}
+                        className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                          colorGroup === ''
+                            ? 'bg-slate-900 dark:bg-white text-white dark:text-black'
+                            : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white/60 hover:bg-slate-200 dark:hover:bg-white/10'
+                        }`}
+                      >
+                        All
+                      </button>
+                      {COLOR_GROUPS.map(({ value, label, hex }) => (
+                        <button
+                          key={value}
+                          onClick={() => setColorGroup(colorGroup === value ? '' : value)}
+                          aria-label={label}
+                          aria-pressed={colorGroup === value}
+                          title={label}
+                          className={`w-5 h-5 rounded-full transition-transform ${
+                            colorGroup === value
+                              ? 'ring-2 ring-offset-2 ring-slate-700 dark:ring-white ring-offset-white dark:ring-offset-zinc-900 scale-110'
+                              : 'hover:scale-110'
+                          } ${value === 'White' ? 'border border-slate-200 dark:border-white/20' : ''}`}
+                          style={{ backgroundColor: hex }}
+                        />
+                      ))}
+                    </div>
                   </div>
 
                   {/* Date range section */}
