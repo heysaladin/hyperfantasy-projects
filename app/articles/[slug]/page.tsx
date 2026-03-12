@@ -17,7 +17,7 @@ const sourceSerif4 = Source_Serif_4({
 
 async function getBlog(slug: string) {
   return await prisma.blog.findFirst({
-    where: { slug, isPublished: true }
+    where: { slug }
   })
 }
 
