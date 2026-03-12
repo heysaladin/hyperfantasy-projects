@@ -4,7 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Dialog as RadixDialog } from 'radix-ui'
-import { ArrowDownAZ, ArrowDownWideNarrow, ArrowUpDown, ArrowUpNarrowWide, ChevronDown, ExternalLink, Image, LayoutGrid, LayoutPanelTop, Search, SlidersHorizontal, X } from 'lucide-react'
+import { ArrowDownAZ, ArrowDownWideNarrow, ArrowUpDown, ArrowUpNarrowWide, ChevronDown, ExternalLink, Image, LayoutGrid, LayoutPanelTop, Search, SlidersHorizontal, Star, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { resolveContent, resolveContentAsText } from '@/lib/tiptap-content'
 import { colorGroupFromHex } from '@/lib/color-group'
@@ -336,6 +336,7 @@ export default function ProjectsPage() {
   const [showMeta, setShowMeta] = useState(true)
   const [yearRange, setYearRange] = useState<[number, number] | null>(null)
   const [colorGroup, setColorGroup] = useState('')
+  const [showFeatured, setShowFeatured] = useState(false)
   const [showVisibleOnly, setShowVisibleOnly] = useState(true)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [isSortOpen, setIsSortOpen] = useState(false)
@@ -401,6 +402,8 @@ export default function ProjectsPage() {
       result = result.filter(p => p.isVisible !== false)
     }
 
+    if (showFeatured) result = result.filter(p => p.isFeatured)
+
     if (yearRange && dataYears && (yearRange[0] > dataYears.min || yearRange[1] < dataYears.max)) {
       result = result.filter(p => {
         if (!p.projectDate) return false
@@ -430,12 +433,12 @@ export default function ProjectsPage() {
     }
 
     return result
-  }, [allPortfolios, search, sort, category, complexity, colorGroup, yearRange, dataYears, showVisibleOnly, user])
+  }, [allPortfolios, search, sort, category, complexity, colorGroup, yearRange, dataYears, showFeatured, showVisibleOnly, user])
 
   // Reset display count when filters change
   useEffect(() => {
     setDisplayCount(PAGE_SIZE)
-  }, [search, sort, category, complexity, colorGroup, yearRange, showVisibleOnly])
+  }, [search, sort, category, complexity, colorGroup, yearRange, showFeatured, showVisibleOnly])
 
   const displayed = filtered.slice(0, displayCount)
   const hasMore = displayCount < filtered.length
@@ -516,6 +519,7 @@ export default function ProjectsPage() {
     setCategory('')
     setComplexity('')
     setColorGroup('')
+    setShowFeatured(false)
     setShowVisibleOnly(true)
     if (dataYears) setYearRange([dataYears.min, dataYears.max])
   }
@@ -525,6 +529,7 @@ export default function ProjectsPage() {
     category !== '',
     complexity !== '',
     colorGroup !== '',
+    showFeatured,
     user && !showVisibleOnly,
     dataYears && yearRange && (yearRange[0] > dataYears.min || yearRange[1] < dataYears.max),
   ].filter(Boolean).length
@@ -746,6 +751,25 @@ export default function ProjectsPage() {
                       </div>
                     </div>
                   )}
+
+                  {/* Featured section — all users */}
+                  <div className="p-4 border-b border-slate-100 dark:border-white/10">
+                    <button
+                      role="switch"
+                      aria-checked={showFeatured}
+                      onClick={() => setShowFeatured(v => !v)}
+                      className="flex items-center justify-between w-full group"
+                    >
+                      <span className={`text-xs font-medium transition-colors ${showFeatured ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-white/40'}`}>Show featured projects</span>
+                      <span className={`relative inline-flex h-5 w-9 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none ${
+                        showFeatured ? 'bg-slate-900 dark:bg-white' : 'bg-slate-200 dark:bg-white/10'
+                      }`}>
+                        <span className={`inline-block h-4 w-4 transform rounded-full bg-white dark:bg-zinc-900 shadow transition-transform duration-200 ${
+                          showFeatured ? 'translate-x-4' : 'translate-x-0'
+                        }`} />
+                      </span>
+                    </button>
+                  </div>
 
                   {/* Visibility section — logged-in only */}
                   {user && <div className="p-4 border-b border-slate-100 dark:border-white/10">

@@ -3,36 +3,56 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Eye, EyeOff, Search, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { ArticleContent } from '@/components/article-content'
 import { resolveContent } from '@/lib/tiptap-content'
+import { createClient } from '@/lib/supabase/client'
+import type { User } from '@supabase/supabase-js'
 
 const PAGE_SIZE = 6
 
 export default function ArticlesPage() {
-  const [blogs, setBlogs] = useState<any[]>([])
+  const [user, setUser] = useState<User | null>(null)
+  const [allBlogs, setAllBlogs] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
+  const [showAllBlogs, setShowAllBlogs] = useState(false)
   const searchBarRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user)
+      if (user) setShowAllBlogs(true)
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      setUser(session?.user ?? null)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
 
   useEffect(() => {
     fetch('/api/blogs')
       .then(r => r.json())
-      .then(data => setBlogs(data.filter((b: any) => b.isPublished)))
-      .catch(() => setBlogs([]))
+      .then(data => setAllBlogs(Array.isArray(data) ? data : []))
+      .catch(() => setAllBlogs([]))
       .finally(() => setIsLoading(false))
   }, [])
 
   const filtered = useMemo(() => {
-    if (!search.trim()) return blogs
+    let result = allBlogs
+    if (!showAllBlogs || !user) {
+      result = result.filter(b => b.isPublished)
+    }
+    if (!search.trim()) return result
     const q = search.trim().toLowerCase()
-    return blogs.filter(b =>
+    return result.filter(b =>
       b.title?.toLowerCase().includes(q) ||
       b.tags?.some((t: string) => t.toLowerCase().includes(q)) ||
       b.excerpt?.toLowerCase().includes(q)
     )
-  }, [blogs, search])
+  }, [allBlogs, search, showAllBlogs, user])
 
   // Reset to page 1 when search changes
   useEffect(() => { setPage(1) }, [search])
@@ -83,25 +103,41 @@ export default function ArticlesPage() {
       {/* Search bar */}
       <div ref={searchBarRef} className="border-b border-slate-200 dark:border-white/10 bg-white/95 dark:bg-black/95 sticky z-10 backdrop-blur-sm transition-[top] duration-300"
         style={{ top: 'calc(var(--nav-offset, 0px) + 64px)' }}>
-        <div className="max-w-5xl mx-auto px-6 lg:px-8 py-4">
-          <div className="relative w-full">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30" aria-hidden="true" />
-            <label htmlFor="articles-search" className="sr-only">Search articles</label>
-            <input
-              id="articles-search"
-              type="search"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search articles…"
-              className="w-full pl-9 pr-8 py-2.5 text-sm bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg outline-none focus:border-slate-400 dark:focus:border-white/30 transition placeholder:text-slate-400 dark:placeholder:text-white/30"
-            />
-            {search && (
+        <div className="max-w-5xl mx-auto px-6 lg:px-8 py-3">
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30" aria-hidden="true" />
+              <label htmlFor="articles-search" className="sr-only">Search articles</label>
+              <input
+                id="articles-search"
+                type="search"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search articles…"
+                className="w-full pl-9 pr-8 py-2.5 text-sm bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg outline-none focus:border-slate-400 dark:focus:border-white/30 transition placeholder:text-slate-400 dark:placeholder:text-white/30"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch('')}
+                  aria-label="Clear search"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-white/30 dark:hover:text-white/60 transition"
+                >
+                  <X size={14} aria-hidden="true" />
+                </button>
+              )}
+            </div>
+            {user && (
               <button
-                onClick={() => setSearch('')}
-                aria-label="Clear search"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-white/30 dark:hover:text-white/60 transition"
+                aria-label={showAllBlogs ? 'Show published only' : 'Show all articles including drafts'}
+                aria-pressed={showAllBlogs}
+                onClick={() => setShowAllBlogs(v => !v)}
+                className={`px-2.5 py-2.5 rounded-lg border transition flex-shrink-0 ${
+                  showAllBlogs
+                    ? 'bg-slate-900 dark:bg-white text-white dark:text-black border-slate-900 dark:border-white'
+                    : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-white/40 border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10'
+                }`}
               >
-                <X size={14} aria-hidden="true" />
+                {showAllBlogs ? <Eye size={15} aria-hidden="true" /> : <EyeOff size={15} aria-hidden="true" />}
               </button>
             )}
           </div>
@@ -145,11 +181,18 @@ export default function ArticlesPage() {
                     )}
                   </div>
                   <div className="flex-1">
-                    <time className="text-sm text-slate-500 dark:text-white/40">
-                      {new Date(blog.createdAt).toLocaleDateString('en-US', {
-                        month: 'long', day: 'numeric', year: 'numeric'
-                      })}
-                    </time>
+                    <div className="flex items-center gap-2">
+                      <time className="text-sm text-slate-500 dark:text-white/40">
+                        {new Date(blog.createdAt).toLocaleDateString('en-US', {
+                          month: 'long', day: 'numeric', year: 'numeric'
+                        })}
+                      </time>
+                      {!blog.isPublished && (
+                        <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
+                          Draft
+                        </span>
+                      )}
+                    </div>
                     <h2 className="text-2xl font-bold mt-2 mb-3 group-hover:text-slate-600 dark:group-hover:text-white/60 transition text-slate-900 dark:text-white">
                       {blog.title}
                     </h2>
