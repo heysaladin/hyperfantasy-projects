@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import { ArrowLeft, ExternalLink, Mail } from 'lucide-react'
 import { ClientDate } from '@/components/client-date'
 import { resolveContent } from '@/lib/tiptap-content'
@@ -59,18 +58,6 @@ export default async function PortfolioDetailPage({
           {portfolio.title}
         </h1>
 
-        {portfolio.imageUrl && (
-          <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-10">
-            <Image
-              src={portfolio.imageUrl}
-              alt={portfolio.title}
-              fill
-              sizes="(max-width: 768px) 100vw, 768px"
-              className="object-cover"
-              priority
-            />
-          </div>
-        )}
 
         <ArticleContent
           html={resolveContent(portfolio.description)}

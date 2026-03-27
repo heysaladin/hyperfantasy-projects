@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Plus, Pencil, Trash2, Search } from 'lucide-react'
+import { Plus, Pencil, Trash2, Search, ArrowUpDown } from 'lucide-react'
 import Link from 'next/link'
 import { resolveContentAsText } from '@/lib/tiptap-content'
 import {
@@ -19,6 +19,31 @@ import {
 } from "@/components/ui/alert-dialog"
 
 const PAGE_SIZE_OPTIONS = [5, 10, 20, 50]
+
+type SortOption = 'order-desc' | 'order-asc' | 'date-desc' | 'date-asc' | 'title-asc' | 'title-desc'
+
+const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+  { value: 'order-desc', label: 'Order ↓' },
+  { value: 'order-asc', label: 'Order ↑' },
+  { value: 'date-desc', label: 'Date ↓' },
+  { value: 'date-asc', label: 'Date ↑' },
+  { value: 'title-asc', label: 'Title A→Z' },
+  { value: 'title-desc', label: 'Title Z→A' },
+]
+
+function sortPortfolios(list: any[], sort: SortOption): any[] {
+  return [...list].sort((a, b) => {
+    switch (sort) {
+      case 'order-desc': return (b.orderIndex ?? 0) - (a.orderIndex ?? 0)
+      case 'order-asc':  return (a.orderIndex ?? 0) - (b.orderIndex ?? 0)
+      case 'date-desc':  return new Date(b.projectDate ?? 0).getTime() - new Date(a.projectDate ?? 0).getTime()
+      case 'date-asc':   return new Date(a.projectDate ?? 0).getTime() - new Date(b.projectDate ?? 0).getTime()
+      case 'title-asc':  return (a.title ?? '').localeCompare(b.title ?? '')
+      case 'title-desc': return (b.title ?? '').localeCompare(a.title ?? '')
+      default: return 0
+    }
+  })
+}
 
 function getPageNumbers(current: number, total: number): (number | '...')[] {
   if (total <= 10) return Array.from({ length: total }, (_, i) => i + 1)
@@ -45,6 +70,7 @@ export default function AdminPortfoliosPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [jumpInput, setJumpInput] = useState('')
+  const [sortBy, setSortBy] = useState<SortOption>('order-desc')
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
   useEffect(() => {
@@ -54,17 +80,10 @@ export default function AdminPortfoliosPage() {
   const fetchPortfolios = async () => {
     const res = await fetch('/api/portfolios')
     const data = await res.json()
-    const list: any[] = Array.isArray(data) ? data : []
-    // Sort: orderIndex desc, then projectDate desc
-    list.sort((a, b) => {
-      const oDiff = (b.orderIndex ?? 0) - (a.orderIndex ?? 0)
-      if (oDiff !== 0) return oDiff
-      return new Date(b.projectDate ?? 0).getTime() - new Date(a.projectDate ?? 0).getTime()
-    })
-    setPortfolios(list)
+    setPortfolios(Array.isArray(data) ? data : [])
   }
 
-  const filtered = portfolios.filter((p: any) => {
+  const filtered = sortPortfolios(portfolios, sortBy).filter((p: any) => {
     if (!search) return true
     const q = search.toLowerCase()
     return (
@@ -84,6 +103,11 @@ export default function AdminPortfoliosPage() {
 
   const handleSearch = (value: string) => {
     setSearch(value)
+    setCurrentPage(1)
+  }
+
+  const handleSort = (value: string) => {
+    setSortBy(value as SortOption)
     setCurrentPage(1)
   }
 
@@ -128,7 +152,7 @@ export default function AdminPortfoliosPage() {
         </Link>
       </div>
 
-      {/* Search + per-page */}
+      {/* Search + sort + per-page */}
       <div className="flex gap-3 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40" size={16} />
@@ -139,6 +163,17 @@ export default function AdminPortfoliosPage() {
             className="pl-9 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10"
           />
         </div>
+        <Select value={sortBy} onValueChange={handleSort}>
+          <SelectTrigger className="w-40 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10">
+            <ArrowUpDown size={14} className="mr-1 text-slate-400 dark:text-white/40" aria-hidden="true" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {SORT_OPTIONS.map(opt => (
+              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Select value={String(itemsPerPage)} onValueChange={handleItemsPerPage}>
           <SelectTrigger className="w-32 bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10">
             <SelectValue />
