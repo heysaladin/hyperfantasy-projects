@@ -4,7 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Dialog as RadixDialog } from 'radix-ui'
-import { ArrowDownAZ, ArrowDownWideNarrow, ArrowUpDown, ArrowUpNarrowWide, ChevronDown, ExternalLink, Image, LayoutGrid, LayoutPanelTop, Search, SlidersHorizontal, Star, X } from 'lucide-react'
+import { ArrowDownAZ, ArrowDownWideNarrow, ArrowUpDown, ArrowUpNarrowWide, ArrowUpRight, ChevronDown, ExternalLink, Image, LayoutGrid, LayoutPanelTop, Search, SlidersHorizontal, Star, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { resolveContent, resolveContentAsText } from '@/lib/tiptap-content'
 import { colorGroupFromHex } from '@/lib/color-group'
@@ -170,12 +170,49 @@ function useLazyVisible() {
   return { ref, visible }
 }
 
-function PortfolioCard({ portfolio, index, onClick, showMeta }: { portfolio: any; index: number; onClick: () => void; showMeta: boolean }) {
+function PortfolioCard({ portfolio, index, onClick, showMeta, href }: { portfolio: any; index: number; onClick: () => void; showMeta: boolean; href?: string }) {
   const { ref, visible } = useLazyVisible()
   // Stagger only for the first page (initial load); scroll-in cards animate instantly
   const delay = index < PAGE_SIZE ? index * 50 : 0
+
+  const cardInner = (
+    <div className="relative overflow-hidden rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 transition hover:border-slate-300 dark:hover:border-white/20">
+      {portfolio.imageUrl && (
+        <div className="overflow-hidden bg-slate-200 dark:bg-white/5">
+          <img src={portfolio.imageUrl} alt={portfolio.title} loading="lazy" decoding="async"
+            className="w-full h-auto block transition group-hover:scale-105" />
+        </div>
+      )}
+      {portfolio.complexity === 'long' && (
+        <div className="absolute bottom-3 right-3 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none">
+          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white dark:bg-black shadow-sm shadow-black/5">
+            <ArrowUpRight size={16} className="text-slate-900 dark:text-white" aria-hidden="true" />
+          </div>
+        </div>
+      )}
+      {showMeta && (
+        <div className="p-6">
+          <div className="flex items-center gap-2 mb-2">
+            {portfolio.category && (
+              <span className="text-xs text-slate-500 dark:text-white/40 uppercase tracking-wider">{portfolio.category}</span>
+            )}
+          </div>
+          <h3 className="text-xl font-semibold group-hover:text-slate-600 dark:group-hover:text-white/60 transition">{portfolio.title}</h3>
+          <p className="mt-2 text-sm text-slate-600 dark:text-white/60 line-clamp-2">{resolveContentAsText(portfolio.description)}</p>
+          {portfolio.tags?.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {portfolio.tags.slice(0, 3).map((tag: string) => (
+                <span key={tag} className="text-xs px-2 py-1 bg-slate-200 dark:bg-white/10 rounded">{tag}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+
   return (
-    <div ref={ref} onClick={onClick} className="group block cursor-pointer"
+    <div ref={ref} className="group block cursor-pointer"
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateY(0)' : 'translateY(16px)',
@@ -183,32 +220,15 @@ function PortfolioCard({ portfolio, index, onClick, showMeta }: { portfolio: any
         willChange: 'opacity, transform',
       }}
     >
-      <div className="overflow-hidden rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 transition hover:border-slate-300 dark:hover:border-white/20">
-        {portfolio.imageUrl && (
-          <div className="overflow-hidden bg-slate-200 dark:bg-white/5">
-            <img src={portfolio.imageUrl} alt={portfolio.title} loading="lazy" decoding="async"
-              className="w-full h-auto block transition group-hover:scale-105" />
-          </div>
-        )}
-        {showMeta && (
-          <div className="p-6">
-            <div className="flex items-center gap-2 mb-2">
-              {portfolio.category && (
-                <span className="text-xs text-slate-500 dark:text-white/40 uppercase tracking-wider">{portfolio.category}</span>
-              )}
-            </div>
-            <h3 className="text-xl font-semibold group-hover:text-slate-600 dark:group-hover:text-white/60 transition">{portfolio.title}</h3>
-            <p className="mt-2 text-sm text-slate-600 dark:text-white/60 line-clamp-2">{resolveContentAsText(portfolio.description)}</p>
-            {portfolio.tags?.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {portfolio.tags.slice(0, 3).map((tag: string) => (
-                  <span key={tag} className="text-xs px-2 py-1 bg-slate-200 dark:bg-white/10 rounded">{tag}</span>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      {href ? (
+        <Link href={href} onClick={(e) => { if (portfolio.complexity !== 'long') { e.preventDefault(); onClick(); } }} className="block">
+          {cardInner}
+        </Link>
+      ) : (
+        <div onClick={onClick}>
+          {cardInner}
+        </div>
+      )}
     </div>
   )
 }
@@ -824,7 +844,7 @@ export default function ProjectsPage() {
             items={displayed}
             gap={MASONRY_GAP}
             renderItem={(portfolio, index) => (
-              <PortfolioCard portfolio={portfolio} index={index} onClick={() => handleClick(portfolio)} showMeta={showMeta} />
+              <PortfolioCard portfolio={portfolio} index={index} onClick={() => handleClick(portfolio)} showMeta={showMeta} href={`/projects/${portfolio.id}`} />
             )}
           />
         )}
