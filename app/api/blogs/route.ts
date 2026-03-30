@@ -31,6 +31,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     console.log('Body received:', body)
     
+    const creator = await prisma.creator.findFirst({ where: { email: user.email! } })
+
     const blog = await prisma.blog.create({
       data: {
         title: body.title,
@@ -40,7 +42,7 @@ export async function POST(request: NextRequest) {
         coverImage: body.coverImage || null,
         tags: body.tags || [],
         isPublished: body.isPublished || false,
-        authorId: body.authorId || null  // ← Add this line
+        authorId: creator?.id ?? null,
       }
     })
     

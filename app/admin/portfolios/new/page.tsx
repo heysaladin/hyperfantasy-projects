@@ -76,7 +76,6 @@ export default function NewPortfolioPage() {
         colorHex: formData.colorHex || null,
         colorGroup: formData.colorGroup || null,
         teamId: null,
-        creatorId: process.env.NEXT_PUBLIC_SUPER_CREATOR
         }
 
         console.log('Sending payload:', payload)

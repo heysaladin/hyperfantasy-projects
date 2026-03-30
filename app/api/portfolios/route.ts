@@ -112,12 +112,9 @@ export async function POST(request: NextRequest) {
       colorGroup: body.colorGroup || null,
     }
 
-    // Add foreign keys - CRITICAL: Check for non-empty string
-    if (body.creatorId && body.creatorId !== '') {
-      console.log('Adding creatorId:', body.creatorId)
-      data.creatorId = body.creatorId
-    }
-    
+    const creator = await prisma.creator.findFirst({ where: { email: user.email! } })
+    if (creator) data.creatorId = creator.id
+
     if (body.teamId && body.teamId !== '') {
       console.log('Adding teamId:', body.teamId)
       data.teamId = body.teamId

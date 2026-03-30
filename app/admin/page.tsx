@@ -3,7 +3,6 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import AdminColorMap from '@/components/admin-color-map'
-import AdminDraftArticles from '@/components/admin-draft-articles'
 import AdminTagsPanel from '@/components/admin-tags-panel'
 import { prisma } from '@/lib/prisma'
 
@@ -82,14 +81,13 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      {/* Draft Articles + Tag Shortcuts panels */}
-      <div className="mt-12 space-y-4">
-        <AdminDraftArticles />
+      {/* Tag Shortcuts panel */}
+      <div className="mt-12">
         <AdminTagsPanel />
       </div>
 
       {/* Color Map Section */}
-      <div className="mt-12 border-t border-slate-200 dark:border-white/10 pt-10">
+      <div className="mt-12">
         <AdminColorMap />
       </div>
     </div>

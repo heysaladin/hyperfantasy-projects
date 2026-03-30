@@ -8,19 +8,20 @@ import { Label } from '@/components/ui/label'
 import dynamic from 'next/dynamic'
 const TiptapEditor = dynamic(() => import('@/components/tiptap-editor').then(m => ({ default: m.TiptapEditor })), { ssr: false, loading: () => <div className="h-64 rounded-md border border-slate-200 dark:border-white/30 bg-white/5 animate-pulse" /> })
 import { Checkbox } from '@/components/ui/checkbox'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, X } from 'lucide-react'
 import Link from 'next/link'
 
 export default function NewBlogPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [tagInput, setTagInput] = useState('')
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
     excerpt: '',
     content: '',
     coverImage: '',
-    tags: '',
+    tags: [] as string[],
     isPublished: false,
   })
 
@@ -29,25 +30,14 @@ export default function NewBlogPage() {
     setLoading(true)
 
     try {
-      // Check if env var is available
-      const authorId = process.env.NEXT_PUBLIC_SUPER_CREATOR
-      console.log('Author ID from env:', authorId)
-      
-      if (!authorId) {
-        throw new Error('NEXT_PUBLIC_SUPER_CREATOR environment variable is not set')
-      }
-
       const payload = {
         title: formData.title,
         slug: formData.slug,
         excerpt: formData.excerpt || null,
         content: formData.content || null,
         coverImage: formData.coverImage || null,
-        tags: formData.tags 
-          ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) 
-          : [],
+        tags: formData.tags,
         isPublished: formData.isPublished,
-        authorId: authorId
       }
 
       console.log('Sending payload:', payload)
@@ -156,14 +146,44 @@ export default function NewBlogPage() {
 
         {/* Tags */}
         <div className="flex flex-col gap-2">
-          <Label htmlFor="tags">Tags</Label>
-          <Input
-            id="tags"
-            value={formData.tags}
-            onChange={(e) => setFormData({...formData, tags: e.target.value})}
-            className="bg-slate-50 dark:bg-white/5"
-            placeholder="tag1, tag2, tag3"
-          />
+          <Label htmlFor="tag-input">Tags</Label>
+          <div
+            className="flex flex-wrap gap-1.5 items-center min-h-10 px-3 py-2 rounded-md border border-input bg-slate-50 dark:bg-white/5 cursor-text"
+            onClick={() => document.getElementById('tag-input')?.focus()}
+          >
+            {formData.tags.map(tag => (
+              <span key={tag} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-slate-200 dark:bg-white/15 text-slate-700 dark:text-white/80">
+                {tag}
+                <button
+                  type="button"
+                  onClick={() => setFormData(f => ({ ...f, tags: f.tags.filter(t => t !== tag) }))}
+                  className="hover:text-red-500 transition-colors"
+                  aria-label={`Remove ${tag}`}
+                >
+                  <X size={11} />
+                </button>
+              </span>
+            ))}
+            <input
+              id="tag-input"
+              value={tagInput}
+              onChange={e => setTagInput(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ',') {
+                  e.preventDefault()
+                  const val = tagInput.trim().replace(/,$/, '')
+                  if (val && !formData.tags.includes(val)) {
+                    setFormData(f => ({ ...f, tags: [...f.tags, val] }))
+                  }
+                  setTagInput('')
+                } else if (e.key === 'Backspace' && !tagInput && formData.tags.length) {
+                  setFormData(f => ({ ...f, tags: f.tags.slice(0, -1) }))
+                }
+              }}
+              placeholder={formData.tags.length ? '' : 'Add tag…'}
+              className="flex-1 min-w-24 bg-transparent outline-none text-sm placeholder:text-slate-400 dark:placeholder:text-white/30"
+            />
+          </div>
         </div>
 
         {/* Checkboxes */}
@@ -173,8 +193,9 @@ export default function NewBlogPage() {
               id="isPublished"
               checked={formData.isPublished}
               onCheckedChange={(checked) => setFormData({...formData, isPublished: checked === true})}
+              className="border-slate-300 dark:border-white/30 data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900 dark:data-[state=checked]:bg-white dark:data-[state=checked]:border-white data-[state=checked]:text-white dark:data-[state=checked]:text-black"
             />
-            <Label htmlFor="isPublished" className="cursor-pointer font-normal">Published</Label>
+            <Label htmlFor="isPublished" className="cursor-pointer font-normal text-slate-700 dark:text-white/80">Published</Label>
           </div>
         </div>
 

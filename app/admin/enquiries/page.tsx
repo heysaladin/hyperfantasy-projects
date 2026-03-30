@@ -1,10 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Plus, Pencil, Trash2, Search } from 'lucide-react'
-import Link from 'next/link'
+import { Search, ChevronDown } from 'lucide-react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,6 +14,53 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+
+const STATUS_OPTIONS = ['new', 'in progress', 'done', 'closed']
+
+const STATUS_STYLES: Record<string, string> = {
+  'new':         'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400',
+  'in progress': 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400',
+  'done':        'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400',
+  'closed':      'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-white/40',
+}
+
+function StatusDropdown({ status, onChange }: { status: string; onChange: (s: string) => void }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  return (
+    <div ref={ref} className="relative inline-block">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded capitalize font-medium transition hover:opacity-80 ${STATUS_STYLES[status] ?? STATUS_STYLES['new']}`}
+      >
+        {status}
+        <ChevronDown size={11} aria-hidden="true" />
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full mt-1 z-50 min-w-32 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-zinc-900 shadow-lg py-1">
+          {STATUS_OPTIONS.map(s => (
+            <button
+              key={s}
+              onClick={() => { onChange(s); setOpen(false) }}
+              className={`w-full text-left px-3 py-1.5 text-xs capitalize hover:bg-slate-100 dark:hover:bg-white/10 transition ${s === status ? 'font-semibold' : ''}`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function AdminEnquiriesPage() {
   const [enquiries, setEnquiries] = useState<any[]>([])
@@ -37,7 +83,10 @@ export default function AdminEnquiriesPage() {
       }
       const data = await res.json()
       console.log('Enquiries fetched:', data) // Debug log
-      setEnquiries(Array.isArray(data) ? data : [])
+      const sorted = (Array.isArray(data) ? data : []).sort((a: any, b: any) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+      setEnquiries(sorted)
       setFilteredEnquiries(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Fetch error:', error)
@@ -58,6 +107,15 @@ export default function AdminEnquiriesPage() {
   const totalPages = Math.ceil(filteredEnquiries.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const paginatedData = filteredEnquiries.slice(startIndex, startIndex + itemsPerPage)
+
+  const updateStatus = async (id: string, status: string) => {
+    setEnquiries(prev => prev.map((e: any) => e.id === id ? { ...e, status } : e))
+    await fetch(`/api/enquiries/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    })
+  }
 
   const handleDelete = async () => {
     if (!deleteId) return
@@ -114,8 +172,15 @@ export default function AdminEnquiriesPage() {
                   </div>
                 </td>
                 <td className="p-4 text-slate-600 dark:text-white/60 capitalize">{enquiry.email || '-'}</td>
-                <td className="p-4 text-slate-600 dark:text-white/60 capitalize">{enquiry.date || '-'}</td>
-                <td className="p-4 text-slate-600 dark:text-white/60 capitalize">{enquiry.status || '-'}</td>
+                <td className="p-4 text-slate-600 dark:text-white/60">
+                  {enquiry.createdAt ? new Date(enquiry.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'}
+                </td>
+                <td className="p-4">
+                  <StatusDropdown
+                    status={enquiry.status || 'new'}
+                    onChange={(s) => updateStatus(enquiry.id, s)}
+                  />
+                </td>
                 {/* <td className="p-4">
                   <div className="flex gap-2 justify-end">
                     <Link href={`/admin/enquiries/${enquiry.id}/edit`}>

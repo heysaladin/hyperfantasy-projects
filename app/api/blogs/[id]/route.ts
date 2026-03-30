@@ -28,7 +28,6 @@ export async function PUT(
         coverImage: body.coverImage || null,
         tags: body.tags || [],
         isPublished: body.isPublished || false,
-        authorId: body.authorId || null
       }
     })
     
