@@ -65,7 +65,7 @@ export default function AboutPage() {
             </div>
             <div className="space-y-6 text-lg text-slate-600 dark:text-white/60 leading-relaxed">
               <p>
-                Founded in 2019, Hyperfantasy started as a small team of designers and developers
+                Founded in 2021, Hyperfantasy started as a small team of designers and developers
                 with a shared vision: to create digital work that genuinely moves people. We
                 believed the industry needed more studios that cared as much about the craft
                 as the outcome.
