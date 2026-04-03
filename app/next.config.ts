@@ -25,6 +25,35 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/heysaladin',
+        destination: '/about/team/heysaladin',
+        permanent: true,
+      },
+      {
+        source: '/hikari',
+        destination: '/about/team/hikari',
+        permanent: true,
+      },
+      {
+        source: '/mitayani',
+        destination: '/about/team/mitayani',
+        permanent: true,
+      },
+      {
+        source: '/dravenclaw',
+        destination: '/about/team/dravenclaw',
+        permanent: true,
+      },
+      {
+        source: '/thinksoft',
+        destination: '/about/team/thinksoft',
+        permanent: true,
+      },
+    ]
+  },
 };
 
 export default nextConfig;
