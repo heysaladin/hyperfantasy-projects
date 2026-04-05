@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { Source_Serif_4 } from 'next/font/google'
@@ -15,10 +16,74 @@ const sourceSerif4 = Source_Serif_4({
   display: 'swap',
 })
 
+function stripHtml(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 async function getBlog(slug: string) {
   return await prisma.blog.findFirst({
     where: { slug }
   })
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const blog = await getBlog(slug)
+
+  if (!blog) {
+    return {
+      title: 'Article Not Found — Hyperfantasy',
+      description: 'This article could not be found.',
+    }
+  }
+
+  const raw = blog.content ? stripHtml(resolveContent(blog.content)) : ''
+  let description = ''
+  if (raw.length > 40) {
+    if (raw.length <= 155) {
+      description = raw
+    } else {
+      const cut = raw.slice(0, 152)
+      const lastSpace = cut.lastIndexOf(' ')
+      description = (lastSpace > 100 ? cut.slice(0, lastSpace) : cut) + '…'
+    }
+  } else {
+    const tagSuffix = (blog.tags as string[])?.length
+      ? ` · ${(blog.tags as string[]).slice(0, 3).join(', ')}`
+      : ''
+    description = `Read "${blog.title}"${tagSuffix} on Hyperfantasy.`
+  }
+
+  const title = `${blog.title} — Hyperfantasy`
+
+  return {
+    title,
+    description,
+    keywords: blog.tags as string[] | undefined,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      ...(blog.createdAt && { publishedTime: blog.createdAt.toISOString() }),
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+    },
+  }
 }
 
 export default async function ArticleDetailPage({
