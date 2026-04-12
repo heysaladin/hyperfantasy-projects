@@ -77,8 +77,9 @@ export const testimonials: Testimonial[] = [
     name: "Iman Fathy",
     role: "Product Manager",
     company: "Tamawal®",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
-      "I've had the pleasure of working with Saladin, and what stands out most is his creativity and genuine curiosity. He asks thoughtful questions to truly understand the problem before designing solutions, which makes a real difference in the quality of his work. He's hardworking, dependable, and always ready to step in when needed. What I admire most is his mindset — he sees every challenge as a chance to learn and grow. Any team would be lucky to have him.",
+      "I've had the pleasure of working with Hyperfantasy, and what stands out most is his creativity and genuine curiosity. He asks thoughtful questions to truly understand the problem before designing solutions, which makes a real difference in the quality of his work. He's hardworking, dependable, and always ready to step in when needed. What I admire most is his mindset — he sees every challenge as a chance to learn and grow. Any team would be lucky to have him.",
     rating: 4.5,
     nps: 9,
     date: "2026-02-24",
@@ -88,6 +89,7 @@ export const testimonials: Testimonial[] = [
     name: "Kamel Gamal Eltayar",
     role: "Business Analyst | Product Owner",
     company: "Tamawal®",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
       "All things he had from innovation side and ability to impress and being creative.",
     rating: 5,
@@ -96,9 +98,10 @@ export const testimonials: Testimonial[] = [
   },
   {
     id: "8",
-    name: "Soliman Ahmed Soliman",
+    name: "Soliman Ahmed",
     role: "Product Designer",
     company: "Tamawal®",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
       "I have worked with Salah for more than one year. He always provides useful UI/UX solutions based on a deep understanding of the problems he works on. I was very lucky to collaborate with him on many product solutions, where he delivered outstanding results.",
     rating: 4.5,
@@ -110,8 +113,9 @@ export const testimonials: Testimonial[] = [
     name: "Abdullah Al Ashikh",
     role: "CFO",
     company: "Tamawal®",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
-      "Saladin is a very great person with imagination. His soul is pure, and I enjoy interacting with him during design sessions. He should continue developing his creativity and focus more on design systems.",
+      "Hyperfantasy is a very great person with imagination. His soul is pure, and I enjoy interacting with him during design sessions. He should continue developing his creativity and focus more on design systems.",
     rating: 5,
     nps: 10,
     date: "2026-03-03",
@@ -121,8 +125,9 @@ export const testimonials: Testimonial[] = [
     name: "Mohamed AbdelHamid",
     role: "Senior Flutter Mobile Developer",
     company: "Tamawal®",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
-      "Saladin is a talented and passionate designer who brings real value to any product he works on. His attention to detail, creativity, and understanding of user experience stand out. Working with him makes a noticeable difference in both the quality of the product and the overall workflow.",
+      "Hyperfantasy is a talented and passionate designer who brings real value to any product he works on. His attention to detail, creativity, and understanding of user experience stand out. Working with him makes a noticeable difference in both the quality of the product and the overall workflow.",
     rating: 5,
     nps: 10,
     date: "2026-04-06",
@@ -133,6 +138,7 @@ export const testimonials: Testimonial[] = [
     name: "Reza Levi Fauzi",
     role: "Product Manager Adsol Q2 2021",
     company: "Tokopedia",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
       "Highly proactive. Overall, Hyperfantasy has a strong understanding of the Adsol business model.",
     rating: 4.5,
@@ -144,6 +150,7 @@ export const testimonials: Testimonial[] = [
     name: "Merlin Detalina",
     role: "Strategic Planning Adsol Q2 2021",
     company: "Tokopedia",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
       "Hyperfantasy very respect with all question that asked to him about his UX proposal flow. Hyperfantasy has a good curiosity and critical thinking. He can find the rootcause and able to do a research to make his proposal flow stronger.",
     rating: 5,
@@ -155,6 +162,7 @@ export const testimonials: Testimonial[] = [
     name: "Amanda Kalpikasari",
     role: "Senior Sales & Ops Adsol Q2 2021",
     company: "Tokopedia",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
       "Provides updates, shows empathy, and understands user pain points.",
     rating: 4.5,
@@ -166,6 +174,7 @@ export const testimonials: Testimonial[] = [
     name: "Sasqia Azizah",
     role: "Inventory Management Adsol Q2 2021",
     company: "Tokopedia",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
       "Hyperfantasy, thank you so much! It's sad that the time was so short. I wish the engagement could have been extended.",
     rating: 5,
@@ -178,6 +187,7 @@ export const testimonials: Testimonial[] = [
     name: "Juan Lesmana",
     role: "Product Manager Finance Q3 2021",
     company: "Tokopedia",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
       "Hyperfantasy adapts very quickly in learning new things. Very proactive and well-prepared. Well done. Really enjoy working with you.",
     rating: 5,
@@ -189,6 +199,7 @@ export const testimonials: Testimonial[] = [
     name: "Alhamsya Bintang Dyasta",
     role: "Software Engineer Finance Q3 2021",
     company: "Tokopedia",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content: "Works quickly and understands the finance business model fast.",
     rating: 5,
     nps: 10,
@@ -199,6 +210,7 @@ export const testimonials: Testimonial[] = [
     name: "Raden Bregas Dwi Hatmojo",
     role: "Procurement Sp. Finance Q3 2021",
     company: "Tokopedia",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
       "The overall procurement plan is easy to understand, and Hyperfantasy is able to provide advice. Good communication skills and clear guidelines. Thanks for the spirit.",
     rating: 4,
@@ -210,6 +222,7 @@ export const testimonials: Testimonial[] = [
     name: "Christyan Aditya",
     role: "Software Engineer Finance Q3 2021",
     company: "Tokopedia",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
       "Hyperfantasy has strong technical knowledge. From an engineer's point of view, it is easy to give input and brainstorm with Hyperfantasy.",
     rating: 5,
@@ -221,6 +234,7 @@ export const testimonials: Testimonial[] = [
     name: "Rahma Septeyani",
     role: "Account Payable Specialist Q3 2021",
     company: "Tokopedia",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content: "Fast learner, communicative, proactive.",
     rating: 4,
     nps: 8,
@@ -231,6 +245,7 @@ export const testimonials: Testimonial[] = [
     name: "Katherina Denistia",
     role: "Account Payable Finance Q3 2021",
     company: "Tokopedia",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
       "Keep up the spirit, Hyperfantasy. Thank you for supporting the AP team so far. We look forward to working with you again in future finance projects.",
     rating: 4.5,
@@ -242,6 +257,7 @@ export const testimonials: Testimonial[] = [
     name: "Reza Z. Ramadhan",
     role: "WPE Finance Q3 2021",
     company: "Tokopedia",
+    image: "https://randomuser.me/api/portraits/men/68.jpg",
     content:
       "Growth mindset, communicative, and high ownership. Hyperfantasy is well-prepared when organizing meetings.",
     rating: 4,
