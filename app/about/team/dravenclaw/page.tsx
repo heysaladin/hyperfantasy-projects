@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma"
 import { HomeFloatingCTA } from "@/components/home-floating-cta"
 import { OpenEnquiryButton } from "@/components/open-enquiry-button"
 import { TeamPortfolioGrid } from "@/components/team-portfolio-grid"
+import localPortfolios from "./data/portfolios"
 
 export const metadata: Metadata = {
   title: "Dravenclaw – Illustration Studio",
@@ -35,10 +36,12 @@ export default async function DravenclawPage() {
     },
   })
 
-  const portfolios = raw.map(p => ({
+  const dbPortfolios = raw.map(p => ({
     ...p,
     projectDate: p.projectDate ? p.projectDate.toISOString() : null,
   }))
+
+  const portfolios = [...localPortfolios, ...dbPortfolios]
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white transition-colors pt-16">

@@ -39,12 +39,13 @@ const SERVICES = [
 ]
 
 const CLIENTS = [
-  { name: 'EZ Laundry', logo: '/logos/logo-ezlaundry.png' },
-  { name: 'Greatsoft',  logo: '/logos/logo-greatsoft.png'  },
-  { name: 'Tresnan',    logo: '/logos/logo-tresnan.png'    },
-  { name: 'Akasia',     logo: '/logos/logo-akasia.png'     },
-  { name: 'Tammwel',    logo: '/logos/logo-tammwel.png'    },
-  { name: 'Sigmatech',  logo: '/logos/logo-sigmatech.png'  },
+  { name: 'Akasia',     logo: 'https://hyperfantasy.web.app/assets/images/logos/logo-akasia.png'     },
+  { name: 'EZ Laundry', logo: 'https://hyperfantasy.web.app/assets/images/logos/logo-ezlaundry.png' },
+  { name: 'Greatsoft',  logo: 'https://hyperfantasy.web.app/assets/images/logos/logo-greatsoft.png'  },
+  { name: 'Sigmatech',  logo: 'https://hyperfantasy.web.app/assets/images/logos/logo-sigmatech.png'  },
+  { name: 'Tammwel',    logo: 'https://hyperfantasy.web.app/assets/images/logos/logo-tammwel.png'    },
+  { name: 'Tresnan',    logo: 'https://hyperfantasy.web.app/assets/images/logos/logo-tresnan.png'    },
+  { name: 'Wolftagon',  logo: 'https://hyperfantasy.web.app/assets/images/logos/logo-wolftagon.png'  },
 ]
 
 async function getProjects(ids: string[]) {

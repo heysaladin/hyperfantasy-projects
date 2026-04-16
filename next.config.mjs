@@ -19,6 +19,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'pps.services.adobe.com' },
       { protocol: 'https', hostname: 'mir-s3-cdn-cf.behance.net' },
       { protocol: 'https', hostname: 'mir-cdn.behance.net' },
+      { protocol: 'https', hostname: 'hyperfantasy.web.app' },
     ],
   },
   async redirects() {
