@@ -70,7 +70,7 @@ export default function ProfilePage() {
         <div>
           <div className="flex flex-col items-center text-center mb-8">
             <img
-              src="https://heysaladindesign.web.app/assets/styles/images/hero-image.png"
+              src="https://heysaladinme.web.app/pictures/avatar.png"
               alt="avatar"
               className="w-48 h-48 rounded-full object-contain bg-white border-4 border-white mb-3"
             />
