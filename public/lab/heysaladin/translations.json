@@ -7,7 +7,9 @@
     "testimonials_count": "20+ testimonials",
     "testimonials_title": "Testimonials",
     "testimonials_subtitle": "20+ reviews from clients & colleagues",
-    "now": "now"
+    "now": "now",
+    "see_all_portfolios": "See all portfolios",
+    "portfolios": "Portfolios"
   },
   "id": {
     "bio": "Hei, saya Saladin, seorang desainer dari Indonesia. Saya meneliti masalah, merancang interaksi, dan menulis kode — membawa pendekatan berpusat pada manusia dan kepekaan artistik untuk menciptakan produk digital yang fungsional sekaligus indah.",
@@ -17,7 +19,9 @@
     "testimonials_count": "20+ testimoni",
     "testimonials_title": "Testimoni",
     "testimonials_subtitle": "20+ ulasan dari klien & rekan kerja",
-    "now": "sekarang"
+    "now": "sekarang",
+    "see_all_portfolios": "Lihat semua portofolio",
+    "portfolios": "Portofolio"
   },
   "ar": {
     "bio": "مرحباً، أنا صلاح الدين، مصمم من إندونيسيا. أبحث في المشكلات، وأصمم التفاعلات، وأكتب الكود — بنهج يركز على الإنسان وحس فني لبناء منتجات رقمية تجمع بين الفائدة والجمال الحقيقي.",
@@ -27,6 +31,80 @@
     "testimonials_count": "20+ توصية",
     "testimonials_title": "التوصيات",
     "testimonials_subtitle": "أكثر من 20 تقييماً من عملاء وزملاء",
-    "now": "الآن"
+    "now": "الآن",
+    "see_all_portfolios": "اطلع على كل الأعمال",
+    "portfolios": "الأعمال"
+  },
+  "ja": {
+    "bio": "こんにちは、インドネシア出身のデザイナー、サラディンです。問題をリサーチし、インタラクションをデザインし、コードを書く — 人間中心のアプローチと芸術的な感性で、使いやすく本当に美しいデジタルプロダクトを作ります。",
+    "send_email": "メールを送る",
+    "chat_now": "今すぐチャット",
+    "working_experiences": "職務経歴",
+    "testimonials_count": "20件以上の推薦",
+    "testimonials_title": "推薦",
+    "testimonials_subtitle": "クライアント・同僚からの20件以上のレビュー",
+    "now": "現在",
+    "see_all_portfolios": "全ポートフォリオを見る",
+    "portfolios": "作品集"
+  },
+  "zh": {
+    "bio": "嗨，我是Saladin，来自印度尼西亚的设计师。我研究问题、设计交互、编写代码 — 以以人为本的方法和艺术眼光，打造兼具实用性与真正美感的数字产品。",
+    "send_email": "发送邮件",
+    "chat_now": "立即聊天",
+    "working_experiences": "工作经历",
+    "testimonials_count": "20+ 推荐",
+    "testimonials_title": "推荐",
+    "testimonials_subtitle": "来自客户和同事的20+评价",
+    "now": "至今",
+    "see_all_portfolios": "查看所有作品集",
+    "portfolios": "作品集"
+  },
+  "ko": {
+    "bio": "안녕하세요, 저는 인도네시아 출신 디자이너 살라딘입니다. 문제를 연구하고, 인터랙션을 디자인하며, 코드를 작성합니다 — 인간 중심적 접근 방식과 예술적 감각으로 실용적이면서도 진정으로 아름다운 디지털 제품을 만듭니다.",
+    "send_email": "이메일 보내기",
+    "chat_now": "지금 채팅",
+    "working_experiences": "경력",
+    "testimonials_count": "20개 이상의 추천",
+    "testimonials_title": "추천",
+    "testimonials_subtitle": "클라이언트 & 동료의 20개 이상의 리뷰",
+    "now": "현재",
+    "see_all_portfolios": "모든 포트폴리오 보기",
+    "portfolios": "포트폴리오"
+  },
+  "ru": {
+    "bio": "Привет, я Саладин, дизайнер из Индонезии. Я исследую проблемы, разрабатываю интерфейсы и пишу код — сочетая человекоцентричный подход и художественное видение для создания цифровых продуктов, которые удобны и по-настоящему красивы.",
+    "send_email": "Написать письмо",
+    "chat_now": "Написать сейчас",
+    "working_experiences": "Опыт работы",
+    "testimonials_count": "20+ отзывов",
+    "testimonials_title": "Отзывы",
+    "testimonials_subtitle": "Более 20 отзывов от клиентов и коллег",
+    "now": "сейчас",
+    "see_all_portfolios": "Все портфолио",
+    "portfolios": "Портфолио"
+  },
+  "fa": {
+    "bio": "سلام، من صلاح‌الدین هستم، طراحی از اندونزی. مشکلات را تحقیق می‌کنم، تعاملات را طراحی می‌کنم و کد می‌نویسم — با رویکردی انسان‌محور و دیدی هنری، محصولات دیجیتالی می‌سازم که هم کاربردی و هم واقعاً زیبا هستند.",
+    "send_email": "ارسال ایمیل",
+    "chat_now": "چت کنید",
+    "working_experiences": "سوابق کاری",
+    "testimonials_count": "بیش از ۲۰ توصیه‌نامه",
+    "testimonials_title": "توصیه‌نامه‌ها",
+    "testimonials_subtitle": "بیش از ۲۰ نظر از مشتریان و همکاران",
+    "now": "اکنون",
+    "see_all_portfolios": "مشاهده همه نمونه‌کارها",
+    "portfolios": "نمونه‌کارها"
+  },
+  "he": {
+    "bio": "שלום, אני סלאדין, מעצב מאינדונזיה. אני חוקר בעיות, מעצב אינטראקציות וכותב קוד — מביא גישה ממוקדת-אדם ועין אמנותית למוצרים דיגיטליים שהם גם שימושיים וגם יפים באמת.",
+    "send_email": "שלח מייל",
+    "chat_now": "שוחח עכשיו",
+    "working_experiences": "ניסיון תעסוקתי",
+    "testimonials_count": "20+ המלצות",
+    "testimonials_title": "המלצות",
+    "testimonials_subtitle": "20+ ביקורות מלקוחות ועמיתים",
+    "now": "כעת",
+    "see_all_portfolios": "ראה את כל התיקים",
+    "portfolios": "תיקים"
   }
 }

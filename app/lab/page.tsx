@@ -3,18 +3,6 @@ import { Folder, FileCode, ExternalLink, ArrowUpRight } from 'lucide-react'
 
 const ENTRIES = [
   {
-    type: 'internal' as const,
-    label: 'Home',
-    description: 'Back to main site',
-    href: '/',
-  },
-  {
-    type: 'internal' as const,
-    label: 'Admin',
-    description: 'Manage your content',
-    href: '/admin',
-  },
-  {
     type: 'external' as const,
     label: 'Hyperfantasy',
     description: 'hyperfantasy.web.app',
@@ -46,10 +34,53 @@ const ENTRIES = [
   },
 ]
 
+function CardIcon({ type }: { type: 'internal' | 'external' | 'file' }) {
+  if (type === 'file') return <FileCode size={16} className="text-slate-400 dark:text-white/30" aria-hidden="true" />
+  return <Folder size={16} className="text-slate-400 dark:text-white/30" aria-hidden="true" />
+}
+
+function CardArrow({ type }: { type: 'internal' | 'external' | 'file' }) {
+  if (type === 'external') return <ExternalLink size={13} aria-hidden="true" />
+  return <ArrowUpRight size={13} aria-hidden="true" />
+}
+
+function Card({ entry }: { entry: typeof ENTRIES[number] }) {
+  const className =
+    "group relative flex flex-col justify-between gap-8 p-5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.02] hover:border-slate-300 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.04] transition"
+
+  const inner = (
+    <>
+      <div className="flex items-start justify-between gap-2">
+        <CardIcon type={entry.type} />
+        <span className="text-slate-400 dark:text-white/20 group-hover:text-slate-600 dark:group-hover:text-white/50 transition">
+          <CardArrow type={entry.type} />
+        </span>
+      </div>
+      <div>
+        <p className="text-sm font-semibold leading-snug">{entry.label}</p>
+        <p className="text-xs text-slate-400 dark:text-white/30 mt-0.5 truncate">{entry.description}</p>
+      </div>
+    </>
+  )
+
+  if (entry.type === 'external') {
+    return (
+      <a href={entry.href} target="_blank" rel="noopener noreferrer" className={className}>
+        {inner}
+      </a>
+    )
+  }
+  return (
+    <Link href={entry.href} className={className}>
+      {inner}
+    </Link>
+  )
+}
+
 export default function LabPage() {
   return (
     <div className="bg-white dark:bg-black text-slate-900 dark:text-white min-h-screen transition-colors pt-16">
-      <div className="max-w-xl mx-auto px-6 py-10">
+      <div className="max-w-4xl mx-auto px-6 py-10">
 
         {/* Header */}
         <div className="mb-8">
@@ -61,58 +92,11 @@ export default function LabPage() {
           <p className="text-sm text-slate-500 dark:text-white/40 mt-1">Experimental works and linked projects.</p>
         </div>
 
-        {/* Entry list */}
-        <div className="flex flex-col divide-y divide-slate-100 dark:divide-white/5 border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden">
-          {ENTRIES.map((entry) =>
-            entry.type === 'external' ? (
-              <a
-                key={entry.href}
-                href={entry.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between px-4 py-3 hover:bg-slate-50 dark:hover:bg-white/5 transition group"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <Folder size={14} className="shrink-0 text-slate-400 dark:text-white/30" aria-hidden="true" />
-                  <div className="min-w-0">
-                    <span className="text-sm font-medium block truncate">{entry.label}</span>
-                    <span className="text-xs text-slate-400 dark:text-white/30 block truncate">{entry.description}</span>
-                  </div>
-                </div>
-                <ExternalLink size={14} className="shrink-0 ml-3 text-slate-400 dark:text-white/30 group-hover:text-slate-600 dark:group-hover:text-white/60 transition" aria-hidden="true" />
-              </a>
-            ) : entry.type === 'file' ? (
-              <Link
-                key={entry.href}
-                href={entry.href}
-                className="flex items-center justify-between px-4 py-3 hover:bg-slate-50 dark:hover:bg-white/5 transition group"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <FileCode size={14} className="shrink-0 text-slate-400 dark:text-white/30" aria-hidden="true" />
-                  <div className="min-w-0">
-                    <span className="text-sm font-medium block truncate">{entry.label}</span>
-                    <span className="text-xs text-slate-400 dark:text-white/30 block truncate">{entry.description}</span>
-                  </div>
-                </div>
-                <ArrowUpRight size={14} className="shrink-0 ml-3 text-slate-400 dark:text-white/30 group-hover:text-slate-600 dark:group-hover:text-white/60 transition" aria-hidden="true" />
-              </Link>
-            ) : (
-              <Link
-                key={entry.href}
-                href={entry.href}
-                className="flex items-center justify-between px-4 py-3 hover:bg-slate-50 dark:hover:bg-white/5 transition group"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <Folder size={14} className="shrink-0 text-slate-400 dark:text-white/30" aria-hidden="true" />
-                  <div className="min-w-0">
-                    <span className="text-sm font-medium block truncate">{entry.label}</span>
-                    <span className="text-xs text-slate-400 dark:text-white/30 block truncate">{entry.description}</span>
-                  </div>
-                </div>
-                <ArrowUpRight size={14} className="shrink-0 ml-3 text-slate-400 dark:text-white/30 group-hover:text-slate-600 dark:group-hover:text-white/60 transition" aria-hidden="true" />
-              </Link>
-            )
-          )}
+        {/* Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          {ENTRIES.map((entry) => (
+            <Card key={entry.href} entry={entry} />
+          ))}
         </div>
 
         <p className="text-xs text-slate-400 dark:text-white/20 mt-4 font-mono">{ENTRIES.length} entries</p>
