@@ -381,8 +381,9 @@ export function HomeFloatingCTA({ ctaBtnId, alwaysVisible, scrollThreshold = 0 }
                         value={formData.budget}
                         onChange={e => setField('budget', e.target.value)}
                         className="bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10"
-                        placeholder="e.g. $5k – $10k"
+                        placeholder="e.g. $1,500 – $5,000"
                       />
+                      <p className="text-xs text-slate-400 dark:text-white/30 mt-1">Minimum budget: $1,500 USD</p>
                     </div>
                   </div>
 

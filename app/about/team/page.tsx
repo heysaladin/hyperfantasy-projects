@@ -1,10 +1,21 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { team } from "@/data/team"
 import { TeamImageFlicker } from "@/components/team-image-flicker"
+import dynamic from 'next/dynamic'
+import { EnquiryCTAButton } from '@/components/enquiry-cta-button'
+
+const HomeFloatingCTA = dynamic(() =>
+  import('@/components/home-floating-cta').then(m => ({ default: m.HomeFloatingCTA }))
+)
+
+const BG       = '#030017'
+const CARD     = '#181346'
+const ACCENT   = '#b394f4'
+const GRADIENT = 'linear-gradient(256.86deg,#1e40af 0%,#7c3aed 55%,#be185d 100%)'
 
 export const metadata: Metadata = {
   title: "Team — Hyperfantasy Creative Studio",
@@ -14,27 +25,34 @@ export const metadata: Metadata = {
 export default async function TeamPage() {
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white transition-colors pt-16">
+    <div style={{ fontFamily: 'var(--font-sora, sans-serif)' }} className="min-h-screen hf-page text-slate-900 dark:text-white transition-colors pt-16">
+      <style>{`
+        .hf-page        { background-color: #ffffff; }
+        .dark .hf-page  { background-color: ${BG}; }
+        .hf-card        { background: #f1f0ff; }
+        .dark .hf-card  { background: ${CARD}; }
+        .before-title   { color:#7c3aed; display:block; font-size:14px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; margin-bottom:16px; }
+        .dark .before-title { color:${ACCENT}; }
+      `}</style>
 
       {/* Header */}
-      <section className="pt-16 pb-20 px-6 lg:px-8 border-b border-slate-200 dark:border-white/5">
+      <section className="pt-16 pb-20 px-6 lg:px-8 border-b border-black/10 dark:border-white/5">
         <div className="max-w-7xl mx-auto">
           <Link
             href="/about"
-            className="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white transition mb-10"
+            className="inline-flex items-center gap-2 text-sm dark:text-white/40 text-slate-500 hover:text-slate-900 dark:hover:text-white transition mb-10"
             aria-label="Back to About"
           >
             <ArrowLeft size={16} aria-hidden="true" />
-
             About
           </Link>
-          <p className="text-sm uppercase tracking-widest text-slate-500 dark:text-white/40 mb-6">The Team</p>
-          <h1 className="text-6xl md:text-8xl font-bold leading-tight mb-8">
+          <span className="before-title">The Team</span>
+          <h1 style={{ fontSize: 'clamp(40px,7vw,86px)', fontWeight: 600, lineHeight: '135%' }} className="mb-8 dark:text-white text-slate-900">
             The people
             <br />
-            <span className="text-slate-500 dark:text-white/40">behind the work</span>
+            <span className="dark:text-white/40 text-slate-500">behind the work</span>
           </h1>
-          <p className="text-xl text-slate-600 dark:text-white/60 max-w-2xl leading-relaxed">
+          <p style={{ fontSize: 18, fontWeight: 300, lineHeight: '150%' }} className="dark:text-white/70 text-slate-600 max-w-2xl">
             A small, focused team of designers, engineers, and strategists united by
             a shared obsession with craft and quality.
           </p>
@@ -74,28 +92,21 @@ export default async function TeamPage() {
         </div>
       </section>
 
-      {/* Join Us */}
-      <section className="py-32 px-6 lg:px-8 bg-slate-900 dark:bg-white text-white dark:text-black">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl md:text-7xl font-bold mb-8">
-            Let's work
-            <br />
-            together
-          </h2>
-          <p className="text-xl text-white/60 dark:text-black/60 mb-12">
-            Have a project in mind? We'd love to hear about it.
-          </p>
-          <Link href="/enquiry">
-            <Button
-              size="lg"
-              className="bg-white dark:bg-black text-black dark:text-white hover:bg-white/90 dark:hover:bg-black/90"
-              aria-label="Get in touch about joining the team"
-            >
-              Get in Touch
-            </Button>
-          </Link>
+      {/* CTA Block */}
+      <section className="py-24 px-6 lg:px-8 border-t border-black/10 dark:border-white/5">
+        <div className="max-w-5xl mx-auto">
+          <div className="rounded-3xl text-center text-white" style={{ background: CARD, padding: '100px 64px' }}>
+            <h2 style={{ fontSize: 'clamp(32px,5vw,48px)', fontWeight: 600, lineHeight: '150%', marginBottom: 40 }}>
+              Have any awesome fantasy?
+            </h2>
+            <EnquiryCTAButton id="team-cta-btn" style={{ background: GRADIENT, color: '#fff', borderRadius: 48, padding: '14px 32px', fontSize: 16, fontWeight: 600, border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <Mail size={18} aria-hidden="true" /> Let&apos;s talk!
+            </EnquiryCTAButton>
+          </div>
         </div>
       </section>
+
+      <HomeFloatingCTA ctaBtnId="team-cta-btn" scrollThreshold={300} />
 
 
     </div>

@@ -7,7 +7,7 @@ const NAV_LINKS = [
   { label: 'Projects', href: '/projects' },
   { label: 'Articles', href: '/articles' },
   { label: 'About',   href: '/about'    },
-  { label: 'Enquiry', href: '/enquiry'  },
+  { label: 'Contact', href: '/enquiry'  },
 ]
 
 const SOCIAL = [

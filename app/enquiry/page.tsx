@@ -8,6 +8,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 
+const BG       = '#030017'
+const CARD     = '#181346'
+const ACCENT   = '#b394f4'
+const GRADIENT = 'linear-gradient(256.86deg,#1e40af 0%,#7c3aed 55%,#be185d 100%)'
+
 const EMPTY = { name: '', email: '', company: '', budget: '', message: '' }
 const EMPTY_ERRORS = { name: '', email: '', message: '' }
 
@@ -84,10 +89,19 @@ export default function NewEnquiryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-slate-900 dark:text-white transition-colors pt-16">
+    <div style={{ fontFamily: 'var(--font-sora, sans-serif)' }} className="min-h-screen hf-page text-slate-900 dark:text-white transition-colors pt-16">
+      <style>{`
+        .hf-page        { background-color: #ffffff; }
+        .dark .hf-page  { background-color: ${BG}; }
+        .hf-card        { background: #f1f0ff; }
+        .dark .hf-card  { background: ${CARD}; }
+        .before-title   { color:#7c3aed; display:block; font-size:14px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; margin-bottom:16px; }
+        .dark .before-title { color:${ACCENT}; }
+      `}</style>
       <div className="max-w-3xl mx-auto px-6 lg:px-8 py-16">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Get in Touch</h1>
-        <p className="text-slate-500 dark:text-white/50 mb-12">
+        <span className="before-title">Contact</span>
+        <h1 style={{ fontSize: 'clamp(36px,6vw,64px)', fontWeight: 600, lineHeight: '135%' }} className="mb-6">Get in Touch</h1>
+        <p style={{ fontSize: 18, fontWeight: 300, lineHeight: '150%' }} className="dark:text-white/70 text-slate-600 mb-12">
           Tell us about your project and we&apos;ll get back to you soon.
         </p>
 
@@ -96,7 +110,7 @@ export default function NewEnquiryPage() {
             role="status"
             aria-live="polite"
             aria-atomic="true"
-            className="rounded-2xl border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 px-8 py-12 text-center"
+            className="hf-card rounded-3xl border border-black/10 dark:border-white/5 px-8 py-12 text-center"
           >
             <style>{`
               @keyframes hf-check-pop {
@@ -124,6 +138,7 @@ export default function NewEnquiryPage() {
             <Button variant="outline" onClick={() => setSuccess(false)}>Send another</Button>
           </div>
         ) : (
+          <div className="hf-card rounded-3xl border border-black/10 dark:border-white/5 px-8 py-10">
           <form onSubmit={handleSubmit} noValidate aria-label="Enquiry form" className="space-y-6">
             <p className="text-sm text-slate-400 dark:text-white/30">
               Fields marked <span aria-hidden="true">*</span><span className="sr-only">with an asterisk</span> are required.
@@ -150,7 +165,7 @@ export default function NewEnquiryPage() {
                 value={formData.name}
                 onChange={e => set('name', e.target.value)}
                 onBlur={() => blur('name')}
-                className={`bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10 ${fieldErrors.name ? 'border-red-500 dark:border-red-500' : ''}`}
+                className={`bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 ${fieldErrors.name ? 'border-red-500 dark:border-red-500' : ''}`}
                 placeholder="Your name"
               />
               {fieldErrors.name && (
@@ -173,7 +188,7 @@ export default function NewEnquiryPage() {
                 value={formData.email}
                 onChange={e => set('email', e.target.value)}
                 onBlur={() => blur('email')}
-                className={`bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10 ${fieldErrors.email ? 'border-red-500 dark:border-red-500' : ''}`}
+                className={`bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 ${fieldErrors.email ? 'border-red-500 dark:border-red-500' : ''}`}
                 placeholder="your@email.com"
               />
               {fieldErrors.email && (
@@ -189,7 +204,7 @@ export default function NewEnquiryPage() {
                 autoComplete="organization"
                 value={formData.company}
                 onChange={e => set('company', e.target.value)}
-                className="bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10"
+                className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10"
                 placeholder="Your company name"
               />
             </div>
@@ -201,9 +216,10 @@ export default function NewEnquiryPage() {
                 id="budget"
                 value={formData.budget}
                 onChange={e => set('budget', e.target.value)}
-                className="bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10"
-                placeholder="e.g. $5,000 – $10,000"
+                className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10"
+                placeholder="e.g. $1,500 – $5,000"
               />
+              <p className="text-xs text-slate-400 dark:text-white/30">Minimum budget: $1,500 USD</p>
             </div>
 
             {/* Message */}
@@ -220,7 +236,7 @@ export default function NewEnquiryPage() {
                 value={formData.message}
                 onChange={e => set('message', e.target.value)}
                 onBlur={() => blur('message')}
-                className={`bg-slate-100 dark:bg-white/5 border-slate-300 dark:border-white/10 ${fieldErrors.message ? 'border-red-500 dark:border-red-500' : ''}`}
+                className={`bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 ${fieldErrors.message ? 'border-red-500 dark:border-red-500' : ''}`}
                 placeholder="Tell us about your project..."
               />
               {fieldErrors.message && (
@@ -229,14 +245,21 @@ export default function NewEnquiryPage() {
             </div>
 
             <div className="flex gap-4 pt-4">
-              <Button type="submit" disabled={loading} aria-disabled={loading} aria-busy={loading}>
+              <button
+                type="submit"
+                disabled={loading}
+                aria-disabled={loading}
+                aria-busy={loading}
+                style={{ background: 'linear-gradient(256.86deg,#1e40af 0%,#7c3aed 55%,#be185d 100%)', borderRadius: 48, padding: '12px 28px', fontSize: 15, fontWeight: 600, color: '#fff', border: 'none', cursor: 'pointer', opacity: loading ? 0.7 : 1, transition: 'opacity .2s' }}
+              >
                 {loading ? <span aria-live="polite">Submitting…</span> : 'Submit Enquiry'}
-              </Button>
+              </button>
               <Link href="/">
                 <Button type="button" variant="outline">Cancel</Button>
               </Link>
             </div>
           </form>
+          </div>
         )}
       </div>
     </div>

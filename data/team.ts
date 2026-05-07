@@ -19,7 +19,7 @@ export const team: TeamMember[] = [
     name: "Dean (Saladin)",
     role: "Product Designer & Coordinator",
     bio: "With over a decade of experience in product design and digital strategy, Dean leads the creative direction while ensuring every project runs with clarity, precision, and purpose.",
-    image: "https://heyheysaladin.web.app/assets/images/profile.jpg",
+    image: "https://heysaladindesign.web.app/pictures/avatar.png",
     gradient: "from-purple-900/20 to-blue-900/20",
     social: {
       twitter: "#",
