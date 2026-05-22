@@ -33,10 +33,10 @@ const ENTRIES = [
     href: '/lab/heysaladin-design-playful/index.html',
   },
   {
-    type: 'external' as const,
+    type: 'file' as const,
     label: 'colab',
-    description: 'Collaboration Space',
-    href: 'https://heysaladinme.web.app/colab/',
+    description: 'index.html',
+    href: '/colab/index.html',
   },
   {
     type: 'external' as const,
