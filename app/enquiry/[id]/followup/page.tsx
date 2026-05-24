@@ -312,7 +312,6 @@ export default function FollowUpPage() {
                           selected={slot.day}
                           onSelect={d => setSlotField(i, 'day', d)}
                           disabled={{ before: new Date() }}
-                          initialFocus
                         />
                       </PopoverContent>
                     </Popover>
