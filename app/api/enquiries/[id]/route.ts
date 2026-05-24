@@ -2,6 +2,20 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { NextRequest } from 'next/server'
 
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params
+  try {
+    const enquiry = await prisma.enquiry.findUnique({ where: { id } })
+    if (!enquiry) return Response.json({ error: 'Not found' }, { status: 404 })
+    return Response.json(enquiry)
+  } catch {
+    return Response.json({ error: 'Failed to fetch enquiry' }, { status: 500 })
+  }
+}
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

@@ -26,7 +26,37 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const enquiry = await prisma.enquiry.create({
-      data: body
+      data: {
+        ...body,
+        summary: {
+          init_enquiry: {
+            name:    body.name    ?? '',
+            email:   body.email   ?? '',
+            company: body.company ?? '',
+            budget:  body.budget  ?? '',
+            message: body.message ?? '',
+          },
+          follow_up_enquiry: {
+            project_details: '',
+            timeline: '',
+            availability: [
+              { slot: 1, day: '', time: '' },
+              { slot: 2, day: '', time: '' },
+              { slot: 3, day: '', time: '' },
+            ],
+            confirmed_call: null,
+          },
+          enquiry_received: null,
+          estimated_done:   null,
+          files:            {},
+          agenda: {
+            next_action:    '',
+            next_action_by: '',
+            due_date:       null,
+          },
+          notes: '',
+        },
+      },
     })
 
     // Send email notification (non-blocking)

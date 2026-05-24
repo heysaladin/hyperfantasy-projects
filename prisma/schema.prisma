@@ -52,15 +52,18 @@ model Blog {
 }
 
 model Enquiry {
-  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
   email     String
   company   String?
   budget    String?
   message   String
-  status    String?   @default("new")
-  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  status    String?      @default("new")
+  createdAt DateTime?    @default(now()) @map("created_at") @db.Timestamptz(6)
+  stage     ProjectStage @default(enquiry)
+  summary   Json?
 
+  @@index([stage])
   @@map("enquiries")
 }
 
@@ -90,4 +93,15 @@ model Creator {
   portfolios Portfolio[]
 
   @@map("creators")
+}
+
+enum ProjectStage {
+  marketing
+  enquiry
+  deal
+  project_management
+  approval
+  development
+  qc
+  handover
 }

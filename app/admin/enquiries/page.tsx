@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Search, ChevronDown } from 'lucide-react'
+import { Search, ChevronDown, FileText, ExternalLink } from 'lucide-react'
+import Link from 'next/link'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -158,7 +159,7 @@ export default function AdminEnquiriesPage() {
               <th className="text-left p-4 font-semibold">Email</th>
               <th className="text-left p-4 font-semibold">Date</th>
               <th className="text-left p-4 font-semibold">Status</th>
-              {/* <th className="text-right p-4 font-semibold">Action</th> */}
+              <th className="text-right p-4 font-semibold"></th>
             </tr>
           </thead>
           <tbody>
@@ -182,22 +183,20 @@ export default function AdminEnquiriesPage() {
                     onChange={(s) => updateStatus(enquiry.id, s)}
                   />
                 </td>
-                {/* <td className="p-4">
+                <td className="p-4">
                   <div className="flex gap-2 justify-end">
-                    <Link href={`/admin/enquiries/${enquiry.id}/edit`}>
-                      <Button variant="outline" size="sm">
-                        <Pencil size={16} />
+                    <Link href={`/admin/enquiries/${enquiry.id}`}>
+                      <Button variant="outline" size="sm" title="Details">
+                        <FileText size={15} />
                       </Button>
                     </Link>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => setDeleteId(enquiry.id)}
-                    >
-                      <Trash2 size={16} />
-                    </Button>
+                    <Link href={`/enquiry/${enquiry.id}`} target="_blank">
+                      <Button variant="outline" size="sm" title="View status page">
+                        <ExternalLink size={15} />
+                      </Button>
+                    </Link>
                   </div>
-                </td> */}
+                </td>
               </tr>
             ))}
           </tbody>
