@@ -283,7 +283,6 @@ export default function EnquiryDetailPage() {
                               selected={callDate}
                               onSelect={setCallDate}
                               disabled={{ before: new Date() }}
-                              initialFocus
                             />
                           </PopoverContent>
                         </Popover>
@@ -416,7 +415,6 @@ export default function EnquiryDetailPage() {
                                   mode="single"
                                   selected={agendaForm.due_date_day}
                                   onSelect={d => setAgendaForm(p => ({ ...p, due_date_day: d }))}
-                                  initialFocus
                                 />
                               </PopoverContent>
                             </Popover>
