@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 const SUBDOMAIN_ROUTES: Record<string, string> = {
+  heysaladin: '/about/team/heysaladin',
   dravenclaw: '/about/team/dravenclaw',
   thinksoft: '/about/team/thinksoft',
   mitayani: '/about/team/mitayani',
