@@ -17,7 +17,7 @@ export async function proxy(request: NextRequest) {
 
   const destination = SUBDOMAIN_ROUTES[subdomain]
   if (destination && request.nextUrl.pathname === '/') {
-    return NextResponse.redirect(new URL(destination, request.url))
+    return NextResponse.rewrite(new URL(destination, request.url))
   }
 
   let response = NextResponse.next({
