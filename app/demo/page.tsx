@@ -1,9 +1,92 @@
-import { Folder } from 'lucide-react'
+import Link from 'next/link'
+import { Folder, FileCode, ExternalLink, ArrowUpRight } from 'lucide-react'
+
+const ENTRIES = [
+  {
+    type: 'external' as const,
+    label: 'Hikari',
+    description: 'hikari.hyperfantasy.co',
+    href: 'https://hikari.hyperfantasy.co/',
+  },
+  {
+    type: 'external' as const,
+    label: 'Mitayani',
+    description: 'mitayani.hyperfantasy.co',
+    href: 'https://mitayani.hyperfantasy.co/',
+  },
+  {
+    type: 'external' as const,
+    label: 'Dravenclaw',
+    description: 'dravenclaw.hyperfantasy.co',
+    href: 'https://dravenclaw.hyperfantasy.co/',
+  },
+  {
+    type: 'external' as const,
+    label: 'Thinksoft',
+    description: 'thinksoft.hyperfantasy.co',
+    href: 'https://thinksoft.hyperfantasy.co/',
+  },
+  {
+    type: 'file' as const,
+    label: 'Zopavo',
+    description: 'index.html',
+    href: '/demo/zopavo/index.html',
+  },
+  {
+    type: 'file' as const,
+    label: 'Cubicle',
+    description: 'index.html',
+    href: '/demo/cubicle/index.html',
+  },
+]
+
+function CardIcon({ type }: { type: 'internal' | 'external' | 'file' }) {
+  if (type === 'file') return <FileCode size={16} className="text-slate-400 dark:text-white/30" aria-hidden="true" />
+  return <Folder size={16} className="text-slate-400 dark:text-white/30" aria-hidden="true" />
+}
+
+function CardArrow({ type }: { type: 'internal' | 'external' | 'file' }) {
+  if (type === 'external') return <ExternalLink size={13} aria-hidden="true" />
+  return <ArrowUpRight size={13} aria-hidden="true" />
+}
+
+function Card({ entry }: { entry: typeof ENTRIES[number] }) {
+  const className =
+    "group relative flex flex-col justify-between gap-8 p-5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.02] hover:border-slate-300 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.04] transition"
+
+  const inner = (
+    <>
+      <div className="flex items-start justify-between gap-2">
+        <CardIcon type={entry.type} />
+        <span className="text-slate-400 dark:text-white/20 group-hover:text-slate-600 dark:group-hover:text-white/50 transition">
+          <CardArrow type={entry.type} />
+        </span>
+      </div>
+      <div>
+        <p className="text-sm font-semibold leading-snug">{entry.label}</p>
+        <p className="text-xs text-slate-400 dark:text-white/30 mt-0.5 truncate">{entry.description}</p>
+      </div>
+    </>
+  )
+
+  if (entry.type === 'external') {
+    return (
+      <a href={entry.href} target="_blank" rel="noopener noreferrer" className={className}>
+        {inner}
+      </a>
+    )
+  }
+  return (
+    <Link href={entry.href} className={className}>
+      {inner}
+    </Link>
+  )
+}
 
 export default function DemoPage() {
   return (
     <div className="bg-white dark:bg-black text-slate-900 dark:text-white min-h-screen transition-colors pt-16">
-      <div className="max-w-xl mx-auto px-6 py-10">
+      <div className="max-w-4xl mx-auto px-6 py-10">
 
         {/* Header */}
         <div className="mb-8">
@@ -12,16 +95,17 @@ export default function DemoPage() {
             <span className="text-xs text-slate-400 dark:text-white/30 font-mono">/demo</span>
           </div>
           <h1 className="text-2xl font-bold">Demo</h1>
-          <p className="text-sm text-slate-500 dark:text-white/40 mt-1">Demos and prototypes. Nothing here yet.</p>
+          <p className="text-sm text-slate-500 dark:text-white/40 mt-1">Demos and prototypes.</p>
         </div>
 
-        {/* Empty state */}
-        <div className="border border-dashed border-slate-200 dark:border-white/10 rounded-xl px-6 py-12 flex flex-col items-center text-center">
-          <Folder size={32} className="text-slate-300 dark:text-white/10 mb-3" aria-hidden="true" />
-          <p className="text-sm text-slate-400 dark:text-white/30">No entries yet</p>
+        {/* Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          {ENTRIES.map((entry) => (
+            <Card key={entry.href} entry={entry} />
+          ))}
         </div>
 
-        <p className="text-xs text-slate-400 dark:text-white/20 mt-4 font-mono">0 entries</p>
+        <p className="text-xs text-slate-400 dark:text-white/20 mt-4 font-mono">{ENTRIES.length} entries</p>
       </div>
     </div>
   )

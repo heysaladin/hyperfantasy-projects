@@ -36,7 +36,7 @@ const ENTRIES = [
     type: 'file' as const,
     label: 'colab',
     description: 'index.html',
-    href: '/colab/index.html',
+    href: '/lab/colab/index.html',
   },
   {
     type: 'external' as const,
