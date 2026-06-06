@@ -59,8 +59,8 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Send email notification (non-blocking)
-    new Resend(process.env.RESEND_API_KEY).emails.send({
+    // Send email notification (non-blocking, skip if key not configured)
+    if (process.env.RESEND_API_KEY) new Resend(process.env.RESEND_API_KEY).emails.send({
       from: 'Hyperfantasy <onboarding@resend.dev>',
       to: 'hello.hyperfantasy@gmail.com',
       subject: `New Enquiry from ${enquiry.name}`,

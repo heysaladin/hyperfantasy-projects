@@ -156,8 +156,9 @@ export default function AdminEnquiriesPage() {
           <thead className="bg-slate-100 dark:bg-white/5 border-b border-slate-300 dark:border-white/10">
             <tr>
               <th className="text-left p-4 font-semibold">Name</th>
+              <th className="text-left p-4 font-semibold w-48">Budget (IDR)</th>
               <th className="text-left p-4 font-semibold">Email</th>
-              <th className="text-left p-4 font-semibold">Date</th>
+              <th className="text-left p-4 font-semibold w-40">Date</th>
               <th className="text-left p-4 font-semibold">Status</th>
               <th className="text-right p-4 font-semibold"></th>
             </tr>
@@ -173,8 +174,13 @@ export default function AdminEnquiriesPage() {
                     </div>
                   </div>
                 </td>
-                <td className="p-4 text-slate-600 dark:text-white/60 capitalize">{enquiry.email || '-'}</td>
-                <td className="p-4 text-slate-600 dark:text-white/60">
+                <td className="p-4 text-slate-600 dark:text-white/60 w-48">
+                  {enquiry.budget
+                    ? Number(enquiry.budget.toString().replace(/[^0-9.]/g, '')).toLocaleString('id-ID')
+                    : '-'}
+                </td>
+                <td className="p-4 text-slate-600 dark:text-white/60 lowercase">{enquiry.email || '-'}</td>
+                <td className="p-4 text-slate-600 dark:text-white/60 w-40">
                   {enquiry.createdAt ? new Date(enquiry.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'}
                 </td>
                 <td className="p-4">
