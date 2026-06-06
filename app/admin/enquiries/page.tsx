@@ -69,10 +69,15 @@ export default function AdminEnquiriesPage() {
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [usdRate, setUsdRate] = useState<number | null>(null)
   const itemsPerPage = 6
 
   useEffect(() => {
     fetchEnquiries()
+    fetch('https://open.er-api.com/v6/latest/USD')
+      .then(r => r.json())
+      .then(data => setUsdRate(data.rates?.IDR ?? null))
+      .catch(() => {})
   }, [])
 
   const fetchEnquiries = async () => {
@@ -93,6 +98,15 @@ export default function AdminEnquiriesPage() {
       console.error('Fetch error:', error)
     }
   }
+
+  const totalDoneBudget = enquiries
+    .filter((e: any) => e.status === 'done')
+    .reduce((sum: number, e: any) => {
+      const val = Number(e.budget?.toString().replace(/[^0-9.]/g, '') ?? '0')
+      return sum + (isNaN(val) ? 0 : val)
+    }, 0)
+
+  const totalDoneUSD = usdRate && totalDoneBudget > 0 ? totalDoneBudget / usdRate : null
 
   // Search filter
   useEffect(() => {
@@ -136,6 +150,18 @@ export default function AdminEnquiriesPage() {
             Total: {filteredEnquiries.length} enquiries
           </p>
         </div>
+        {totalDoneBudget > 0 && (
+          <div className="text-right">
+            <div className="text-3xl font-bold">
+              Rp {totalDoneBudget.toLocaleString('id-ID')}
+            </div>
+            <p className="text-slate-600 dark:text-white/60 text-sm mt-1">
+              {totalDoneUSD
+                ? `$${totalDoneUSD.toLocaleString('en-US', { maximumFractionDigits: 0 })} USD`
+                : usdRate === null ? 'Loading rate…' : '$0 USD'}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Search */}
