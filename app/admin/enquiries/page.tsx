@@ -16,10 +16,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
-const STATUS_OPTIONS = ['new', 'in progress', 'done', 'closed']
+const STATUS_OPTIONS = ['new', 'replied', 'in progress', 'done', 'closed']
 
 const STATUS_STYLES: Record<string, string> = {
   'new':         'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400',
+  'replied':     'bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400',
   'in progress': 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400',
   'done':        'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400',
   'closed':      'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-white/40',
@@ -185,7 +186,7 @@ export default function AdminEnquiriesPage() {
               <th className="text-left p-4 font-semibold w-48">Budget (IDR)</th>
               <th className="text-left p-4 font-semibold">Email</th>
               <th className="text-left p-4 font-semibold w-40">Date</th>
-              <th className="text-left p-4 font-semibold">Status</th>
+              <th className="text-left p-4 font-semibold w-36">Status</th>
               <th className="text-right p-4 font-semibold"></th>
             </tr>
           </thead>
@@ -209,7 +210,7 @@ export default function AdminEnquiriesPage() {
                 <td className="p-4 text-slate-600 dark:text-white/60 w-40">
                   {enquiry.createdAt ? new Date(enquiry.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'}
                 </td>
-                <td className="p-4">
+                <td className="p-4 w-36">
                   <StatusDropdown
                     status={enquiry.status || 'new'}
                     onChange={(s) => updateStatus(enquiry.id, s)}
