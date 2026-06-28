@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Sora } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { PostHogProvider } from "@/components/posthog-provider";
+import { PWARegister } from "@/components/pwa-register";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,9 +26,35 @@ const sora = Sora({
   weight: ["300", "400", "500", "600", "700"],
 });
 
+export const viewport: Viewport = {
+  themeColor: "#09090b",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export const metadata: Metadata = {
   title: "Hyperfantasy - Creative Studio Design & Development",
   description: "A creative studio specializing in brand design, web development, and digital strategy. We help brands stand out in the digital landscape.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Hyperfantasy",
+  },
+  icons: {
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    icon: [
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
+    ],
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+  },
 };
 
 export default function RootLayout({
@@ -56,6 +83,7 @@ export default function RootLayout({
             <Footer />
           </ThemeProvider>
         </PostHogProvider>
+        <PWARegister />
         <Analytics />
         <SpeedInsights />
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID!} />
