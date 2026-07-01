@@ -96,14 +96,20 @@ export default async function Home() {
       <div className="hf-page">
 
         {/* ── HERO ─────────────────────────────────────────────── */}
-        <section className="pt-40 pb-32 px-6 lg:px-8 text-center" aria-label="Hero">
-          <div className="max-w-5xl mx-auto">
-            <h1 style={{ fontSize: 'clamp(40px,7vw,86px)', fontWeight: 600, lineHeight: '135%' }}
-              className="mb-10 dark:text-white text-slate-900">
+        <section aria-label="Hero" style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 1.5rem' }}>
+          {/* Video background */}
+          <video autoPlay muted loop playsInline style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, opacity: 0.55 }}>
+            <source src="/cable.mov" type="video/mp4" />
+          </video>
+          {/* Overlay */}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 1, background: 'linear-gradient(to bottom,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.2) 40%,rgba(0,0,0,0.75) 75%,#000 100%)' }} />
+          {/* Content */}
+          <div className="max-w-5xl mx-auto" style={{ position: 'relative', zIndex: 2, padding: '10rem 0 8rem', textAlign: 'center' }}>
+            <h1 className="mb-10" style={{ fontSize: 'clamp(40px,7vw,86px)', fontWeight: 700, lineHeight: 1.08, color: '#fff', letterSpacing: '-0.04em' }}>
               Leveraging design<br />&amp; tech to bring<br />
-              <span style={{ background: GRADIENT, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>your fantasy life!</span>
+              <span style={{ color: '#3A5EFB' }}>your fantasy life!</span>
             </h1>
-            <p className="text-lg dark:text-white/60 text-slate-600 mb-10">Have any awesome fantasy?</p>
+            <p style={{ fontSize: '1.125rem', color: 'rgba(255,255,255,0.6)', marginBottom: '2.5rem' }}>Have any awesome fantasy?</p>
             <EnquiryCTAButton className="grad-btn">Let&apos;s talk! <ArrowRight size={18} aria-hidden="true" /></EnquiryCTAButton>
           </div>
         </section>
@@ -292,13 +298,35 @@ export default async function Home() {
         </section>
 
         {/* ── CTA ──────────────────────────────────────────────── */}
-        <section id="hf-cta" className="py-24 px-6 lg:px-8 border-t border-black/10 dark:border-white/5">
-          <div className="max-w-5xl mx-auto">
-            <div className="hf-action rounded-3xl text-center text-white" style={{ padding: '100px 64px' }}>
-              <h2 style={{ fontSize: 'clamp(32px,5vw,48px)', fontWeight: 600, lineHeight: '150%', marginBottom: 40 }}>
+        <section id="hf-cta" style={{ position: 'relative', overflow: 'hidden', padding: 0 }}>
+          {/* Video background */}
+          <video autoPlay muted loop playsInline style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, opacity: 0.5 }}>
+            <source src="/surface_web.mp4" type="video/mp4" />
+          </video>
+          {/* Overlay */}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 1, background: 'linear-gradient(to bottom,#000 0%,rgba(0,0,0,0.25) 25%,rgba(0,0,0,0.25) 75%,#000 100%)' }} />
+          {/* Content */}
+          <div className="max-w-4xl mx-auto" style={{ position: 'relative', zIndex: 2, padding: '100px 1.5rem' }}>
+            {/* Liquid glass card */}
+            <div style={{
+              position: 'relative',
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%)',
+              backdropFilter: 'blur(40px) saturate(200%) brightness(1.1)',
+              WebkitBackdropFilter: 'blur(40px) saturate(200%) brightness(1.1)',
+              border: '1px solid rgba(255,255,255,0.18)',
+              borderRadius: 32,
+              padding: '80px 64px',
+              textAlign: 'center',
+              boxShadow: '0 0 0 0.5px rgba(255,255,255,0.08) inset, 0 2px 0 rgba(255,255,255,0.15) inset, 0 32px 80px rgba(0,0,0,0.45), 0 8px 24px rgba(0,0,0,0.3)',
+            }}>
+              {/* Inner highlight shimmer */}
+              <div style={{ position: 'absolute', inset: 0, borderRadius: 32, pointerEvents: 'none', background: 'radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.12) 0%, transparent 70%)' }} />
+              <h2 style={{ fontSize: 'clamp(28px,4.5vw,52px)', fontWeight: 700, lineHeight: 1.1, marginBottom: 40, letterSpacing: '-0.03em', color: '#fff', position: 'relative' }}>
                 Have any awesome fantasy?
               </h2>
-              <EnquiryCTAButton id="hf-cta-btn" className="grad-btn"><Mail size={18} aria-hidden="true" /> Let&apos;s talk!</EnquiryCTAButton>
+              <EnquiryCTAButton id="hf-cta-btn" className="grad-btn" style={{ position: 'relative' }}>
+                <Mail size={18} aria-hidden="true" /> Let&apos;s talk!
+              </EnquiryCTAButton>
             </div>
           </div>
         </section>
