@@ -99,7 +99,7 @@ export default async function Home() {
         <section aria-label="Hero" style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 1.5rem' }}>
           {/* Video background */}
           <video autoPlay muted loop playsInline style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, opacity: 0.55 }}>
-            <source src="/cable.mov" type="video/mp4" />
+            <source src="/cable_web.mp4" type="video/mp4" />
           </video>
           {/* Overlay */}
           <div style={{ position: 'absolute', inset: 0, zIndex: 1, background: 'linear-gradient(to bottom,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.2) 40%,rgba(0,0,0,0.75) 75%,#000 100%)' }} />
