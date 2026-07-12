@@ -14,13 +14,15 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category') || ''
     const complexity = searchParams.get('complexity') || ''
     const sort = searchParams.get('sort') || 'order'
+    const orderedOnly = searchParams.get('ordered') === 'true'
 
     // Build AND conditions so OR (for isVisible) never conflicts with other filters
     const conditions: any[] = []
-    if (visibleOnly) conditions.push({ OR: [{ isVisible: true }, { isVisible: null }] })
-    if (search)      conditions.push({ title: { contains: search, mode: 'insensitive' } })
-    if (category)    conditions.push({ category })
-    if (complexity)  conditions.push({ complexity })
+    if (visibleOnly)  conditions.push({ OR: [{ isVisible: true }, { isVisible: null }] })
+    if (orderedOnly)  conditions.push({ orderIndex: { gt: 0 } })
+    if (search)       conditions.push({ title: { contains: search, mode: 'insensitive' } })
+    if (category)     conditions.push({ category })
+    if (complexity)   conditions.push({ complexity })
     const where: any = conditions.length ? { AND: conditions } : {}
 
     const orderBy =

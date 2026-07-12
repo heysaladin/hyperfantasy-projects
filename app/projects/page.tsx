@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Dialog as RadixDialog } from 'radix-ui'
@@ -181,7 +181,8 @@ function PortfolioCard({ portfolio, index, onClick, showMeta, href }: { portfoli
     <div className="relative overflow-hidden rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 transition hover:border-slate-300 dark:hover:border-white/20">
       {portfolio.imageUrl && (
         <div className="overflow-hidden bg-slate-200 dark:bg-white/5">
-          <img src={portfolio.imageUrl} alt={portfolio.title} loading="lazy" decoding="async"
+          <img src={portfolio.imageUrl} alt={portfolio.title}
+            loading={index < 3 ? 'eager' : 'lazy'} decoding="async"
             className="w-full h-auto block transition group-hover:scale-105" />
         </div>
       )}
@@ -331,6 +332,24 @@ function RangeSlider({ min, max, value, onChange }: {
   )
 }
 
+// ---------- session cache ----------
+
+const CACHE_KEY = 'hf_portfolios_v1'
+const CACHE_TTL = 5 * 60 * 1000 // 5 min
+
+function readCache(): any[] | null {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY)
+    if (!raw) return null
+    const { ts, items } = JSON.parse(raw)
+    return Date.now() - ts < CACHE_TTL ? items : null
+  } catch { return null }
+}
+
+function writeCache(items: any[]) {
+  try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), items })) } catch {}
+}
+
 // ---------- main page ----------
 
 export default function ProjectsPage() {
@@ -382,23 +401,45 @@ export default function ProjectsPage() {
   const sortPanelRef = useRef<HTMLDivElement>(null)
   const filterBarRef = useRef<HTMLDivElement>(null)
 
-  // Fetch all visible portfolios once on mount
+  // Fetch portfolios: cache → instant; otherwise first-page fast then full in background
   useEffect(() => {
-    fetch('/api/portfolios?limit=500&offset=0')
-      .then(r => r.json())
-      .then(data => {
-        const items: any[] = data.items || []
-        setAllPortfolios(items)
-        const years = items
-          .filter(p => p.projectDate)
-          .map(p => new Date(p.projectDate).getFullYear())
-        if (years.length >= 2) {
-          const mn = Math.min(...years), mx = Math.max(...years)
-          if (mn < mx) setYearRange([mn, mx])
-        }
-      })
-      .catch(() => setAllPortfolios([]))
-      .finally(() => setIsLoading(false))
+    let cancelled = false
+
+    function applyAll(items: any[]) {
+      setAllPortfolios(items)
+    }
+
+    async function load() {
+      // Instant from cache
+      const cached = readCache()
+      if (cached) {
+        applyAll(cached)
+        setIsLoading(false)
+        return
+      }
+
+      try {
+        // Phase 1: curated items only (orderIndex > 0) — small set, fast
+        const r1 = await fetch('/api/portfolios?limit=500&ordered=true')
+        const d1 = await r1.json()
+        if (cancelled) return
+        setAllPortfolios(d1.items || [])
+        setIsLoading(false)
+
+        // Phase 2: full dataset — non-blocking background update
+        const r2 = await fetch('/api/portfolios?limit=500&offset=0')
+        const d2 = await r2.json()
+        if (cancelled) return
+        const all: any[] = d2.items || []
+        writeCache(all)
+        startTransition(() => applyAll(all))
+      } catch {
+        if (!cancelled) setIsLoading(false)
+      }
+    }
+
+    load()
+    return () => { cancelled = true }
   }, [])
 
   // Stable slider bounds (full date range of all portfolios)
@@ -408,6 +449,12 @@ export default function ProjectsPage() {
     const mn = Math.min(...years), mx = Math.max(...years)
     return mn < mx ? { min: mn, max: mx } : null
   }, [allPortfolios])
+
+  // Initialize yearRange once from dataYears — does NOT reset displayCount
+  useEffect(() => {
+    if (!dataYears) return
+    setYearRange(prev => prev ?? [dataYears.min, dataYears.max])
+  }, [dataYears])
 
   // Client-side filter + sort (instant, no network)
   const filtered = useMemo(() => {
@@ -466,10 +513,10 @@ export default function ProjectsPage() {
     return result
   }, [allPortfolios, search, sort, category, complexity, colorGroup, yearRange, dataYears, showFeatured, showVisibleOnly, user])
 
-  // Reset display count when filters change
+  // Reset display count when user-controlled filters change (NOT yearRange — that's set by background load)
   useEffect(() => {
     setDisplayCount(PAGE_SIZE)
-  }, [search, sort, category, complexity, colorGroup, yearRange, showFeatured, showVisibleOnly])
+  }, [search, sort, category, complexity, colorGroup, showFeatured, showVisibleOnly])
 
   const displayed = filtered.slice(0, displayCount)
   const hasMore = displayCount < filtered.length
