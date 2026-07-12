@@ -23,7 +23,15 @@ export function Navbar() {
 
   useEffect(() => {
     const supabase = createClient()
-    supabase.auth.getUser().then(({ data: { user } }) => setUser(user))
+    supabase.auth.getUser().then(({ data: { user }, error }) => {
+      if (error) {
+        // Stale/invalid refresh token — clear the broken session cookies
+        supabase.auth.signOut()
+        setUser(null)
+        return
+      }
+      setUser(user)
+    })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       setUser(session?.user ?? null)
     })

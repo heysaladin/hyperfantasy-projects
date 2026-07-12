@@ -13,7 +13,7 @@ export async function PATCH(
     const existing = await prisma.enquiry.findUnique({ where: { id } })
     if (!existing) return Response.json({ error: 'Not found' }, { status: 404 })
 
-    const summary  = (existing.summary as any) ?? {}
+    const summary  = ((existing as any).summary as any) ?? {}
     const followUp = summary.follow_up_enquiry ?? {}
 
     const updated = await prisma.enquiry.update({
@@ -28,7 +28,7 @@ export async function PATCH(
             ...(confirmed_call !== undefined && { confirmed_call }),
           },
         },
-      },
+      } as any,
     })
 
     return Response.json(updated)
