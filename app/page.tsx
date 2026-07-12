@@ -91,25 +91,40 @@ export default async function Home() {
         .hf-fade-r { background: linear-gradient(to left,  #ffffff, transparent); }
         .hf-work-card { padding: 20px 16px; display:grid; grid-template-columns:1fr; gap:16px; align-items:center; }
         @media (min-width:1024px) { .hf-work-card { padding:40px 48px; grid-template-columns:1fr 1fr; gap:32px; } }
+        .hf-hero-bg {
+          position:absolute; inset:0; width:100%; height:100%;
+          background-image:
+            linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 25%, rgba(255,255,255,0.6) 55%, rgba(255,255,255,0.1) 80%, transparent 100%),
+            url('/bg-light.png');
+          background-size: cover;
+          background-position: center;
+        }
+        .dark .hf-hero-bg {
+          background-image: url('/bg-hero.png');
+          background-size: cover;
+          background-position: center;
+        }
+        .hf-hero-title { color: #111; }
+        .hf-hero-sub { color: rgba(0,0,0,0.55); }
+        .dark .hf-hero-title { color: #fff; }
+        .dark .hf-hero-sub { color: rgba(255,255,255,0.6); }
       `}</style>
 
       <div className="hf-page">
 
         {/* ── HERO ─────────────────────────────────────────────── */}
         <section aria-label="Hero" style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 1.5rem' }}>
-          {/* Video background */}
-          <video autoPlay muted loop playsInline style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, opacity: 0.55 }}>
-            <source src="/cable_web.mp4" type="video/mp4" />
-          </video>
+          {/* Cloud background */}
+          <div className="hf-hero-bg" style={{ zIndex: 0 }} />
           {/* Overlay */}
-          <div style={{ position: 'absolute', inset: 0, zIndex: 1, background: 'linear-gradient(to bottom,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.2) 40%,rgba(0,0,0,0.75) 75%,#000 100%)' }} />
+          {/* <div style={{ position: 'absolute', inset: 0, zIndex: 1, background: 'linear-gradient(to bottom,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.2) 40%,rgba(0,0,0,0.75) 75%,#000 100%)' }} /> */}
           {/* Content */}
-          <div className="max-w-5xl mx-auto" style={{ position: 'relative', zIndex: 2, padding: '10rem 0 8rem', textAlign: 'center' }}>
-            <h1 className="mb-10" style={{ fontSize: 'clamp(40px,7vw,86px)', fontWeight: 700, lineHeight: 1.08, color: '#fff', letterSpacing: '-0.04em' }}>
+          <div className="max-w-5xl mx-auto" style={{ position: 'relative', zIndex: 2, padding: '4rem 0 14rem', textAlign: 'center' }}>
+            <h1 className="hf-hero-title mb-10" style={{ fontSize: 'clamp(40px,7vw,86px)', fontWeight: 700, lineHeight: 1.08, letterSpacing: '-0.04em' }}>
               Leveraging design<br />&amp; tech to bring<br />
               <span style={{ color: '#3A5EFB' }}>your fantasy life!</span>
             </h1>
-            <p style={{ fontSize: '1.125rem', color: 'rgba(255,255,255,0.6)', marginBottom: '2.5rem' }}>Have any awesome fantasy?</p>
+            <p className="hf-hero-sub" style={{ fontSize: '1.125rem', marginBottom: '2.5rem' }}>Have any awesome fantasy?</p>
             <EnquiryCTAButton className="grad-btn">Let&apos;s talk! <ArrowRight size={18} aria-hidden="true" /></EnquiryCTAButton>
           </div>
         </section>

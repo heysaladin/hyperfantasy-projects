@@ -364,7 +364,7 @@ export default function ProjectsPage() {
   const [sort, setSort] = useState('order')
   const [category, setCategory] = useState('')
   const [complexity, setComplexity] = useState('')
-  const [showMeta, setShowMeta] = useState(true)
+  const [showMeta, setShowMeta] = useState(false)
   const [yearRange, setYearRange] = useState<[number, number] | null>(null)
   const [colorGroup, setColorGroup] = useState('')
   const [showFeatured, setShowFeatured] = useState(false)
