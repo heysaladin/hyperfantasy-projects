@@ -26,8 +26,8 @@ export const testimonials: Testimonial[] = [
   {
     id: "2",
     name: "Cokorda Gde Dwipa Susila",
-    role: "Head of Shipping & Export Import",
-    company: "PT Freeport Indonesia",
+    role: "Founder Tresnan (Head of Shipping & Export Import, PT Freeport Indonesia)",
+    company: "",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/photo-testimony-2.png",
     content:
       "Hyperfantasy is a rare & outstanding talents I have ever worked with. I've worked with them to develop UI/UX for an app & website. I was very impressed with their ability to translate a brief requirement into an awesome UI/UX design. They was always able to complete the task in a timely manner or even faster than the expected target. Great manner & professionalism during our cooperation.",

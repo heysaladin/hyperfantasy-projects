@@ -76,7 +76,7 @@ export default function AboutPage() {
               { value: '50+', label: 'Projects Completed' },
               { value: '30+', label: 'Happy Clients' },
               { value: '5+',  label: 'Years Experience' },
-              { value: '5',   label: 'Interchangeable Teams' },
+              { value: '5',   label: 'Specialist Teams' },
             ].map(({ value, label }) => (
               <div key={label}>
                 <div style={{ fontSize: 'clamp(40px,5vw,64px)', fontWeight: 600 }} className="hf-accent-text mb-2">{value}</div>
@@ -184,7 +184,7 @@ export default function AboutPage() {
                   )}
                   <div>
                     <p className="text-slate-900 dark:text-white" style={{ fontSize: 16, fontWeight: 500 }}>{t.name}</p>
-                    <p className="text-slate-500 dark:text-white/50" style={{ fontSize: 14 }}>{t.role}, {t.company}</p>
+                    <p className="text-slate-500 dark:text-white/50" style={{ fontSize: 14 }}>{t.role}{t.company ? `, ${t.company}` : ''}</p>
                   </div>
                 </div>
               </div>
