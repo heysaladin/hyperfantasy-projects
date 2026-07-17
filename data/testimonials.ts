@@ -8,6 +8,7 @@ export interface Testimonial {
   rating: number;
   nps?: number;
   date: string;
+  client: boolean;
 }
 
 export const testimonials: Testimonial[] = [
@@ -22,6 +23,7 @@ export const testimonials: Testimonial[] = [
     rating: 5,
     nps: 10,
     date: "2023-06-10",
+    client: true,
   },
   {
     id: "2",
@@ -34,6 +36,7 @@ export const testimonials: Testimonial[] = [
     rating: 5,
     nps: 10,
     date: "2023-04-22",
+    client: true,
   },
   {
     id: "3",
@@ -46,6 +49,7 @@ export const testimonials: Testimonial[] = [
     rating: 5,
     nps: 10,
     date: "2022-11-15",
+    client: true,
   },
   {
     id: "4",
@@ -58,6 +62,7 @@ export const testimonials: Testimonial[] = [
     rating: 5,
     nps: 10,
     date: "2022-09-08",
+    client: true,
   },
   {
     id: "5",
@@ -70,11 +75,13 @@ export const testimonials: Testimonial[] = [
     rating: 5,
     nps: 10,
     date: "2022-07-01",
+    client: true,
   },
-  // Tamawal® team
+  // Tamawal® team — peer reviews
   {
     id: "6",
     name: "Iman Fathy",
+    client: false,
     role: "Product Manager",
     company: "Tamawal®",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/TLE0MEZFE-U07LE3F6TNX-9ad44bb7e676-192.jpeg",
@@ -87,6 +94,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "7",
     name: "Kamel Gamal Eltayar",
+    client: false,
     role: "Business Analyst | Product Owner",
     company: "Tamawal®",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/TLE0MEZFE-U098RKTHUQ4-cf45169fd7d0-512.png",
@@ -99,6 +107,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "8",
     name: "Soliman Ahmed",
+    client: false,
     role: "Product Designer",
     company: "Tamawal®",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/TLE0MEZFE-U087ZJUED5W-cea1bdbada74-512.jpeg",
@@ -111,6 +120,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "9",
     name: "Abdullah Al Ashikh",
+    client: false,
     role: "CFO",
     company: "Tamawal®",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/TLE0MEZFE-UQGF0547J-1bdacdf6b56d-512.jpeg",
@@ -123,6 +133,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "10",
     name: "Mohamed AbdelHamid",
+    client: false,
     role: "Senior Flutter Mobile Developer",
     company: "Tamawal®",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/TLE0MEZFE-U0601MSPD2S-7afe7ed08c46-192.png",
@@ -132,10 +143,11 @@ export const testimonials: Testimonial[] = [
     nps: 10,
     date: "2026-04-06",
   },
-  // Tokopedia — Adsol Q2 2021
+  // Tokopedia — Adsol Q2 2021 — peer reviews
   {
     id: "11",
     name: "Reza Levi Fauzi",
+    client: false,
     role: "Product Manager Adsol Q2 2021",
     company: "Tokopedia",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/s-blob-v1-IMAGE--8f_dii8THQ.jpg",
@@ -148,6 +160,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "12",
     name: "Merlin Detalina",
+    client: false,
     role: "Strategic Planning Adsol Q2 2021",
     company: "Tokopedia",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/s-blob-v1-IMAGE-ZNzMPyJHeAI.jpg",
@@ -160,6 +173,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "13",
     name: "Amanda Kalpikasari",
+    client: false,
     role: "Senior Sales & Ops Adsol Q2 2021",
     company: "Tokopedia",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/s-blob-v1-IMAGE-sx01waYJFl8.jpg",
@@ -172,6 +186,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "14",
     name: "Sasqia Azizah",
+    client: false,
     role: "Inventory Management Adsol Q2 2021",
     company: "Tokopedia",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/s-blob-v1-IMAGE-wcwe7DMj2TQ.jpg",
@@ -181,10 +196,11 @@ export const testimonials: Testimonial[] = [
     nps: 10,
     date: "2021-06-30",
   },
-  // Tokopedia — Finance Q3 2021
+  // Tokopedia — Finance Q3 2021 — peer reviews
   {
     id: "15",
     name: "Juan Lesmana",
+    client: false,
     role: "Product Manager Finance Q3 2021",
     company: "Tokopedia",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/s-blob-v1-IMAGE-vUWZ_e77Zf8.jpg",
@@ -197,6 +213,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "16",
     name: "Alhamsya Bintang Dyasta",
+    client: false,
     role: "Software Engineer Finance Q3 2021",
     company: "Tokopedia",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/s-blob-v1-IMAGE-UbriWXGA3K8.jpg",
@@ -208,6 +225,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "17",
     name: "Raden Bregas Dwi Hatmojo",
+    client: false,
     role: "Procurement Sp. Finance Q3 2021",
     company: "Tokopedia",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/s-blob-v1-IMAGE-9IdrNqdjKtE.jpg",
@@ -220,6 +238,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "18",
     name: "Christyan Aditya",
+    client: false,
     role: "Software Engineer Finance Q3 2021",
     company: "Tokopedia",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/s-blob-v1-IMAGE-_NuTCIxikx8.jpg",
@@ -232,6 +251,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "19",
     name: "Rahma Septeyani",
+    client: false,
     role: "Account Payable Specialist Q3 2021",
     company: "Tokopedia",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/s-blob-v1-IMAGE-w_5YDktWJQE.jpg",
@@ -243,6 +263,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "20",
     name: "Katherina Denistia",
+    client: false,
     role: "Account Payable Finance Q3 2021",
     company: "Tokopedia",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/s-blob-v1-IMAGE-e9BUIlnM8lY.jpg",
@@ -255,6 +276,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "21",
     name: "Reza Z. Ramadhan",
+    client: false,
     role: "WPE Finance Q3 2021",
     company: "Tokopedia",
     image: "https://hyperfantasy.web.app/assets/images/testimonials/s-blob-v1-IMAGE-LjWXSMdgTEs.jpg",

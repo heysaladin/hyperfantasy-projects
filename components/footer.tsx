@@ -3,92 +3,316 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
+/* ── Data ──────────────────────────────────────────────────────── */
 const NAV_LINKS = [
   { label: 'Projects', href: '/projects' },
   { label: 'Articles', href: '/articles' },
-  { label: 'About',   href: '/about'    },
-  { label: 'Contact', href: '/enquiry'  },
+  { label: 'About',    href: '/about'    },
+  { label: 'Contact',  href: '/enquiry'  },
 ]
 
 const SOCIAL = [
-  {
-    label: 'Dribbble',
-    href: 'https://dribbble.com/hyperfantasy',
-    svg: <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12s5.374 12 12 12 12-5.373 12-12S18.626 0 12 0zm7.92 5.637a10.06 10.06 0 0 1 2.254 6.275c-.33-.067-3.63-.737-6.95-.32-.075-.18-.143-.367-.22-.554-.21-.522-.438-1.044-.672-1.548 3.658-1.49 5.33-3.634 5.588-3.853zM12 1.999a10.03 10.03 0 0 1 6.738 2.588c-.22.19-1.718 2.2-5.254 3.523C11.879 5.478 10.24 3.373 9.98 3.028A10.1 10.1 0 0 1 12 1.999zm-3.87.957c.248.327 1.855 2.44 3.476 5.006C7.19 8.88 3.54 8.862 3.18 8.853A10.07 10.07 0 0 1 8.13 2.956zM1.977 12.018v-.26c.35.008 4.624.06 9.145-1.27.256.503.496 1.014.72 1.527-.116.033-.232.066-.347.104-4.676 1.508-7.164 5.63-7.374 5.98A10.03 10.03 0 0 1 1.977 12.018zm10.023 10.005a10.03 10.03 0 0 1-6.065-2.027c.175-.34 2.17-4.187 7.32-5.997l.062-.02a36.14 36.14 0 0 1 1.842 6.533 10.01 10.01 0 0 1-3.159.511zm5.012-1.717a37.9 37.9 0 0 0-1.706-6.114c3.1-.494 5.822.317 6.155.42a10.07 10.07 0 0 1-4.449 5.694z"/></svg>,
-  },
-  {
-    label: 'Behance',
-    href: 'https://www.behance.net/hyperfantasy',
-    svg: <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" aria-hidden="true"><path d="M6.938 4.503c.702 0 1.34.06 1.92.188.577.13 1.07.33 1.485.61.41.28.733.65.96 1.12.225.47.34 1.05.34 1.73 0 .74-.17 1.36-.507 1.86-.338.5-.837.9-1.502 1.22.906.26 1.576.72 2.022 1.37.448.66.665 1.45.665 2.36 0 .75-.13 1.39-.41 1.93-.28.54-.67.98-1.16 1.32-.49.34-1.05.58-1.69.73-.63.15-1.28.23-1.95.23H0V4.51h6.938v-.007zM16.94 16.665c.44.428 1.073.643 1.894.643.59 0 1.1-.148 1.53-.447.428-.29.7-.61.806-.94h2.568c-.41 1.27-1.04 2.18-1.89 2.73-.85.55-1.884.83-3.098.83-.84 0-1.597-.13-2.274-.4-.677-.27-1.25-.65-1.72-1.14-.467-.49-.826-1.08-1.075-1.76-.25-.68-.373-1.43-.373-2.24 0-.79.13-1.52.4-2.19s.65-1.24 1.14-1.72c.49-.48 1.075-.855 1.753-1.124.68-.268 1.43-.4 2.25-.4.92 0 1.72.18 2.4.53.68.35 1.23.82 1.66 1.4.43.586.73 1.26.9 2.02.17.75.22 1.54.16 2.37h-7.64c0 .84.222 1.46.66 1.89zm-10.24.05c.317 0 .62-.03.906-.09s.54-.17.757-.32c.217-.15.39-.35.52-.6.127-.25.19-.57.19-.95 0-.75-.22-1.29-.67-1.62-.45-.33-1.05-.49-1.8-.49H3.57v4.07h3.13zm-.27-6.39c.34 0 .65-.04.93-.13.28-.09.52-.22.72-.4.2-.18.35-.4.46-.67.11-.27.165-.57.165-.9 0-.74-.2-1.27-.59-1.58-.4-.31-.92-.47-1.57-.47H3.57v4.15h2.86zm14.174-2.66c-.366-.4-.92-.6-1.657-.6-.476 0-.877.08-1.2.24-.322.16-.585.36-.785.6-.2.24-.34.5-.42.78-.08.28-.13.55-.14.8h4.83c-.12-.82-.37-1.42-.63-1.82z"/></svg>,
-  },
-  {
-    label: 'Instagram',
-    href: 'https://www.instagram.com/hyperfantasy.design',
-    svg: <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>,
-  },
+  { label: 'Dribbble',  href: 'https://dribbble.com/hyperfantasy' },
+  { label: 'Behance',   href: 'https://www.behance.net/hyperfantasy' },
+  { label: 'Instagram', href: 'https://www.instagram.com/hyperfantasy.design' },
+  { label: 'LinkedIn',  href: 'https://www.linkedin.com/company/hyperfantasy' },
 ]
 
 const EXCLUDED = ['/projects', '/admin', '/login']
 
+/* ── Icons ─────────────────────────────────────────────────────── */
+function IconDiagonalArrow({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path fillRule="evenodd" clipRule="evenodd" d="M6.25 6.25H17.75V17.75H16.25V8.81066L7 18.0607L5.93934 17L15.1893 7.75H6.25V6.25Z" />
+    </svg>
+  )
+}
+
+function IconRightArrow({ size = 72 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path fillRule="evenodd" clipRule="evenodd" d="M12 3.93934L20.0607 12L12 20.0607L10.9393 19L17.1893 12.75H4.25V11.25H17.1893L10.9393 5L12 3.93934Z" />
+    </svg>
+  )
+}
+
+function IconUpArrow({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path fillRule="evenodd" clipRule="evenodd" d="M12 3.93934L20.0607 12L19 13.0607L12.75 6.81066V19.75H11.25V6.81066L5.00001 13.0607L3.93935 12L12 3.93934Z" />
+    </svg>
+  )
+}
+
+/* ── Slide-up link animation ────────────────────────────────────── */
+function SlideLink({
+  label, href, external = false, className = '', suffix,
+}: {
+  label: string
+  href: string
+  external?: boolean
+  className?: string
+  suffix?: React.ReactNode
+}) {
+  return (
+    <a
+      href={href}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopener noreferrer' : undefined}
+      className={`group inline-flex items-center gap-2 ${className}`}
+    >
+      <span className="relative inline-flex overflow-hidden" style={{ height: '1.5rem' }}>
+        <span className="flex items-center text-white transition-transform duration-300 ease-in-out group-hover:-translate-y-full" style={{ fontSize: 18, lineHeight: 1 }}>
+          {label}
+        </span>
+        <span className="absolute inset-0 flex items-center translate-y-full transition-transform duration-300 ease-in-out group-hover:translate-y-0" style={{ fontSize: 18, lineHeight: 1, color: 'rgba(255,255,255,0.55)' }}>
+          {label}
+        </span>
+      </span>
+      {suffix}
+    </a>
+  )
+}
+
+/* ── Analog Clock ───────────────────────────────────────────────── */
+function AnalogClock({ timezone }: { timezone: string }) {
+  const [hands, setHands] = useState<{ hx: number; hy: number; mx: number; my: number } | null>(null)
+
+  useEffect(() => {
+    function update() {
+      const now = new Date(new Date().toLocaleString('en-US', { timeZone: timezone }))
+      const h = now.getHours() % 12
+      const m = now.getMinutes()
+      const s = now.getSeconds()
+      const hDeg = h * 30 + m * 0.5
+      const mDeg = m * 6 + s * 0.1
+      const cx = 50, cy = 50
+      setHands({
+        hx: cx + 24 * Math.sin((hDeg * Math.PI) / 180),
+        hy: cy - 24 * Math.cos((hDeg * Math.PI) / 180),
+        mx: cx + 34 * Math.sin((mDeg * Math.PI) / 180),
+        my: cy - 34 * Math.cos((mDeg * Math.PI) / 180),
+      })
+    }
+    update()
+    const id = setInterval(update, 1000)
+    return () => clearInterval(id)
+  }, [timezone])
+
+  /* 7 tick dots at non-cardinal positions (Kretya style) */
+  const ticks = [0, 45, 90, 135, 210, 270, 315].map(deg => {
+    const r = 42, rad = (deg - 90) * Math.PI / 180
+    return { x: 50 + r * Math.cos(rad), y: 50 + r * Math.sin(rad) }
+  })
+
+  return (
+    <svg width="40" height="40" viewBox="0 0 100 100">
+      {ticks.map((t, i) => (
+        <rect key={i} x={t.x - 2} y={t.y - 2} width="4" height="4" fill="white" rx="1" opacity="0.8" />
+      ))}
+      {hands && (
+        <>
+          <line x1="50" y1="50" x2={hands.hx} y2={hands.hy} stroke="white" strokeWidth="3.5" strokeLinecap="round" />
+          <line x1="50" y1="50" x2={hands.mx} y2={hands.my} stroke="white" strokeWidth="3.5" strokeLinecap="round" />
+        </>
+      )}
+    </svg>
+  )
+}
+
+/* ── Digital time display ────────────────────────────────────────── */
+function LiveTime({ timezone }: { timezone: string }) {
+  const [display, setDisplay] = useState('')
+
+  useEffect(() => {
+    function update() {
+      const d = new Date()
+      setDisplay(d.toLocaleTimeString('en-US', { timeZone: timezone, hour: '2-digit', minute: '2-digit', hour12: true }))
+    }
+    update()
+    const id = setInterval(update, 1000)
+    return () => clearInterval(id)
+  }, [timezone])
+
+  return <span>{display}</span>
+}
+
+/* ── Footer ─────────────────────────────────────────────────────── */
 export function Footer() {
   const pathname = usePathname()
 
   if (EXCLUDED.some(p => pathname.startsWith(p))) return null
 
-  const isActive = (href: string) =>
-    href === '/' ? pathname === '/' : pathname.startsWith(href)
-
   return (
-    <footer className="border-t border-slate-200 dark:border-white/10 bg-white dark:bg-black text-slate-900 dark:text-white">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
+    <footer
+      className="sticky bottom-0 z-0 w-full"
+      style={{ background: '#030017', color: '#fff' }}
+    >
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-
-          {/* Brand */}
-          <Link href="/" className="flex items-center gap-2 hover:opacity-70 transition w-full md:w-40 shrink-0 justify-center md:justify-start">
-            <Image src="/logo-pictogram.svg" alt="Hyperfantasy" width={24} height={24} />
-            <span className="text-lg font-bold tracking-tight">HYPERFANTASY</span>
-          </Link>
-
-          {/* Nav links */}
-          <div className="flex flex-wrap gap-1">
-            {NAV_LINKS.map(({ label, href }) => (
-              <Link
-                key={href}
-                href={href}
-                aria-current={isActive(href) ? 'page' : undefined}
-                className={`px-3 py-1.5 rounded-lg text-sm transition ${
-                  isActive(href)
-                    ? 'bg-slate-900 dark:bg-white text-white dark:text-black'
-                    : 'text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
-                }`}
-              >
-                {label}
-              </Link>
-            ))}
+        {/* ─── Top: Nav · Logo · Social ─────────────────── */}
+        <div
+          className="py-12 flex flex-col md:flex-row md:items-start justify-between gap-10"
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+        >
+          {/* Nav group */}
+          <div>
+            <p style={{ fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: '1.25rem', fontWeight: 500 }}>
+              Navigation
+            </p>
+            <div className="flex flex-col gap-3">
+              {NAV_LINKS.map(({ label, href }) => (
+                <SlideLink key={href} label={label} href={href} />
+              ))}
+            </div>
           </div>
 
-          {/* Social */}
-          <div className="flex items-center justify-center md:justify-end gap-4 w-full md:w-40 shrink-0">
-            {SOCIAL.map(({ label, href, svg }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                className="text-slate-400 dark:text-white/30 hover:text-slate-900 dark:hover:text-white transition"
-              >
-                {svg}
-              </a>
-            ))}
+          {/* Logo */}
+          <div className="flex items-start md:items-center md:justify-center md:pt-0 pt-2">
+            <Link href="/" className="inline-flex items-center gap-3 opacity-90 hover:opacity-60 transition-opacity duration-200">
+              <Image src="/logo-pictogram.svg" alt="Hyperfantasy" width={32} height={32} />
+              <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.01em', textTransform: 'uppercase' }}>
+                Hyperfantasy
+              </span>
+            </Link>
           </div>
 
+          {/* Social group */}
+          <div>
+            <p style={{ fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: '1.25rem', fontWeight: 500 }}>
+              Connect
+            </p>
+            <div className="flex flex-col gap-3">
+              {SOCIAL.map(({ label, href }) => (
+                <SlideLink
+                  key={label}
+                  label={label}
+                  href={href}
+                  external
+                  suffix={
+                    <span className="relative inline-flex overflow-hidden transition-all duration-300" style={{ width: 18, height: 18 }}>
+                      <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out group-hover:-translate-y-full group-hover:translate-x-full" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                        <IconDiagonalArrow />
+                      </span>
+                      <span className="absolute inset-0 flex items-center justify-center translate-y-full -translate-x-full transition-transform duration-300 ease-in-out group-hover:translate-y-0 group-hover:translate-x-0">
+                        <IconDiagonalArrow />
+                      </span>
+                    </span>
+                  }
+                />
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-white/5 text-xs text-slate-400 dark:text-white/20 text-center">
-          © {new Date().getFullYear()} Hyperfantasy. All rights reserved.
+        {/* ─── Bottom: Tagline · Big CTA · Time ─────────── */}
+        <div className="py-14 flex flex-col lg:flex-row gap-14 justify-between">
+
+          {/* Tagline + copyright */}
+          <div className="flex flex-col justify-between gap-6 shrink-0" style={{ maxWidth: 400 }}>
+            <div>
+              <h2 style={{ fontSize: 'clamp(24px,2.8vw,40px)', fontWeight: 300, lineHeight: 1.15, letterSpacing: '-0.02em' }}>
+                Think bold, build clean,<br />and stay super new.<br />
+                <span style={{ color: 'rgba(255,255,255,0.5)' }}>Hyperfantasy can do it.</span>
+              </h2>
+            </div>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.01em' }}>
+              © {new Date().getFullYear()} Hyperfantasy. All rights reserved.
+            </p>
+          </div>
+
+          {/* Right column: CTA + clock + scroll-top */}
+          <div className="flex flex-col justify-between gap-10">
+
+            {/* Big CTA link */}
+            <div className="flex flex-col gap-5">
+              <Link
+                href="/enquiry"
+                className="group inline-flex items-center gap-4"
+              >
+                <span className="relative inline-flex overflow-hidden" style={{ height: 'clamp(56px,7.5vw,90px)' }}>
+                  <span
+                    className="flex items-center transition-transform duration-500 ease-in-out group-hover:-translate-y-full"
+                    style={{ fontSize: 'clamp(48px,6.5vw,78px)', fontWeight: 300, letterSpacing: '-0.03em', lineHeight: 1 }}
+                  >
+                    Let&apos;s Collaborate
+                  </span>
+                  <span
+                    className="absolute inset-0 flex items-center translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"
+                    style={{ fontSize: 'clamp(48px,6.5vw,78px)', fontWeight: 300, letterSpacing: '-0.03em', lineHeight: 1, color: 'rgba(255,255,255,0.5)' }}
+                  >
+                    Let&apos;s Collaborate
+                  </span>
+                </span>
+                <span
+                  className="transition-transform duration-300 ease-in-out group-hover:translate-x-2 group-hover:-translate-y-2"
+                  style={{ color: 'rgba(255,255,255,0.8)', flexShrink: 0 }}
+                >
+                  <IconRightArrow size={56} />
+                </span>
+              </Link>
+
+              {/* "or" + email */}
+              <div className="flex items-center gap-3">
+                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>or</span>
+                <a
+                  href="mailto:hello@hyperfantasy.co"
+                  className="inline-flex items-center gap-2 transition-colors duration-200 hover:bg-white/10"
+                  style={{
+                    padding: '8px 16px',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    borderRadius: 3,
+                    fontSize: 13,
+                    color: 'rgba(255,255,255,0.75)',
+                    background: 'rgba(255,255,255,0.04)',
+                  }}
+                >
+                  hello@hyperfantasy.co
+                </a>
+              </div>
+            </div>
+
+            {/* Clock + scroll-top */}
+            <div className="flex items-end justify-between gap-6">
+
+              {/* Jakarta clock */}
+              <div className="flex items-center gap-3">
+                <AnalogClock timezone="Asia/Jakarta" />
+                <div>
+                  <p style={{ fontSize: 12, color: '#fff', marginBottom: 2 }}>
+                    Currently in East Java — GMT+7
+                  </p>
+                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>
+                    <LiveTime timezone="Asia/Jakarta" />
+                  </p>
+                </div>
+              </div>
+
+              {/* Scroll to top */}
+              <button
+                aria-label="Scroll to top"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="group flex items-center justify-center shrink-0 transition-colors duration-200 hover:bg-white/10"
+                style={{
+                  width: 44,
+                  height: 44,
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: 3,
+                  background: 'rgba(255,255,255,0.05)',
+                  color: '#fff',
+                  cursor: 'pointer',
+                }}
+              >
+                <span className="transition-transform duration-300 group-hover:-translate-y-0.5">
+                  <IconUpArrow size={18} />
+                </span>
+              </button>
+
+            </div>
+          </div>
         </div>
 
       </div>

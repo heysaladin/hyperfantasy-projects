@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Sora } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const sora = Sora({
-  variable: "--font-sora",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
 });
@@ -65,7 +65,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
         suppressHydrationWarning
       >
         <a
@@ -76,10 +76,13 @@ export default function RootLayout({
         </a>
         <PostHogProvider>
           <ThemeProvider>
-            <Navbar />
-            <main id="main-content">
-              {children}
-            </main>
+            {/* Sits above the sticky footer in z-order; opaque bg covers it while scrolling */}
+            <div style={{ position: 'relative', zIndex: 1, backgroundColor: 'var(--background)' }}>
+              <Navbar />
+              <main id="main-content">
+                {children}
+              </main>
+            </div>
             <Footer />
           </ThemeProvider>
         </PostHogProvider>
