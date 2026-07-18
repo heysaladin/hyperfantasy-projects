@@ -3,6 +3,7 @@ import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { ArrowRight, ArrowUpRight, Mail, Star } from 'lucide-react'
 import { EnquiryCTAButton } from '@/components/enquiry-cta-button'
+import { HeroSlideshow } from '@/components/hero-slideshow'
 import { ScrollReveal } from '@/components/scroll-reveal'
 import { FaqAccordion } from '@/components/faq-accordion'
 import { testimonials } from '@/data/testimonials'
@@ -94,10 +95,10 @@ const FAQ_ITEMS = [
   },
 ]
 
-function TestimonialCard({ t }: { t: typeof testimonials[number] }) {
+function TestimonialCard({ t, ghost }: { t: typeof testimonials[number]; ghost?: boolean }) {
   return (
     <div
-      className="hf-card border border-black/10 dark:border-white/10 rounded-2xl p-7 shrink-0 flex flex-col"
+      className={`rounded-2xl p-7 shrink-0 flex flex-col ${ghost ? 'border border-black/5 dark:border-white/5' : 'hf-card border border-black/10 dark:border-white/10'}`}
       style={{ width: 340 }}
     >
       <div className="flex gap-0.5 mb-5" role="img" aria-label={`Rating: ${t.rating} out of 5`}>
@@ -111,7 +112,7 @@ function TestimonialCard({ t }: { t: typeof testimonials[number] }) {
       >
         &ldquo;{t.content}&rdquo;
       </p>
-      <div className="flex items-center gap-3 pt-4 border-t border-black/10 dark:border-white/10 mt-auto">
+      <div className={`flex items-center gap-3 pt-4 border-t mt-auto ${ghost ? 'border-black/5 dark:border-white/5' : 'border-black/10 dark:border-white/10'}`}>
         {t.image && (
           <Image src={t.image} alt={t.name} width={40} height={40} className="rounded-xl object-cover shrink-0" />
         )}
@@ -122,6 +123,29 @@ function TestimonialCard({ t }: { t: typeof testimonials[number] }) {
       </div>
     </div>
   )
+}
+
+const UIUX_PINNED_IDS = [
+  'bfa69f1e-9ce3-4c1b-93b2-c9ffb5e05367', // Impactfit
+  'c0020417-5c30-427d-b6d9-e5d26dc29178', // Unilet
+  'c8b1eab7-03e0-4fda-bb83-af33f4558b7c', // HOM Smart Home
+]
+
+async function getUiuxGallery() {
+  const [vaksini, pinned] = await Promise.all([
+    // Top mobile-tagged item (Vaksini)
+    prisma.portfolio.findFirst({
+      where: { tags: { hasSome: ['Mobile App', 'Mobile'] }, imageUrl: { not: null }, isVisible: true },
+      select: { id: true, imageUrl: true, tags: true },
+      orderBy: { orderIndex: 'desc' },
+    }),
+    // 3 pinned IDs
+    prisma.portfolio.findMany({
+      where: { id: { in: UIUX_PINNED_IDS }, imageUrl: { not: null } },
+      select: { id: true, imageUrl: true, tags: true },
+    }),
+  ])
+  return [...(vaksini ? [vaksini] : []), ...pinned]
 }
 
 async function getServiceGallery(tagSets: string[][]) {
@@ -137,22 +161,40 @@ async function getServiceGallery(tagSets: string[][]) {
   )
 }
 
+const PINNED_WORK_IDS = [
+  'ec7824ad-3313-456d-ae6d-b95eec96bfb1',
+  'd2ae0651-0693-42c3-b2d0-5d87760d2564',
+  '9969f4b8-0147-4f4d-bb39-2157ee0d79cb',
+]
+
 export default async function Home() {
-  const [portfolios, svcGalleries, articles] = await Promise.all([
+  const [portfoliosTop, portfoliosPinned, svcGalleries, articles, uiuxGallery] = await Promise.all([
     prisma.portfolio.findMany({
       where: { isVisible: true, imageUrl: { not: null } },
       orderBy: [{ isFeatured: 'desc' }, { orderIndex: 'desc' }],
-      take: 9,
+      take: 3,
+      select: { id: true, title: true, description: true, imageUrl: true, category: true },
+    }),
+    prisma.portfolio.findMany({
+      where: { id: { in: PINNED_WORK_IDS }, imageUrl: { not: null } },
       select: { id: true, title: true, description: true, imageUrl: true, category: true },
     }),
     getServiceGallery(SERVICES.map(s => s.galleryTags)),
     prisma.blog.findMany({
       where: { isPublished: true },
-      orderBy: [{ index: 'desc' }],
+      orderBy: [{ createdAt: 'desc' }],
       take: 3,
       select: { id: true, slug: true, title: true, excerpt: true, coverImage: true, tags: true },
     }),
+    getUiuxGallery(),
   ])
+  // Merge: top 3 first, then pinned (deduped)
+  const topIds = new Set(portfoliosTop.map(p => p.id))
+  const portfolios = [
+    ...portfoliosTop,
+    ...portfoliosPinned.filter(p => !topIds.has(p.id)),
+  ]
+  svcGalleries[0] = uiuxGallery
 
   const clientTestimonials = testimonials.filter(t => t.client === true)
   const peerTestimonials   = testimonials.filter(t => t.client === false)
@@ -181,6 +223,14 @@ export default async function Home() {
         }
         .dark .hf-label { color:${ACCENT}; }
 
+        /* ── Section heading ── */
+        .hf-h2 {
+          font-size:clamp(24px,2.8vw,40px);
+          font-weight:300;
+          line-height:1.15;
+          letter-spacing:-0.02em;
+        }
+
         /* ── Dividers ── */
         .hf-line { border-top:1px solid rgba(0,0,0,.08); }
         .dark .hf-line { border-color:rgba(255,255,255,.07); }
@@ -203,10 +253,13 @@ export default async function Home() {
         .ghost-btn:hover { background:rgba(0,0,0,.04); }
         .dark .ghost-btn:hover { background:rgba(255,255,255,.06); }
 
-        /* ── Hero ── */
+        /* ── Hero (Framer-style) ── */
+        .hf-hero-section { background:#030017; overflow:hidden; }
+
         .hf-hero-h1 {
-          font-size:clamp(52px,9vw,108px);
-          font-weight:700; letter-spacing:-0.055em; line-height:.94;
+          font-size:clamp(58px,6vw,76px);
+          font-weight:600; letter-spacing:-0.04em; line-height:1.08;
+          color:#fff; text-align:center;
         }
         .hf-hero-accent {
           font-style:italic;
@@ -215,14 +268,44 @@ export default async function Home() {
           background-clip:text;
         }
 
+        /* Announcement pill */
+        .hf-pill {
+          display:inline-flex; align-items:center; gap:8px;
+          background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+          border-radius:100px; padding:6px 14px 6px 10px;
+          font-size:13px; text-decoration:none; color:rgba(255,255,255,.75);
+          transition:background .2s;
+        }
+        .hf-pill:hover { background:rgba(255,255,255,.12); }
+        .hf-pill-dot { width:6px; height:6px; border-radius:50%; background:#22c55e; flex-shrink:0; }
+        .hf-pill-dim { color:rgba(255,255,255,.45); }
+
+        /* Ghost button for hero (always dark) */
+        .hf-hero-ghost-btn {
+          background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15);
+          border-radius:48px; padding:13px 24px;
+          font-size:14px; font-weight:500; color:#fff;
+          display:inline-flex; align-items:center; gap:8px;
+          text-decoration:none; transition:background .18s;
+        }
+        .hf-hero-ghost-btn:hover { background:rgba(255,255,255,.16); }
+
+        /* Hero visual */
+        .hf-hero-visual {
+          position:relative; aspect-ratio:16/9;
+          border-radius:16px 16px 0 0; overflow:hidden;
+          border:1px solid rgba(255,255,255,.09); border-bottom:none;
+          background:rgba(255,255,255,.03);
+        }
+
         /* ── Hero entrance animation ── */
         @keyframes hf-rise {
-          from { opacity:0; transform:translateY(36px); }
+          from { opacity:0; transform:translateY(32px); }
           to   { opacity:1; transform:translateY(0); }
         }
         .hf-rise {
           opacity:0;
-          animation:hf-rise 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+          animation:hf-rise 0.85s cubic-bezier(0.16,1,0.3,1) forwards;
         }
 
         /* ── Scroll reveal ── */
@@ -254,8 +337,8 @@ export default async function Home() {
 
         /* ── Stats ── */
         .hf-stat-num {
-          font-size:clamp(44px,6vw,80px); font-weight:700;
-          letter-spacing:-0.05em; line-height:1;
+          font-size:clamp(40px,5vw,72px); font-weight:300;
+          letter-spacing:-0.015em; line-height:1.1;
         }
 
         /* ── Industry tags ── */
@@ -275,18 +358,20 @@ export default async function Home() {
         @media(max-width:900px) { .sw-gallery { grid-template-columns:1fr 1fr; } }
         @media(max-width:540px) { .sw-gallery { grid-template-columns:1fr; } }
         .sw-col { display:flex; flex-direction:column; gap:14px; }
-        .sw-col:nth-child(2) { margin-top:56px; }
-        .sw-col:nth-child(3) { margin-top:28px; }
-        @media(max-width:540px) {
-          .sw-col:nth-child(2), .sw-col:nth-child(3) { margin-top:0; }
-        }
+        @media(max-width:540px) { .sw-col { margin-top:0 !important; } }
+
+        /* ── Selected Works — featured layout (≤3 items) ── */
+        .sw-featured { display:grid; grid-template-columns:1.4fr 1fr; gap:14px; align-items:start; }
+        .sw-featured-right { display:flex; flex-direction:column; gap:14px; height:100%; }
+        @media(max-width:680px) { .sw-featured { grid-template-columns:1fr; } }
+
         .sw-card { display:block; text-decoration:none; color:inherit; }
         .sw-img {
-          position:relative; overflow:hidden; border-radius:4px;
+          overflow:hidden; border-radius:4px;
           background:rgba(0,0,0,.06);
         }
         .dark .sw-img { background:rgba(255,255,255,.05); }
-        .sw-img img { transition:transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+        .sw-img img { transition:transform 0.6s cubic-bezier(0.16,1,0.3,1); display:block; width:100%; height:auto; }
         .sw-card:hover .sw-img img { transform:scale(1.04); }
         .sw-meta { padding:12px 0 4px; }
         .sw-title { font-size:15px; font-weight:500; letter-spacing:-0.01em; line-height:1.3; }
@@ -298,24 +383,19 @@ export default async function Home() {
           display:grid;
           grid-template-columns:2fr 3fr;
           align-items:start;
-          border:1px solid rgba(0,0,0,.09);
+          gap:3rem;
         }
-        .dark .svc-outer { border-color:rgba(255,255,255,.09); }
         @media(max-width:768px) {
-          .svc-outer { grid-template-columns:1fr; }
+          .svc-outer { grid-template-columns:1fr; gap:2rem; }
         }
 
         /* Left sticky panel */
         .svc-left {
           position:sticky; top:4.5rem;
-          padding:2.5rem;
-          border-right:1px solid rgba(0,0,0,.09);
           align-self:start;
         }
-        .dark .svc-left { border-color:rgba(255,255,255,.09); }
         @media(max-width:768px) {
-          .svc-left { position:static; border-right:none; border-bottom:1px solid rgba(0,0,0,.09); }
-          .dark .svc-left { border-bottom-color:rgba(255,255,255,.09); }
+          .svc-left { position:static; }
         }
         .svc-section-cta {
           display:inline-block; margin-top:2rem;
@@ -327,16 +407,16 @@ export default async function Home() {
         .dark .svc-section-cta:hover { color:#b394f4; }
 
         /* Right: stacked sticky cards */
-        .svc-right { display:flex; flex-direction:column; }
+        .svc-right { display:flex; flex-direction:column; gap:12px; }
         .svc-block {
           position:sticky; top:4.5rem;
-          border-top:1px solid rgba(0,0,0,.09);
+          border:1px solid rgba(0,0,0,.09);
+          border-radius:12px;
           padding:2.5rem;
           background:#fff;
           will-change:transform;
         }
         .dark .svc-block { border-color:rgba(255,255,255,.09); background:${BG}; }
-        .svc-block:first-child { border-top:none; }
         .svc-block:nth-child(1) { z-index:1; }
         .svc-block:nth-child(2) { z-index:2; }
         .svc-block:nth-child(3) { z-index:3; }
@@ -388,8 +468,8 @@ export default async function Home() {
         }
         .faq-heading-box h2 {
           position:sticky; top:6rem;
-          font-size:clamp(32px,3.5vw,52px);
-          font-weight:700; letter-spacing:-0.03em; line-height:1.1;
+          font-size:clamp(24px,2.8vw,40px);
+          font-weight:300; letter-spacing:-0.02em; line-height:1.15;
         }
         .faq-list { border-top:1px solid rgba(0,0,0,.1); }
         .dark .faq-list { border-color:rgba(255,255,255,.08); }
@@ -443,8 +523,8 @@ export default async function Home() {
         .dark .hf-fade-r { background:linear-gradient(to left,${BG},transparent); }
 
         /* ── Card (testimonials) ── */
-        .hf-card { background:#f4f2fe; }
-        .dark .hf-card { background:${CARD}; }
+        .hf-card { background:rgba(124,58,237,0.05); }
+        .dark .hf-card { background:rgba(255,255,255,0.03); }
 
         /* ── Accent text ── */
         .hf-accent { color:#7c3aed; }
@@ -460,66 +540,66 @@ export default async function Home() {
         {/* ─────────────────────────────────────── */}
         {/* 01 · HERO                               */}
         {/* ─────────────────────────────────────── */}
-        <section aria-label="Hero" className="px-6 lg:px-8" style={{ paddingTop: '7rem', paddingBottom: '5rem' }}>
-          <div className="max-w-7xl mx-auto">
+        <section aria-label="Hero" className="hf-hero-section" style={{ paddingTop: '7.5rem' }}>
 
-            {/* Top row: badge + timezones */}
-            <div className="hf-rise flex flex-wrap items-center justify-between gap-6 mb-14"
-              style={{ animationDelay: '0.05s' }}>
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: 8,
-                background: 'rgba(124,58,237,.08)', border: '1px solid rgba(124,58,237,.2)',
-                borderRadius: 32, padding: '5px 14px',
-                fontSize: 11, fontWeight: 700, letterSpacing: '0.15em',
-                color: '#7c3aed', textTransform: 'uppercase',
-              }} className="dark:bg-purple-400/5 dark:border-purple-400/20 dark:text-purple-300">
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
-                Creative Collective · Est. 2011
-              </div>
-
-              <div className="hf-tz-strip">
-                {TIMEZONES.map((t, i) => (
-                  <div key={t.city} className="hf-tz-item">
-                    {i === 0 && <span className="hf-tz-dot" />}
-                    <span>{t.city}</span>
-                    <span style={{ opacity: 0.55 }}>{t.offset}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* Centered content */}
+          <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
 
             {/* Headline */}
-            <h1 className="hf-hero-h1 hf-title hf-rise"
-              style={{ animationDelay: '0.18s', marginBottom: '3rem', maxWidth: '90%' }}>
-              Designing visuals<br />
-              that turn <span className="hf-hero-accent">fantasy</span><br />
+            <h1 className="hf-hero-h1 hf-rise"
+              style={{ animationDelay: '0.15s', marginTop: '1.75rem' }}>
+              Designing visuals that turn{' '}
+              <span className="hf-hero-accent">fantasy</span>{' '}
               into reality.
             </h1>
 
-            {/* Sub + CTAs */}
-            <div className="hf-rise flex flex-col sm:flex-row sm:items-end justify-between gap-8"
-              style={{ animationDelay: '0.36s' }}>
-              <p className="hf-body"
-                style={{ fontSize: 'clamp(15px,1.5vw,18px)', fontWeight: 300, lineHeight: 1.7, maxWidth: 400 }}>
-                A creative collective for brands that refuse to blend in — branding, illustration, design, and development under one roof.
-              </p>
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', flexShrink: 0 }}>
-                <EnquiryCTAButton className="grad-btn">
-                  Start a Project <ArrowRight size={15} aria-hidden="true" />
-                </EnquiryCTAButton>
-                <Link href="/projects" className="ghost-btn dark:text-white text-slate-800">
-                  See Our Work
-                </Link>
-              </div>
+            {/* Subtext */}
+            <p className="hf-rise"
+              style={{
+                animationDelay: '0.25s',
+                fontSize: 'clamp(15px,1.3vw,17px)',
+                color: 'rgba(255,255,255,.5)',
+                fontWeight: 300, lineHeight: 1.75,
+                marginTop: '2rem',
+                marginBottom: '1.25rem',
+              }}>
+              A creative collective for brands that refuse to blend in —<br className="hidden sm:block" />
+              branding, illustration, design, and development under one roof.
+            </p>
+
+            {/* CTAs */}
+            <div className="hf-rise"
+              style={{ animationDelay: '0.32s', display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <EnquiryCTAButton className="grad-btn">
+                Start a Project <ArrowRight size={15} aria-hidden="true" />
+              </EnquiryCTAButton>
+              <Link href="/projects" className="hf-hero-ghost-btn">
+                See Our Work
+              </Link>
             </div>
           </div>
+
+          {/* Hero visual */}
+          <div className="hf-rise px-5 sm:px-8 lg:px-12"
+            style={{ animationDelay: '0.45s', maxWidth: 1320, margin: '4rem auto 0' }}>
+            <div className="hf-hero-visual">
+              <HeroSlideshow />
+              {/* Bottom fade into page bg */}
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: 'linear-gradient(to bottom,transparent 55%,rgba(3,0,23,.65) 100%)',
+                pointerEvents: 'none',
+              }} />
+            </div>
+          </div>
+
         </section>
 
         {/* ─────────────────────────────────────── */}
         {/* 02 · LOGO CAROUSEL                      */}
         {/* ─────────────────────────────────────── */}
         <section className="border-t border-black/8 dark:border-white/7 py-10">
-          <div className="marquee-wrapper mb-8" dir="ltr">
+          <div className="marquee-wrapper" dir="ltr">
             <div className="marquee-track" style={{ animationDuration: '35.4333s' }}>
               {[
                 { src: '/lab/heysaladin/logos/logo-05.svg', alt: 'Logo 5' },
@@ -560,8 +640,7 @@ export default async function Home() {
               {/* Left: prose */}
               <ScrollReveal>
                 <span className="hf-label">About Us</span>
-                <p className="hf-title"
-                  style={{ fontSize: 'clamp(22px,2.5vw,32px)', fontWeight: 600, lineHeight: 1.3, letterSpacing: '-0.02em', marginBottom: '1.5rem' }}>
+                <p className="hf-title hf-h2" style={{ marginBottom: '1.5rem' }}>
                   No bloated agency structure — just trusted senior specialists assembled per project.
                 </p>
                 <p className="hf-body"
@@ -574,13 +653,13 @@ export default async function Home() {
               </ScrollReveal>
 
               {/* Right: stats */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '2rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {STATS.map((s, i) => (
                   <ScrollReveal key={s.label} delay={100 + i * 110}>
-                    <div className="hf-stat-num hf-title">{s.value}</div>
-                    <div className="hf-muted"
-                      style={{ fontSize: 12, marginTop: 8, letterSpacing: '.06em', textTransform: 'uppercase', fontWeight: 600 }}>
-                      {s.label}
+                    <div style={{ paddingTop: '1.25rem', paddingBottom: '1.25rem', borderTop: '1px solid rgba(0,0,0,0.08)', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}
+                      className="dark:border-white/8">
+                      <span className="hf-stat-num hf-title">{s.value}</span>
+                      <span className="hf-muted" style={{ fontSize: 14, fontWeight: 400 }}>{s.label}</span>
                     </div>
                   </ScrollReveal>
                 ))}
@@ -589,66 +668,39 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ─────────────────────────────────────── */}
-        {/* 03 · INDUSTRIES                         */}
-        {/* ─────────────────────────────────────── */}
-        <section className="px-6 lg:px-8 py-16 border-b border-black/8 dark:border-white/7">
-          <div className="max-w-7xl mx-auto">
-            <ScrollReveal>
-              <div className="flex items-center justify-between mb-8 gap-4">
-                <span className="hf-label" style={{ marginBottom: 0 }}>Industries We Work With</span>
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                {INDUSTRIES.map(ind => (
-                  <span key={ind} className="hf-industry-tag">{ind}</span>
-                ))}
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
 
         {/* ─────────────────────────────────────── */}
         {/* 04 · SELECTED WORKS                     */}
         {/* ─────────────────────────────────────── */}
-        {portfolios.length > 0 && (() => {
-          // Split into 3 columns by modulo index
-          const cols: typeof portfolios[] = [[], [], []]
-          portfolios.forEach((p, i) => cols[i % 3].push(p))
-          return (
+        {portfolios.length > 0 && (
           <section className="px-6 lg:px-8 py-20">
             <div className="max-w-7xl mx-auto">
 
-              {/* Header */}
               <ScrollReveal>
                 <div className="flex items-end justify-between mb-4 gap-4">
                   <div>
-                    <span className="hf-label">Selected Work</span>
-                    <h2 style={{ fontSize: 'clamp(28px,3.8vw,46px)', fontWeight: 350, letterSpacing: '-0.011em', lineHeight: 1.26 }}
-                      className="hf-title">
-                      Selected work that blends product thinking,<br />
+                    <span className="hf-label">Our Work</span>
+                    <h2 className="hf-title hf-h2">
+                      Our work that blends product thinking,<br />
                       branding, and UI/UX. Crafted to drive results.
                     </h2>
                   </div>
                 </div>
               </ScrollReveal>
 
-              {/* 3-column Kretya gallery */}
+              {/* 3-col grid: col 1 offset 48px, col 2 offset 24px */}
               <div className="sw-gallery mt-10">
-                {cols.map((col, colIdx) => (
-                  <div key={colIdx} className="sw-col">
-                    {col.map((p, rowIdx) => {
-                      // Alternate tall (3:4) and square (1:1) cards — tall card shifts per column
-                      const tall = (colIdx === 0 && rowIdx === 0) || (colIdx === 1 && rowIdx === 1) || (colIdx === 2 && rowIdx === 0)
-                      return (
-                        <Link key={p.id} href={`/projects/${p.id}`} className="sw-card">
-                          <div className="sw-img" style={{ aspectRatio: tall ? '3/4' : '1/1' }}>
+                {[portfolios.slice(0,2), portfolios.slice(2,4), portfolios.slice(4,6)].map((col, ci) => (
+                  <div key={ci} className="sw-col" style={{ marginTop: ci === 1 ? 48 : ci === 2 ? 24 : 0 }}>
+                    {col.map((p, ri) => (
+                      <ScrollReveal key={p.id} delay={ci * 60 + ri * 30}>
+                        <Link href={`/projects/${p.id}`} className="sw-card">
+                          <div className="sw-img">
                             {p.imageUrl && (
-                              <Image
-                                src={p.imageUrl}
-                                alt={p.title}
-                                fill
-                                className="object-cover"
-                                sizes="(max-width:540px) 100vw, (max-width:900px) 50vw, 33vw"
+                              <Image src={p.imageUrl} alt={p.title}
+                                width={0} height={0}
+                                sizes="(max-width:540px) 100vw, 33vw"
+                                style={{ width: '100%', height: 'auto', display: 'block' }}
                               />
                             )}
                           </div>
@@ -657,25 +709,23 @@ export default async function Home() {
                             {p.category && <p className="sw-tagline">{p.category}</p>}
                           </div>
                         </Link>
-                      )
-                    })}
+                      </ScrollReveal>
+                    ))}
                   </div>
                 ))}
               </div>
 
-              {/* CTA */}
               <ScrollReveal>
                 <div className="mt-14 flex justify-center">
                   <Link href="/projects" className="ghost-btn dark:text-white text-slate-800">
-                    ↳ See all works <ArrowUpRight size={14} aria-hidden="true" />
+                    See all works <ArrowUpRight size={14} aria-hidden="true" />
                   </Link>
                 </div>
               </ScrollReveal>
 
             </div>
           </section>
-          )
-        })()}
+        )}
 
         {/* ─────────────────────────────────────── */}
         {/* 05 · SERVICES                           */}
@@ -687,17 +737,10 @@ export default async function Home() {
               {/* Left: sticky panel */}
               <div className="svc-left">
                 <span className="hf-label">Service</span>
-                <h2 className="hf-title" style={{
-                  fontSize: 'clamp(22px,2.4vw,32px)',
-                  fontWeight: 400,
-                  letterSpacing: '-0.009em',
-                  lineHeight: 1.28,
-                }}>
+                <h2 className="hf-title hf-h2">
                   A Unified Approach to Digital Growth Through Strategic Design, Development, and Branding
                 </h2>
-                <Link href="/projects" className="svc-section-cta">
-                  ↳ See Our Work
-                </Link>
+
               </div>
 
               {/* Right: sticky-stacked service cards */}
@@ -774,8 +817,7 @@ export default async function Home() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-12">
             <ScrollReveal>
               <span className="hf-label">Testimonials</span>
-              <h2 style={{ fontSize: 'clamp(24px,3.5vw,44px)', fontWeight: 600, letterSpacing: '-0.025em' }}
-                className="hf-title">
+              <h2 className="hf-title hf-h2">
                 What clients say
               </h2>
             </ScrollReveal>
@@ -795,7 +837,7 @@ export default async function Home() {
             {/* Row 2 — peers, ← right (reverse) */}
             <div className="hf-marquee-rev">
               {[...peerTestimonials, ...peerTestimonials].map((t, i) => (
-                <TestimonialCard key={i} t={t} />
+                <TestimonialCard key={i} t={t} ghost />
               ))}
             </div>
           </div>
@@ -811,8 +853,7 @@ export default async function Home() {
                 <div className="flex items-end justify-between mb-10 gap-4">
                   <div>
                     <span className="hf-label">From the Blog</span>
-                    <h2 style={{ fontSize: 'clamp(24px,3.5vw,44px)', fontWeight: 600, letterSpacing: '-0.025em' }}
-                      className="hf-title">
+                    <h2 className="hf-title hf-h2">
                       Latest articles
                     </h2>
                   </div>
@@ -873,28 +914,79 @@ export default async function Home() {
         )}
 
         {/* ─────────────────────────────────────── */}
-        {/* 09 · FINAL CTA                          */}
+        {/* 09 · ON COOKING                         */}
         {/* ─────────────────────────────────────── */}
-        <section id="hf-cta" className="hf-cta-bg px-6 lg:px-8 py-28 border-t border-black/8 dark:border-white/7">
-          <ScrollReveal className="max-w-3xl mx-auto text-center">
-            <span className="hf-label" style={{ textAlign: 'center' }}>Ready to start?</span>
-            <h2 style={{ fontSize: 'clamp(40px,7vw,84px)', fontWeight: 700, lineHeight: 0.97, letterSpacing: '-0.05em', marginBottom: '1.5rem' }}
-              className="hf-title">
-              Got a fantasy?<br />
-              <span className="hf-hero-accent">Let&apos;s make it real.</span>
-            </h2>
-            <p className="hf-muted" style={{ fontSize: 15, marginBottom: '2.5rem', fontWeight: 300 }}>
-              hello@hyperfantasy.co
-            </p>
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <EnquiryCTAButton id="hf-cta-btn" className="grad-btn">
-                <Mail size={16} aria-hidden="true" /> Start a Project
-              </EnquiryCTAButton>
-              <Link href="/projects" className="ghost-btn dark:text-white text-slate-700">
-                See Our Work
-              </Link>
+        <section className="hf-cta-bg px-6 lg:px-8 py-20 border-t border-black/8 dark:border-white/7">
+          <div className="max-w-7xl mx-auto">
+            <ScrollReveal>
+              <div className="flex items-end justify-between mb-10 gap-4">
+                <div>
+                  <span className="hf-label">Currently</span>
+                  <h2 className="hf-title hf-h2">On Cooking</h2>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {[
+                {
+                  tag: 'Photography · AI',
+                  title: 'Photography + AI Platform',
+                  desc: 'AI-assisted platform for managing and curating photographer-shot results — organize, review, and deliver with intelligence.',
+                  image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&q=80&fit=crop',
+                  bg: '#0e0a1e',
+                },
+                {
+                  tag: 'Mobile App · Analytics',
+                  title: 'KPI Monitoring App',
+                  desc: 'A mobile-first app for tracking KPIs on the go — real-time metrics, team visibility, and decisions at your fingertips.',
+                  image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80&fit=crop',
+                  bg: '#071628',
+                },
+                {
+                  tag: 'Fintech · Lending',
+                  title: 'Fintech Platform',
+                  desc: 'Instant loan platform covering personal loans, car financing, real estate, and card credit — fast approvals, seamless experience.',
+                  image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80&fit=crop',
+                  bg: '#071a0f',
+                },
+              ].map((p, i) => (
+                <ScrollReveal key={p.title} delay={i * 80}>
+                  <article
+                    style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(0,0,0,.08)' }}
+                    className="dark:border-white/10 group h-full flex flex-col"
+                  >
+                    <div style={{ aspectRatio: '16/9', background: p.bg, position: 'relative', overflow: 'hidden' }}>
+                      <Image
+                        src={p.image} alt={p.title} fill
+                        sizes="(max-width:768px) 100vw, 33vw"
+                        className="object-cover opacity-70 group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div style={{
+                        position: 'absolute', top: 12, right: 12,
+                        background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)',
+                        borderRadius: 100, padding: '4px 10px',
+                        fontSize: 11, fontWeight: 600, letterSpacing: '0.08em',
+                        color: '#fff', display: 'flex', alignItems: 'center', gap: 5,
+                      }}>
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', flexShrink: 0 }} />
+                        In Progress
+                      </div>
+                    </div>
+                    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}
+                        className="hf-accent">{p.tag}</span>
+                      <h3 style={{ fontSize: 16, fontWeight: 600, lineHeight: '140%', margin: '8px 0' }}
+                        className="hf-title group-hover:opacity-70 transition">{p.title}</h3>
+                      <p style={{ fontSize: 13, lineHeight: '165%' }}
+                        className="hf-muted">{p.desc}</p>
+                    </div>
+                  </article>
+                </ScrollReveal>
+              ))}
             </div>
-          </ScrollReveal>
+
+          </div>
         </section>
 
       </main>

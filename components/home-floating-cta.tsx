@@ -66,38 +66,19 @@ export function HomeFloatingCTA({ ctaBtnId, alwaysVisible, scrollThreshold = 0 }
   useEffect(() => {
     if (!mounted) return
     if (alwaysVisible) return
-    const ctaBtn = document.getElementById(ctaBtnId)
-    if (!ctaBtn) return
-    let ctaOutOfView = false
-    let scrolledEnough = scrollThreshold === 0
 
-    const update = () => {
-      const show = ctaOutOfView && scrolledEnough
-      setVisible(show)
-      ctaBtn.style.visibility = show ? 'hidden' : 'visible'
-    }
-
-    const observer = new IntersectionObserver(([entry]) => {
-      ctaOutOfView = !entry.isIntersecting
-      update()
-    }, { threshold: 0.1 })
+    const BOTTOM_MARGIN = 120 // px from bottom to start hiding
 
     const onScroll = () => {
-      scrolledEnough = window.scrollY > scrollThreshold
-      update()
+      const scrolledEnough = window.scrollY > scrollThreshold
+      const nearBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - BOTTOM_MARGIN
+      setVisible(scrolledEnough && !nearBottom)
     }
 
-    observer.observe(ctaBtn)
-    if (scrollThreshold > 0) {
-      window.addEventListener('scroll', onScroll, { passive: true })
-      onScroll()
-    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
 
-    return () => {
-      observer.disconnect()
-      window.removeEventListener('scroll', onScroll)
-      ctaBtn.style.visibility = 'visible'
-    }
+    return () => window.removeEventListener('scroll', onScroll)
   }, [ctaBtnId, alwaysVisible, mounted, scrollThreshold])
 
   // Lock scroll + focus first input + Escape key when modal opens

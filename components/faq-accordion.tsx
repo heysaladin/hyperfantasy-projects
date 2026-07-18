@@ -12,7 +12,8 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
 
       {/* Left: sticky heading */}
       <div className="faq-heading-box">
-        <h2 className="hf-title">
+        <span className="hf-label">FAQ</span>
+        <h2 className="hf-title hf-h2">
           Frequently asked<br />questions.
         </h2>
       </div>

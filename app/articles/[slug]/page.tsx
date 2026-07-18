@@ -149,6 +149,17 @@ export default async function ArticleDetailPage({
         {/* Divider */}
         <div style={{ height: '1px', background: 'var(--article-divider)', marginBottom: '40px' }} />
 
+        {/* Feature image */}
+        {blog.coverImage && (
+          <div style={{ marginBottom: '48px', borderRadius: 4, overflow: 'hidden' }}>
+            <img
+              src={blog.coverImage}
+              alt={blog.title}
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+            />
+          </div>
+        )}
+
         {/* Medium-style prose */}
         <style>{`
           :root {
