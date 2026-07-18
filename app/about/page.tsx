@@ -198,7 +198,7 @@ export default async function AboutPage() {
 
         .svc-tags { display:flex; flex-wrap:wrap; gap:5px; }
         .svc-tag {
-          border:1px solid rgba(0,0,0,.1); border-radius:2px;
+          border:1px solid rgba(0,0,0,.1); border-radius:999px;
           padding:5px 11px; font-size:12px; font-weight:400;
           background:#fff; color:#151515; white-space:nowrap;
         }

@@ -90,7 +90,7 @@ export default function ArticlesPage() {
       <div className="border-b border-slate-200 dark:border-white/10">
         <div className="max-w-[728px] mx-auto px-6 pt-14 pb-10">
           <h1 style={{
-            fontFamily: 'var(--font-geist-sans), "Helvetica Neue", Helvetica, Arial, sans-serif',
+            fontFamily: 'var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif',
             fontSize: 'clamp(32px, 6vw, 48px)',
             fontWeight: 700,
             lineHeight: 1.1,
@@ -99,7 +99,7 @@ export default function ArticlesPage() {
             marginBottom: '12px',
           }}>Articles</h1>
           <p style={{
-            fontFamily: 'var(--font-geist-sans)',
+            fontFamily: 'var(--font-inter)',
             fontSize: '16px',
             lineHeight: 1.5,
             color: '#6b6b6b',
@@ -123,7 +123,7 @@ export default function ArticlesPage() {
               onChange={e => setSearch(e.target.value)}
               placeholder="Search articles…"
               className="w-full pl-9 pr-8 py-2.5 text-sm bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg outline-none focus:border-slate-400 dark:focus:border-white/30 transition placeholder:text-slate-400 dark:placeholder:text-white/30"
-              style={{ fontFamily: 'var(--font-geist-sans)' }}
+              style={{ fontFamily: 'var(--font-inter)' }}
             />
             {search && (
               <button
@@ -137,7 +137,7 @@ export default function ArticlesPage() {
           </div>
           {isAdmin && (
             <label className="flex-shrink-0 flex items-center gap-2 cursor-pointer select-none">
-              <span className="text-xs font-medium text-slate-500 dark:text-white/40" style={{ fontFamily: 'var(--font-geist-sans)' }}>Drafts</span>
+              <span className="text-xs font-medium text-slate-500 dark:text-white/40" style={{ fontFamily: 'var(--font-inter)' }}>Drafts</span>
               <span
                 onClick={() => setShowDrafts(v => !v)}
                 role="switch"
@@ -178,7 +178,7 @@ export default function ArticlesPage() {
                 <article>
                   {/* Date — top */}
                   <time style={{
-                    fontFamily: 'var(--font-geist-sans)',
+                    fontFamily: 'var(--font-inter)',
                     fontSize: '12px',
                     letterSpacing: '0',
                     color: '#6b6b6b',
@@ -194,7 +194,7 @@ export default function ArticlesPage() {
                   <div className="flex items-start gap-6">
                     <div className="flex-1 min-w-0">
                       <h2 style={{
-                        fontFamily: 'var(--font-geist-sans), "Helvetica Neue", Helvetica, Arial, sans-serif',
+                        fontFamily: 'var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif',
                         fontSize: '20px',
                         fontWeight: 700,
                         lineHeight: 1.3,
@@ -210,7 +210,7 @@ export default function ArticlesPage() {
                       </h2>
                       {blog.excerpt && (
                         <p style={{
-                          fontFamily: 'var(--font-geist-sans)',
+                          fontFamily: 'var(--font-inter)',
                           fontSize: '14px',
                           lineHeight: 1.55,
                           letterSpacing: '0',
@@ -239,7 +239,7 @@ export default function ArticlesPage() {
                     <div className="flex flex-wrap gap-1.5 mt-3">
                       {blog.tags.slice(0, 3).map((tag: string) => (
                         <span key={tag} style={{
-                          fontFamily: 'var(--font-geist-sans)',
+                          fontFamily: 'var(--font-inter)',
                           fontSize: '12px',
                           letterSpacing: '0',
                           padding: '2px 10px',
@@ -262,7 +262,7 @@ export default function ArticlesPage() {
               ? <SearchX size={36} strokeWidth={1.25} className="text-slate-300 dark:text-white/20" aria-hidden="true" />
               : <FileText size={36} strokeWidth={1.25} className="text-slate-300 dark:text-white/20" aria-hidden="true" />
             }
-            <p style={{ fontFamily: 'var(--font-geist-sans)', fontSize: '15px', color: '#6b6b6b' }} className="dark:!text-white/40">
+            <p style={{ fontFamily: 'var(--font-inter)', fontSize: '15px', color: '#6b6b6b' }} className="dark:!text-white/40">
               {search ? `No articles found for "${search}"` : 'No articles published yet.'}
             </p>
           </div>
@@ -284,7 +284,7 @@ export default function ArticlesPage() {
               <button
                 key={n}
                 onClick={() => setPage(n)}
-                style={{ fontFamily: 'var(--font-geist-sans)', fontSize: '14px' }}
+                style={{ fontFamily: 'var(--font-inter)', fontSize: '14px' }}
                 className={`w-9 h-9 rounded-full font-medium transition ${
                   n === page
                     ? 'bg-[#292929] dark:bg-white text-white dark:text-black'

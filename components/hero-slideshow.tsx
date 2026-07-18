@@ -29,6 +29,7 @@ const IMAGES = [
 export function HeroSlideshow() {
   const [idx, setIdx] = useState(0)
   const ready = useRef(false)
+  const paused = useRef(false)
 
   // Preload all images into browser memory before starting the loop
   useEffect(() => {
@@ -42,8 +43,9 @@ export function HeroSlideshow() {
         loaded++
         // Start cycling only after first image is ready
         if (loaded === 1) {
-          const id = setInterval(() => setIdx(i => (i + 1) % IMAGES.length), 500)
-          // Store interval id for cleanup via the next effect's return
+          const id = setInterval(() => {
+            if (!paused.current) setIdx(i => (i + 1) % IMAGES.length)
+          }, 500)
           ;(window as any).__heroSlideshowId = id
         }
       }
@@ -64,10 +66,13 @@ export function HeroSlideshow() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       fetchPriority="high"
       decoding="async"
+      onMouseEnter={() => { paused.current = true }}
+      onMouseLeave={() => { paused.current = false }}
       style={{
         position: 'absolute', inset: 0,
         width: '100%', height: '100%',
         objectFit: 'cover', objectPosition: 'top',
+        cursor: 'default',
       }}
     />
   )

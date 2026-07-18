@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import { ArrowRight, ArrowUpRight, Mail, Star } from 'lucide-react'
 import { EnquiryCTAButton } from '@/components/enquiry-cta-button'
 import { HeroSlideshow } from '@/components/hero-slideshow'
+import { TestimonialMarquee } from '@/components/testimonial-marquee'
 import { ScrollReveal } from '@/components/scroll-reveal'
 import { FaqAccordion } from '@/components/faq-accordion'
 import { testimonials } from '@/data/testimonials'
@@ -446,7 +447,7 @@ export default async function Home() {
         /* Tags */
         .svc-tags { display:flex; flex-wrap:wrap; gap:5px; }
         .svc-tag {
-          border:1px solid rgba(0,0,0,.1); border-radius:2px;
+          border:1px solid rgba(0,0,0,.1); border-radius:999px;
           padding:5px 11px; font-size:12px; font-weight:400;
           background:#fff; color:#151515; white-space:nowrap;
         }
@@ -823,23 +824,23 @@ export default async function Home() {
             </ScrollReveal>
           </div>
 
-          <div className="relative flex flex-col gap-4 overflow-hidden">
+          <div className="relative flex flex-col gap-4">
             <div className="pointer-events-none absolute inset-y-0 left-0 w-20 z-10 hf-fade-l" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-20 z-10 hf-fade-r" />
 
-            {/* Row 1 — clients, left → */}
-            <div className="hf-marquee">
+            {/* Row 1 — clients */}
+            <TestimonialMarquee duration={104}>
               {[...clientTestimonials, ...clientTestimonials].map((t, i) => (
                 <TestimonialCard key={i} t={t} />
               ))}
-            </div>
+            </TestimonialMarquee>
 
-            {/* Row 2 — peers, ← right (reverse) */}
-            <div className="hf-marquee-rev">
+            {/* Row 2 — peers */}
+            <TestimonialMarquee duration={104}>
               {[...peerTestimonials, ...peerTestimonials].map((t, i) => (
                 <TestimonialCard key={i} t={t} ghost />
               ))}
-            </div>
+            </TestimonialMarquee>
           </div>
         </section>
 
@@ -933,21 +934,21 @@ export default async function Home() {
                   tag: 'Photography · AI',
                   title: 'Photography + AI Platform',
                   desc: 'AI-assisted platform for managing and curating photographer-shot results — organize, review, and deliver with intelligence.',
-                  image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&q=80&fit=crop',
+                  image: 'https://images.unsplash.com/photo-1606941900695-e1cfcb9010d9?q=80&w=987&auto=format&fit=crop',
                   bg: '#0e0a1e',
                 },
                 {
                   tag: 'Mobile App · Analytics',
                   title: 'KPI Monitoring App',
                   desc: 'A mobile-first app for tracking KPIs on the go — real-time metrics, team visibility, and decisions at your fingertips.',
-                  image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80&fit=crop',
+                  image: 'https://images.unsplash.com/photo-1622782914767-404fb9ab3f57?q=80&w=1064&auto=format&fit=crop',
                   bg: '#071628',
                 },
                 {
                   tag: 'Fintech · Lending',
                   title: 'Fintech Platform',
                   desc: 'Instant loan platform covering personal loans, car financing, real estate, and card credit — fast approvals, seamless experience.',
-                  image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80&fit=crop',
+                  image: 'https://plus.unsplash.com/premium_photo-1681469490618-c24cc20bef1c?q=80&w=1085&auto=format&fit=crop',
                   bg: '#071a0f',
                 },
               ].map((p, i) => (

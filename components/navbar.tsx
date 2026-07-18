@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { X, Clock, ArrowUpRight } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme-toggle'
@@ -43,6 +43,7 @@ export function Navbar() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const mobileCompactRef = useRef<HTMLDivElement>(null)
   const [user, setUser] = useState<User | null>(null)
   const [ejTime, setEjTime] = useState('')
   const [mounted, setMounted] = useState(false)
@@ -83,6 +84,24 @@ export function Navbar() {
     return () => subscription.unsubscribe()
   }, [])
 
+  // Keep --nav-height in sync with the actual visual nav height.
+  // On /projects mobile the full nav (h-16 = 64px) always stays, so always 64px.
+  // On other pages mobile the compact pill is shorter, so measure its actual height.
+  useEffect(() => {
+    const update = () => {
+      const isMobile = window.innerWidth < 768
+      if (scrolled && !menuOpen && isMobile && !pathname.startsWith('/projects')) {
+        const h = mobileCompactRef.current?.offsetHeight ?? 44
+        document.documentElement.style.setProperty('--nav-height', `${h}px`)
+      } else {
+        document.documentElement.style.setProperty('--nav-height', '64px')
+      }
+    }
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [scrolled, menuOpen, pathname])
+
   // Reset offset when leaving /projects
   useEffect(() => {
     if (!pathname.startsWith('/projects')) {
@@ -110,6 +129,7 @@ export function Navbar() {
     pathname.startsWith(href)
 
   const isTransparent = pathname === '/' && !scrolled && !menuOpen
+  const isProjects = pathname.startsWith('/projects')
 
   return (
     <>
@@ -117,10 +137,14 @@ export function Navbar() {
       className="fixed top-0 w-full z-50 transition-all duration-500"
       style={{ transform: 'translateY(var(--nav-offset, 0px))' }}
     >
-      {/* Full navbar — visible when not scrolled */}
+      {/* Full navbar — on /projects stays visible on mobile even when scrolled */}
       <div
         className={`transition-all duration-500 ${
-          scrolled && !menuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          scrolled && !menuOpen
+            ? isProjects
+              ? 'md:opacity-0 md:pointer-events-none'
+              : 'opacity-0 pointer-events-none'
+            : 'opacity-100'
         }`}
       >
         <div
@@ -148,7 +172,7 @@ export function Navbar() {
                     key={href}
                     href={href}
                     aria-current={isActive(href) ? 'page' : undefined}
-                    className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold tracking-wider uppercase transition-all duration-300 ${
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 ${
                       isActive(href)
                         ? 'bg-slate-900 dark:bg-white text-white dark:text-black'
                         : isTransparent
@@ -197,10 +221,14 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Compact pill — visible when scrolled */}
+      {/* Compact pill — on /projects mobile the full nav stays, so hide compact there */}
       <div
         className={`absolute top-0 left-0 right-0 flex justify-center items-start transition-all duration-500 pt-0 md:pt-3 ${
-          scrolled && !menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          scrolled && !menuOpen
+            ? isProjects
+              ? 'opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto'
+              : 'opacity-100 pointer-events-auto'
+            : 'opacity-0 pointer-events-none'
         }`}
       >
         <div
@@ -258,6 +286,7 @@ export function Navbar() {
 
         {/* Mobile pill — just logo + hamburger */}
         <div
+          ref={mobileCompactRef}
           className="flex md:hidden w-full items-center justify-between bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md px-5 py-3"
         >
           <Link href="/" className="hover:opacity-70 transition inline-flex items-center gap-2 text-slate-900 dark:text-white">

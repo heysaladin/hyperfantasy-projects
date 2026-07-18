@@ -533,24 +533,26 @@ export default function ProjectsPage() {
 
   // Hide navbar when filter bar touches it, reveal on scroll up
   useEffect(() => {
-    const NAV_H = 64
     let lastY = window.scrollY
     let hidden = false
 
     const onScroll = () => {
       const y = window.scrollY
       const goingDown = y > lastY
+      const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height') || '64') || 64
 
-      if (filterBarRef.current) {
-        const barTop = filterBarRef.current.getBoundingClientRect().top
-        // Filter bar is touching the navbar when its top <= NAV_H
-        if (goingDown && barTop <= NAV_H && !hidden) {
-          document.documentElement.style.setProperty('--nav-offset', `-${NAV_H}px`)
+      // Only start hiding navbar after user has scrolled past the header section
+      if (y > 120) {
+        if (goingDown && !hidden) {
+          document.documentElement.style.setProperty('--nav-offset', `-${navH}px`)
           hidden = true
         } else if (!goingDown && hidden) {
           document.documentElement.style.setProperty('--nav-offset', '0px')
           hidden = false
         }
+      } else if (hidden) {
+        document.documentElement.style.setProperty('--nav-offset', '0px')
+        hidden = false
       }
 
       lastY = y
@@ -621,19 +623,19 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-slate-900 dark:text-white transition-colors pt-16">
+    <div className="min-h-screen bg-white dark:bg-black text-slate-900 dark:text-white transition-colors pt-16" style={{ fontFamily: 'var(--font-inter)' }}>
 
       {/* Header */}
       <div className="border-b border-slate-200 dark:border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">Hyperfantasy&apos;s Projects</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Hyperfantasy&apos;s Projects</h1>
           <p className="text-xl text-slate-600 dark:text-white/60">Selected projects showcasing our expertise</p>
         </div>
       </div>
 
-      {/* Search + Sort & Filter */}
-      <div ref={filterBarRef} className="border-b border-slate-200 dark:border-white/10 sticky z-10 bg-white/95 dark:bg-black/95 backdrop-blur-sm transition-[top] duration-300"
-        style={{ top: 'calc(var(--nav-offset, 0px) + 64px)' }}>
+      {/* Search + Sort & Filter — sticky, flush below navbar once scrolled past header */}
+      <div ref={filterBarRef} className="border-b border-slate-200 dark:border-white/10 sticky z-20 bg-white/95 dark:bg-black/95 backdrop-blur-sm"
+        style={{ top: 'calc(var(--nav-offset, 0px) + var(--nav-height, 64px))', transition: 'top 0.3s ease' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-3">
           <div className="flex items-center gap-3">
 
