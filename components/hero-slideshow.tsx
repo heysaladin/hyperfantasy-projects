@@ -17,11 +17,11 @@ const IMAGES = [
   'https://cdn.dribbble.com/userupload/4876248/file/original-e9fa53b9306b99a9d9aa6b1e53a0aff5.png?compress=1&resize=1504x1128',
   'https://cdn.dribbble.com/userupload/4899099/file/original-ec1a644b5f8fcfac27755ca46a92790a.png?compress=1&resize=1504x1128',
   'https://cdn.dribbble.com/userupload/4803971/file/original-a6f5bc391ef0e57d8a5f3cb7db811ea0.png?compress=1&resize=2048x1535',
-  'https://mir-s3-cdn-cf.behance.net/project_modules/fs/38ae0c142316807.6264a81a99d53.png',
-  'https://mir-s3-cdn-cf.behance.net/project_modules/fs/c425b8142316551.6264a5a7e008f.png',
-  'https://mir-s3-cdn-cf.behance.net/project_modules/fs/6b1d54138970043.622807cba6242.png',
-  'https://mir-s3-cdn-cf.behance.net/project_modules/fs/4bfd4c138970509.622809b25f730.png',
-  'https://mir-s3-cdn-cf.behance.net/project_modules/fs/29e985138970301.622808f0746ba.png',
+  'https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/38ae0c142316807.6264a81a99d53.png',
+  'https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/c425b8142316551.6264a5a7e008f.png',
+  'https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/6b1d54138970043.622807cba6242.png',
+  'https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/4bfd4c138970509.622809b25f730.png',
+  'https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/29e985138970301.622808f0746ba.png',
   'https://cdn.dribbble.com/userupload/11733553/file/original-b794b3adc47300996d36e749e27ecf5e.png?resize=1504x1128&vertical=center',
   'https://cdn.dribbble.com/userupload/2907401/file/original-05a06171e691c927101533ca4518780c.png',
 ]
@@ -31,26 +31,28 @@ export function HeroSlideshow() {
   const ready = useRef(false)
   const paused = useRef(false)
 
-  // Preload all images into browser memory before starting the loop
+  // Start cycling; preload only the next image ahead of time
   useEffect(() => {
     if (ready.current) return
     ready.current = true
 
-    let loaded = 0
-    IMAGES.forEach(src => {
+    const preloadNext = (current: number) => {
+      const next = (current + 1) % IMAGES.length
       const img = new window.Image()
-      img.onload = () => {
-        loaded++
-        // Start cycling only after first image is ready
-        if (loaded === 1) {
-          const id = setInterval(() => {
-            if (!paused.current) setIdx(i => (i + 1) % IMAGES.length)
-          }, 500)
-          ;(window as any).__heroSlideshowId = id
-        }
+      img.src = IMAGES[next]
+    }
+
+    preloadNext(0)
+    const id = setInterval(() => {
+      if (!paused.current) {
+        setIdx(i => {
+          const next = (i + 1) % IMAGES.length
+          preloadNext(next)
+          return next
+        })
       }
-      img.src = src
-    })
+    }, 500)
+    ;(window as any).__heroSlideshowId = id
 
     return () => {
       clearInterval((window as any).__heroSlideshowId)

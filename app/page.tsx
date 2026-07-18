@@ -425,8 +425,8 @@ export default async function Home() {
         .svc-block-header {
           display:flex; align-items:baseline; gap:1.25rem; margin-bottom:1rem;
         }
-        .svc-num { font-size:13px; color:rgba(0,0,0,.4); font-weight:400; flex-shrink:0; }
-        .dark .svc-num { color:rgba(255,255,255,.3); }
+        .svc-num { font-size:13px; color:rgba(0,0,0,.6); font-weight:400; flex-shrink:0; }
+        .dark .svc-num { color:rgba(255,255,255,.55); }
         .svc-title { font-size:clamp(18px,2vw,22px); font-weight:500; letter-spacing:-0.02em; }
         .svc-desc {
           font-size:14px; line-height:1.75; color:rgba(0,0,0,.55);
@@ -581,8 +581,8 @@ export default async function Home() {
           </div>
 
           {/* Hero visual */}
-          <div className="hf-rise px-5 sm:px-8 lg:px-12"
-            style={{ animationDelay: '0.45s', maxWidth: 1320, margin: '4rem auto 0' }}>
+          <div className="px-5 sm:px-8 lg:px-12"
+            style={{ maxWidth: 1320, margin: '4rem auto 0' }}>
             <div className="hf-hero-visual">
               <HeroSlideshow />
               {/* Bottom fade into page bg */}

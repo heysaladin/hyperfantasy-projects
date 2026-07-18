@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   devIndicators: false,
+  experimental: {
+    browsersListForSwc: true,
+  },
   serverExternalPackages: ['@prisma/client', '@prisma/adapter-pg', 'pg'],
   images: {
     formats: ['image/avif', 'image/webp'],

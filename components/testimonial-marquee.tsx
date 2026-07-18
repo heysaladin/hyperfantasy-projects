@@ -12,7 +12,7 @@ export function TestimonialMarquee({ children, duration = 52 }: Props) {
   const pos       = useRef(0)
   const dragging  = useRef(false)
   const dragStart = useRef({ x: 0, pos: 0 })
-  const rafId     = useRef<number>()
+  const rafId     = useRef<number>(0)
 
   useEffect(() => {
     const track = trackRef.current

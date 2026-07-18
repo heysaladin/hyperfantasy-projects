@@ -2,6 +2,12 @@
   "name": "hyperfantasy-projects",
   "version": "0.1.0",
   "private": true,
+  "browserslist": [
+    "chrome >= 89",
+    "edge >= 89",
+    "firefox >= 89",
+    "safari >= 15"
+  ],
   "scripts": {
     "postinstall": "prisma generate",
     "dev": "next dev --webpack",
