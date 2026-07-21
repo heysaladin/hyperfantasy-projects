@@ -15,7 +15,7 @@ export default function AdminTagsPanel() {
   const dragIndex = useRef<number | null>(null)
 
   const fetchTags = () => {
-    fetch('/api/tags')
+    fetch('/api/tags', { cache: 'no-store' })
       .then(r => r.json())
       .then(data => setTags(Array.isArray(data) ? data : []))
       .catch(() => setTags([]))
@@ -35,34 +35,37 @@ export default function AdminTagsPanel() {
 
   const addTag = async () => {
     if (!newName.trim()) return
-    await fetch('/api/tags', {
+    const res = await fetch('/api/tags', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: newName.trim() }),
     })
+    const newTag = await res.json()
     setNewName('')
-    fetchTags()
+    if (newTag?.id) setTags(prev => [...prev, newTag])
+    else fetchTags()
   }
 
   const saveEdit = async (id: string) => {
     if (!editName.trim()) return
+    const trimmed = editName.trim()
+    setTags(prev => prev.map(t => t.id === id ? { ...t, name: trimmed } : t))
+    setEditId(null)
     await fetch('/api/tags', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, name: editName.trim() }),
+      body: JSON.stringify({ id, name: trimmed }),
     })
-    setEditId(null)
-    fetchTags()
   }
 
   const deleteTag = async (id: string) => {
+    setTags(prev => prev.filter(t => t.id !== id))
+    setMenuId(null)
     await fetch('/api/tags', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id }),
     })
-    setMenuId(null)
-    fetchTags()
   }
 
   const saveOrder = (ordered: TagItem[]) => {

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import AdminColorMap from '@/components/admin-color-map'
 import AdminTagsPanel from '@/components/admin-tags-panel'
+import AdminCookingPanel from '@/components/admin-cooking-panel'
 import { prisma } from '@/lib/prisma'
 
 export default async function AdminDashboard() {
@@ -84,6 +85,11 @@ export default async function AdminDashboard() {
       {/* Tag Shortcuts panel */}
       <div className="mt-12">
         <AdminTagsPanel />
+      </div>
+
+      {/* Cooking panel */}
+      <div className="mt-4">
+        <AdminCookingPanel />
       </div>
 
       {/* Color Map Section */}

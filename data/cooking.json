@@ -1,0 +1,29 @@
+[
+  {
+    "id": "c1a2b3d4-e5f6-7890-abcd-ef1234567890",
+    "tag": "Photography · AI",
+    "title": "Photography + AI Platform",
+    "desc": "AI-assisted platform for managing and curating photographer-shot results — organize, review, and deliver with intelligence.",
+    "image": "https://images.unsplash.com/photo-1606941900695-e1cfcb9010d9?q=80&w=987&auto=format&fit=crop",
+    "bg": "#0e0a1e",
+    "active": false
+  },
+  {
+    "id": "d2b3c4e5-f6a7-8901-bcde-f12345678901",
+    "tag": "Mobile App · Analytics",
+    "title": "KPI Monitoring App",
+    "desc": "A mobile-first app for tracking KPIs on the go — real-time metrics, team visibility, and decisions at your fingertips.",
+    "image": "https://images.unsplash.com/photo-1622782914767-404fb9ab3f57?q=80&w=1064&auto=format&fit=crop",
+    "bg": "#071628",
+    "active": false
+  },
+  {
+    "id": "e3c4d5f6-a7b8-9012-cdef-123456789012",
+    "tag": "Fintech · Lending",
+    "title": "Fintech Platform",
+    "desc": "Instant loan platform covering personal loans, car financing, real estate, and card credit — fast approvals, seamless experience.",
+    "image": "https://plus.unsplash.com/premium_photo-1681469490618-c24cc20bef1c?q=80&w=1085&auto=format&fit=crop",
+    "bg": "#071a0f",
+    "active": true
+  }
+]

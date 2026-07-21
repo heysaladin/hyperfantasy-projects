@@ -1,6 +1,10 @@
+export const revalidate = 0
+
 import Link from 'next/link'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
+import fs from 'fs'
+import path from 'path'
 import { ArrowRight, ArrowUpRight, Mail, Star } from 'lucide-react'
 import { EnquiryCTAButton } from '@/components/enquiry-cta-button'
 import { HeroSlideshow } from '@/components/hero-slideshow'
@@ -10,6 +14,15 @@ import { FaqAccordion } from '@/components/faq-accordion'
 import { testimonials } from '@/data/testimonials'
 import { resolveContentAsText } from '@/lib/tiptap-content'
 import { prisma } from '@/lib/prisma'
+
+type CookingItem = { id: string; tag: string; title: string; desc: string; image: string; bg: string; active: boolean }
+
+function getCookingItems(): CookingItem[] {
+  try {
+    const raw = fs.readFileSync(path.join(process.cwd(), 'data', 'cooking.json'), 'utf-8')
+    return JSON.parse(raw).filter((i: CookingItem) => i.active)
+  } catch { return [] }
+}
 
 const HomeFloatingCTA = dynamic(() =>
   import('@/components/home-floating-cta').then(m => ({ default: m.HomeFloatingCTA }))
@@ -169,6 +182,9 @@ const PINNED_WORK_IDS = [
 ]
 
 export default async function Home() {
+  const cookingItems = getCookingItems()
+  const cookingCols = cookingItems.length === 1 ? 'grid-cols-1' : cookingItems.length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3'
+
   const [portfoliosTop, portfoliosPinned, svcGalleries, articles, uiuxGallery] = await Promise.all([
     prisma.portfolio.findMany({
       where: { isVisible: true, imageUrl: { not: null } },
@@ -917,78 +933,70 @@ export default async function Home() {
         {/* ─────────────────────────────────────── */}
         {/* 09 · ON COOKING                         */}
         {/* ─────────────────────────────────────── */}
-        <section className="hf-cta-bg px-6 lg:px-8 py-20 border-t border-black/8 dark:border-white/7">
-          <div className="max-w-7xl mx-auto">
-            <ScrollReveal>
-              <div className="flex items-end justify-between mb-10 gap-4">
-                <div>
-                  <span className="hf-label">Currently</span>
-                  <h2 className="hf-title hf-h2">On Cooking</h2>
+        {cookingItems.length > 0 && (
+          <section className="hf-cta-bg px-6 lg:px-8 py-20 border-t border-black/8 dark:border-white/7">
+            <div className="max-w-7xl mx-auto">
+              <ScrollReveal>
+                <div className="flex items-end justify-between mb-10 gap-4">
+                  <div>
+                    <span className="hf-label">Currently</span>
+                    <h2 className="hf-title hf-h2">On Cooking</h2>
+                  </div>
                 </div>
+              </ScrollReveal>
+
+              <div className={`grid ${cookingCols} gap-5`}>
+                {cookingItems.map((p, i) => {
+                  const horizontal = cookingItems.length === 1
+                  return (
+                    <ScrollReveal key={p.id} delay={i * 80}>
+                      <article
+                        style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(0,0,0,.08)', ...(horizontal ? { minHeight: 220 } : {}) }}
+                        className={`dark:border-white/10 group h-full ${horizontal ? 'flex flex-row items-stretch' : 'flex flex-col'}`}
+                      >
+                        {/* Image */}
+                        <div style={{
+                          ...(horizontal
+                            ? { aspectRatio: '4/3', flexShrink: 0, alignSelf: 'stretch', position: 'relative', overflow: 'hidden', background: p.bg }
+                            : { aspectRatio: '16/9', background: p.bg, position: 'relative', overflow: 'hidden' }),
+                        }}>
+                          {p.image && (
+                            <Image
+                              src={p.image} alt={p.title} fill
+                              sizes={cookingItems.length === 1 ? '(max-width:768px) 100vw, 45vw' : '(max-width:768px) 100vw, 22vw'}
+                              className="object-cover opacity-70 group-hover:scale-105 transition-transform duration-700"
+                            />
+                          )}
+                          <div style={{
+                            position: 'absolute', top: 12, right: 12,
+                            background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)',
+                            borderRadius: 100, padding: '4px 10px',
+                            fontSize: 11, fontWeight: 600, letterSpacing: '0.08em',
+                            color: '#fff', display: 'flex', alignItems: 'center', gap: 5,
+                          }}>
+                            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', flexShrink: 0 }} />
+                            In Progress
+                          </div>
+                        </div>
+
+                        {/* Text */}
+                        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'center' }}>
+                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}
+                            className="hf-accent">{p.tag}</span>
+                          <h3 style={{ fontSize: horizontal ? 18 : 16, fontWeight: 600, lineHeight: '140%', margin: '8px 0' }}
+                            className="hf-title group-hover:opacity-70 transition">{p.title}</h3>
+                          <p style={{ fontSize: 13, lineHeight: '165%' }}
+                            className="hf-muted">{p.desc}</p>
+                        </div>
+                      </article>
+                    </ScrollReveal>
+                  )
+                })}
               </div>
-            </ScrollReveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {[
-                {
-                  tag: 'Photography · AI',
-                  title: 'Photography + AI Platform',
-                  desc: 'AI-assisted platform for managing and curating photographer-shot results — organize, review, and deliver with intelligence.',
-                  image: 'https://images.unsplash.com/photo-1606941900695-e1cfcb9010d9?q=80&w=987&auto=format&fit=crop',
-                  bg: '#0e0a1e',
-                },
-                {
-                  tag: 'Mobile App · Analytics',
-                  title: 'KPI Monitoring App',
-                  desc: 'A mobile-first app for tracking KPIs on the go — real-time metrics, team visibility, and decisions at your fingertips.',
-                  image: 'https://images.unsplash.com/photo-1622782914767-404fb9ab3f57?q=80&w=1064&auto=format&fit=crop',
-                  bg: '#071628',
-                },
-                {
-                  tag: 'Fintech · Lending',
-                  title: 'Fintech Platform',
-                  desc: 'Instant loan platform covering personal loans, car financing, real estate, and card credit — fast approvals, seamless experience.',
-                  image: 'https://plus.unsplash.com/premium_photo-1681469490618-c24cc20bef1c?q=80&w=1085&auto=format&fit=crop',
-                  bg: '#071a0f',
-                },
-              ].map((p, i) => (
-                <ScrollReveal key={p.title} delay={i * 80}>
-                  <article
-                    style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(0,0,0,.08)' }}
-                    className="dark:border-white/10 group h-full flex flex-col"
-                  >
-                    <div style={{ aspectRatio: '16/9', background: p.bg, position: 'relative', overflow: 'hidden' }}>
-                      <Image
-                        src={p.image} alt={p.title} fill
-                        sizes="(max-width:768px) 100vw, 33vw"
-                        className="object-cover opacity-70 group-hover:scale-105 transition-transform duration-700"
-                      />
-                      <div style={{
-                        position: 'absolute', top: 12, right: 12,
-                        background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)',
-                        borderRadius: 100, padding: '4px 10px',
-                        fontSize: 11, fontWeight: 600, letterSpacing: '0.08em',
-                        color: '#fff', display: 'flex', alignItems: 'center', gap: 5,
-                      }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', flexShrink: 0 }} />
-                        In Progress
-                      </div>
-                    </div>
-                    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}
-                        className="hf-accent">{p.tag}</span>
-                      <h3 style={{ fontSize: 16, fontWeight: 600, lineHeight: '140%', margin: '8px 0' }}
-                        className="hf-title group-hover:opacity-70 transition">{p.title}</h3>
-                      <p style={{ fontSize: 13, lineHeight: '165%' }}
-                        className="hf-muted">{p.desc}</p>
-                    </div>
-                  </article>
-                </ScrollReveal>
-              ))}
             </div>
-
-          </div>
-        </section>
+          </section>
+        )}
 
       </main>
 
