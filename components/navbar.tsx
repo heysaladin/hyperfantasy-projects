@@ -197,7 +197,7 @@ export function Navbar() {
                 {user && (
                   <Link
                     href="/admin"
-                    className="px-3 py-1.5 rounded-lg text-sm font-medium border border-slate-200 dark:border-white/10 text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition"
+                    className="px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-100 dark:bg-white/8 text-slate-700 dark:text-white/60 hover:bg-slate-200 dark:hover:bg-white/12 hover:text-slate-900 dark:hover:text-white transition"
                   >
                     Admin
                   </Link>
