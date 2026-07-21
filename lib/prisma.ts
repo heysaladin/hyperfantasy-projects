@@ -7,6 +7,7 @@ const globalForPrisma = globalThis as unknown as {
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
+  max: 1,
 })
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter })
