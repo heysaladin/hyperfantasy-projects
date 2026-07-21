@@ -1,13 +1,15 @@
+export const dynamic = 'force-dynamic'
+
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import dynamic from 'next/dynamic'
+import nextDynamic from 'next/dynamic'
 import { ArrowRight } from 'lucide-react'
 import { EnquiryCTAButton } from '@/components/enquiry-cta-button'
 import { ScrollReveal } from '@/components/scroll-reveal'
 import { prisma } from '@/lib/prisma'
 
-const HomeFloatingCTA = dynamic(() =>
+const HomeFloatingCTA = nextDynamic(() =>
   import('@/components/home-floating-cta').then(m => ({ default: m.HomeFloatingCTA }))
 )
 
