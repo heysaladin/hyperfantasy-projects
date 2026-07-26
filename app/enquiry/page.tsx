@@ -195,7 +195,7 @@ export default function EnquiryPage() {
           className="max-lg:!grid-cols-1 max-lg:!gap-12">
 
           {/* ── Left: heading + info ── */}
-          <div style={{ position: 'sticky', top: '6rem', alignSelf: 'start' }}>
+          <div className="lg:sticky lg:top-24" style={{ alignSelf: 'start' }}>
             <p className="enq-eyebrow" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '1.75rem' }}>
               Contact
             </p>
