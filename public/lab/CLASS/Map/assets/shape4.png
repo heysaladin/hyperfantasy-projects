@@ -1,0 +1,11 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="8.24885" height="99.824" viewBox="0 0 8.24885 99.824" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="shape 4">
+<path id="Axo panel 4" d="M0 0C0 0.300739 0.386666 0.558511 1.20296 0.773324C2.83554 1.20295 5.4133 1.20295 7.04589 0.773324C7.86218 0.558511 8.24885 0.257777 8.24885 0V98.7284C8.24885 99.0292 7.86218 99.2869 7.04589 99.5017C5.4133 99.9314 2.83554 99.9314 1.20296 99.5017C0.386666 99.2869 0 98.9862 0 98.7284V0Z" fill="url(#paint0_linear_0_46)"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_46" x1="4.14604" y1="5.57889" x2="4.14604" y2="120.048" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="#AEBDDF"/>
+</linearGradient>
+</defs>
+</svg>

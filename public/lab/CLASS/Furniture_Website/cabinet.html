@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1440" />
+  <title>Cabinet - Interio.</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Nunito:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      min-width: 1440px;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─────────────────────────────────────────────────── */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 133px;
+      height: 80px;
+      background: #fff;
+    }
+
+    .nav__logo {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      color: #312d2d;
+      text-decoration: none;
+    }
+
+    .nav__logo span {
+      color: #f6b50e;
+    }
+
+    .nav__links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav__links a {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      color: #312d2d;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav__links a:hover {
+      color: #f6b50e;
+    }
+
+    /* ─── HERO BANNER ─────────────────────────────────────────── */
+    .banner {
+      margin: 0 135px;
+      position: relative;
+      height: 393px;
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .banner__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .banner__overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 24px;
+    }
+
+    .banner__title {
+      position: absolute;
+      bottom: 90px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 42px;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    /* ─── PRODUCTS SECTION ────────────────────────────────────── */
+    .products {
+      padding: 60px 134px 80px;
+    }
+
+    .products__filter {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 32px;
+      cursor: pointer;
+    }
+
+    .products__filter-label {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      color: #000;
+      line-height: 1.2;
+    }
+
+    .products__filter-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .products__row {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 64px;
+    }
+
+    .product-card {
+      display: flex;
+      flex-direction: column;
+      gap: 17px;
+      width: 270px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .product-card__img-wrap {
+      width: 270px;
+      height: 270px;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+
+    .product-card__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-card__img {
+      transform: scale(1.04);
+    }
+
+    .product-card__info {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .product-card__name {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      color: #000;
+      line-height: 1.2;
+    }
+
+    .product-card__desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: #676767;
+      line-height: 1.2;
+    }
+
+    .product-card__price {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      color: #000;
+      line-height: 1.2;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    .footer {
+      background: #29795a;
+      padding: 64px 165px;
+    }
+
+    .footer__grid {
+      display: flex;
+      gap: 30px;
+    }
+
+    .footer__col {
+      flex: 1;
+    }
+
+    .footer__col-title {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 28px;
+      color: #f4f5f7;
+      margin-bottom: 24px;
+    }
+
+    .footer__links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      list-style: none;
+    }
+
+    .footer__links a {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 24px;
+      color: #eeeff4;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer__links a:hover {
+      color: #f6b50e;
+    }
+
+    .footer__badges {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .footer__badge {
+      height: 48px;
+      width: 162px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ──────────────────────────────────────────────────── -->
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">Inte<span>rio.</span></a>
+    <ul class="nav__links">
+      <li><a href="#">Categories</a></li>
+      <li><a href="#">Furniture</a></li>
+      <li><a href="#">Interior Design</a></li>
+      <li><a href="#">Property</a></li>
+    </ul>
+  </nav>
+
+  <!-- ─── HERO BANNER ──────────────────────────────────────────── -->
+  <div class="banner">
+    <img class="banner__img" src="assets/cabinet-banner.jpeg" alt="Cabinet in stylish disguise" />
+    <div class="banner__overlay"></div>
+    <h1 class="banner__title">Cabinet in stylish disguise</h1>
+  </div>
+
+  <!-- ─── PRODUCTS ─────────────────────────────────────────────── -->
+  <section class="products">
+    <div class="products__filter">
+      <span class="products__filter-label">Popular</span>
+      <img class="products__filter-icon" src="assets/arrow-down.svg" alt="dropdown" />
+    </div>
+
+    <!-- Row 1 -->
+    <div class="products__row">
+      <div class="product-card">
+        <div class="product-card__img-wrap">
+          <img class="product-card__img" src="assets/cabinet-prod-1.png" alt="BRIMNES Cabinet" />
+        </div>
+        <div class="product-card__info">
+          <p class="product-card__name">BRIMNES</p>
+          <p class="product-card__desc">Cabinet with doors, white, 78x95 cm</p>
+          <p class="product-card__price">Rp 1.299.000</p>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-card__img-wrap">
+          <img class="product-card__img" src="assets/cabinet-prod-2.png" alt="BRIMNES Cabinet" />
+        </div>
+        <div class="product-card__info">
+          <p class="product-card__name">BRIMNES</p>
+          <p class="product-card__desc">Cabinet with doors, white, 78x95 cm</p>
+          <p class="product-card__price">Rp 1.299.000</p>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-card__img-wrap">
+          <img class="product-card__img" src="assets/cabinet-prod-3.png" alt="BRIMNES Cabinet" />
+        </div>
+        <div class="product-card__info">
+          <p class="product-card__name">BRIMNES</p>
+          <p class="product-card__desc">Cabinet with doors, white, 78x95 cm</p>
+          <p class="product-card__price">Rp 1.299.000</p>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-card__img-wrap">
+          <img class="product-card__img" src="assets/cabinet-prod-4.png" alt="BRIMNES Cabinet" />
+        </div>
+        <div class="product-card__info">
+          <p class="product-card__name">BRIMNES</p>
+          <p class="product-card__desc">Cabinet with doors, white, 78x95 cm</p>
+          <p class="product-card__price">Rp 1.299.000</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="products__row">
+      <div class="product-card">
+        <div class="product-card__img-wrap">
+          <img class="product-card__img" src="assets/cabinet-prod-1.png" alt="BRIMNES Cabinet" />
+        </div>
+        <div class="product-card__info">
+          <p class="product-card__name">BRIMNES</p>
+          <p class="product-card__desc">Cabinet with doors, white, 78x95 cm</p>
+          <p class="product-card__price">Rp 1.299.000</p>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-card__img-wrap">
+          <img class="product-card__img" src="assets/cabinet-prod-2.png" alt="BRIMNES Cabinet" />
+        </div>
+        <div class="product-card__info">
+          <p class="product-card__name">BRIMNES</p>
+          <p class="product-card__desc">Cabinet with doors, white, 78x95 cm</p>
+          <p class="product-card__price">Rp 1.299.000</p>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-card__img-wrap">
+          <img class="product-card__img" src="assets/cabinet-prod-3.png" alt="BRIMNES Cabinet" />
+        </div>
+        <div class="product-card__info">
+          <p class="product-card__name">BRIMNES</p>
+          <p class="product-card__desc">Cabinet with doors, white, 78x95 cm</p>
+          <p class="product-card__price">Rp 1.299.000</p>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-card__img-wrap">
+          <img class="product-card__img" src="assets/cabinet-prod-4.png" alt="BRIMNES Cabinet" />
+        </div>
+        <div class="product-card__info">
+          <p class="product-card__name">BRIMNES</p>
+          <p class="product-card__desc">Cabinet with doors, white, 78x95 cm</p>
+          <p class="product-card__price">Rp 1.299.000</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer__grid">
+      <div class="footer__col">
+        <p class="footer__col-title">Company</p>
+        <ul class="footer__links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <p class="footer__col-title">Support</p>
+        <ul class="footer__links">
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Safety Center</a></li>
+          <li><a href="#">Community Guidelines</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <p class="footer__col-title">Legal</p>
+        <ul class="footer__links">
+          <li><a href="#">Cookies Policy</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Law Enforcement</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <p class="footer__col-title">Install App</p>
+        <div class="footer__badges">
+          <img class="footer__badge" src="assets/badge-google-play.jpg" alt="Get it on Google Play" />
+          <img class="footer__badge" src="assets/badge-app-store.jpg" alt="Download on the App Store" />
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

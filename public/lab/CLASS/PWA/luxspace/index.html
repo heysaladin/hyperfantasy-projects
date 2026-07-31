@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LuxSpace</title>
+  <link rel="icon" href="images/content/favicon.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Open Sans','sans-serif'] } } }
+    }
+  </script>
+  <style>body { font-family: 'Open Sans', sans-serif; }</style>
+</head>
+<body class="bg-white">
+  <div class="min-h-screen flex items-center justify-center flex-col text-center px-4">
+    <img src="images/content/logo.png" alt="LuxSpace" class="mb-8" />
+    <p class="text-gray-600 max-w-xs">
+      Kami menyediakan furniture berkelas yang membuat ruangan terasa homey
+    </p>
+  </div>
+  <script>
+    setTimeout(() => { window.location.href = 'home.html'; }, 2000);
+  </script>
+</body>
+</html>

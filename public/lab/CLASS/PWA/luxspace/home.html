@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LuxSpace</title>
+  <link rel="icon" href="images/content/favicon.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { 'pink-400': '#F9CADA' },
+          fontFamily: { sans: ['Open Sans', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Open Sans', sans-serif; }
+    .stretched-link { position: absolute; inset: 0; z-index: 10; }
+    .card:hover .card-shadow { box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -2px rgba(0,0,0,.05); }
+    ul.breadcrumb { display: flex; gap: 0; }
+    ul.breadcrumb li { font-weight: 300; }
+    ul.breadcrumb li:last-child { font-weight: 600; }
+    ul.breadcrumb li:not(:last-child)::after { content: ' / '; margin: 0 6px; }
+    .hero { min-height: 90vh; position: relative; overflow: hidden; }
+    .hero-image { position: relative; }
+    @media (max-width: 767px) {
+      .hero { display: flex; align-items: center; }
+      .hero-caption { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; }
+    }
+    /* video play button */
+    .video-btn {
+      position: absolute; bottom: 32px; right: 32px;
+      width: 72px; height: 72px; border-radius: 50%;
+      background: #BCE7F0; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 30;
+    }
+    /* modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.7);
+      z-index: 100; display: flex; align-items: center; justify-content: center;
+    }
+    /* carousel */
+    #carousel-track { display: flex; transition: transform .3s ease; }
+    .carousel-card { flex: none; padding: 0 16px; }
+    /* accordion (mobile footer) */
+    .accordion-body { overflow: hidden; }
+    @media (max-width: 767px) {
+      .accordion-body { max-height: 0; transition: max-height .3s ease; }
+      .accordion-body.open { max-height: 200px; }
+    }
+    @media (min-width: 768px) {
+      .accordion-body { max-height: none !important; }
+    }
+  </style>
+</head>
+<body class="text-black">
+
+  <!-- HEADER -->
+  <header class="absolute w-full z-50 px-4">
+    <div class="container mx-auto py-5">
+      <div class="flex items-center">
+        <div class="w-56 flex items-center">
+          <a href="home.html"><img src="images/content/logo.png" alt="LuxSpace" /></a>
+        </div>
+        <div class="flex-1"></div>
+        <!-- nav desktop -->
+        <nav id="menu" class="fixed bg-white inset-0 flex flex-col invisible items-center justify-center opacity-0 md:visible md:flex-row md:bg-transparent md:relative md:opacity-100 md:flex md:items-center transition-opacity duration-200 z-40">
+          <a href="#" class="mx-3 py-6 md:py-0 text-black md:text-white hover:underline block">Showcase</a>
+          <a href="#" class="mx-3 py-6 md:py-0 text-black md:text-white hover:underline block">Catalog</a>
+          <a href="#" class="mx-3 py-6 md:py-0 text-black md:text-white hover:underline block">Delivery</a>
+          <a href="#" class="mx-3 py-6 md:py-0 text-black md:text-white hover:underline block">Rewards</a>
+        </nav>
+        <div class="flex items-center ml-6">
+          <!-- hamburger -->
+          <button id="menu-toggler" class="flex md:hidden items-center justify-center w-8 h-8 text-white focus:outline-none z-50">
+            <svg class="fill-current" width="18" height="17" viewBox="0 0 18 17">
+              <path d="M15.9773 0.461304H1.04219C0.466585 0.461304 0 0.790267 0 1.19609C0 1.60192 0.466668 1.93088 1.04219 1.93088H15.9773C16.5529 1.93088 17.0195 1.60192 17.0195 1.19609C17.0195 0.790208 16.5529 0.461304 15.9773 0.461304Z"/>
+              <path d="M15.9773 7.68802H1.04219C0.466585 7.68802 0 8.01698 0 8.42281C0 8.82864 0.466668 9.1576 1.04219 9.1576H15.9773C16.5529 9.1576 17.0195 8.82864 17.0195 8.42281C17.0195 8.01692 16.5529 7.68802 15.9773 7.68802Z"/>
+              <path d="M15.9773 14.9147H1.04219C0.466585 14.9147 0 15.2437 0 15.6495C0 16.0553 0.466668 16.3843 1.04219 16.3843H15.9773C16.5529 16.3843 17.0195 16.0553 17.0195 15.6495C17.0195 15.2436 16.5529 14.9147 15.9773 14.9147Z"/>
+            </svg>
+          </button>
+          <!-- cart -->
+          <a href="cart.html" class="ml-6 flex items-center justify-center w-8 h-8 text-white">
+            <svg class="fill-current" width="26" height="24" viewBox="0 0 26 24">
+              <path d="M10.8754 18.7312C9.61762 18.7312 8.59436 19.7115 8.59436 20.9164C8.59436 22.1214 9.61762 23.1017 10.8754 23.1017C12.1331 23.1017 13.1564 22.1214 13.1564 20.9164C13.1563 19.7115 12.1331 18.7312 10.8754 18.7312ZM10.8754 21.8814C10.3199 21.8814 9.86796 21.4485 9.86796 20.9163C9.86796 20.3842 10.3199 19.9512 10.8754 19.9512C11.4308 19.9512 11.8828 20.3842 11.8828 20.9163C11.8828 21.4486 11.4308 21.8814 10.8754 21.8814Z"/>
+              <path d="M18.8764 18.7312C17.6186 18.7312 16.5953 19.7115 16.5953 20.9164C16.5953 22.1214 17.6186 23.1017 18.8764 23.1017C20.1342 23.1017 21.1575 22.1214 21.1575 20.9164C21.1574 19.7115 20.1341 18.7312 18.8764 18.7312ZM18.8764 21.8814C18.3209 21.8814 17.869 21.4485 17.869 20.9163C17.869 20.3842 18.3209 19.9512 18.8764 19.9512C19.4319 19.9512 19.8838 20.3842 19.8838 20.9163C19.8838 21.4486 19.4319 21.8814 18.8764 21.8814Z"/>
+              <path d="M19.438 7.2262H10.3122C9.96051 7.2262 9.67542 7.49932 9.67542 7.83626C9.67542 8.1732 9.96056 8.44632 10.3122 8.44632H19.438C19.7897 8.44632 20.0748 8.1732 20.0748 7.83626C20.0748 7.49927 19.7897 7.2262 19.438 7.2262Z"/>
+              <path d="M18.9414 10.3942H10.8089C10.4572 10.3942 10.1721 10.6673 10.1721 11.0042C10.1721 11.3412 10.4572 11.6143 10.8089 11.6143H18.9413C19.293 11.6143 19.5781 11.3412 19.5781 11.0042C19.5781 10.6673 19.293 10.3942 18.9414 10.3942Z"/>
+              <path d="M25.6499 4.508C25.407 4.22245 25.0472 4.05871 24.6626 4.05871H4.82655L4.42595 2.19571C4.34232 1.80709 4.06563 1.48078 3.68565 1.32272L0.890528 0.160438C0.567841 0.0261566 0.192825 0.168008 0.0528584 0.477043C-0.0872597 0.786176 0.0608116 1.14549 0.383347 1.27957L3.17852 2.4419L6.2598 16.7708C6.38117 17.3351 6.90578 17.7446 7.50723 17.7446H22.7635C23.1152 17.7446 23.4003 17.4715 23.4003 17.1346C23.4003 16.7976 23.1152 16.5245 22.7635 16.5245H7.50728L7.13247 14.7815H22.8814C23.4828 14.7815 24.0075 14.3719 24.1288 13.8076L25.9101 5.52488C25.9876 5.16421 25.8928 4.79349 25.6499 4.508ZM22.8814 13.5615H6.87012L5.08895 5.27879L24.6626 5.27884L22.8814 13.5615Z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero flex items-center">
+    <!-- caption -->
+    <div class="w-full md:w-1/2 absolute md:relative z-20 text-center flex flex-col justify-center hero-caption px-8 md:px-0">
+      <h1 class="text-3xl md:text-5xl leading-tight font-semibold text-white md:text-black">
+        The Room <br/>You've Dreaming
+      </h1>
+      <h2 class="text-base md:text-lg my-6 tracking-wide text-white md:text-black">
+        Kami menyediakan furniture berkelas yang<br class="hidden lg:block"/>
+        membuat ruangan terasa homey
+      </h2>
+      <div>
+        <a href="#browse-the-room" class="bg-pink-400 text-black hover:bg-black hover:text-pink-400 rounded-full px-8 py-3 mt-4 inline-block transition duration-200">
+          Explore Now
+        </a>
+      </div>
+    </div>
+    <!-- image -->
+    <div class="w-full md:w-1/2 absolute inset-0 md:relative">
+      <div class="hero-image w-full h-full" style="min-height:90vh;">
+        <div class="absolute inset-0 bg-black opacity-40 z-10 md:opacity-0"></div>
+        <img src="images/content/image-section-1.png" alt="hero" class="absolute inset-0 md:relative w-full h-full object-cover object-center" style="min-height:90vh;" />
+        <!-- play button -->
+        <button class="video-btn" id="play-btn" aria-label="Play video">
+          <svg width="22" height="22" viewBox="0 0 22 26" fill="none">
+            <path d="M21 11.536c2.667 1.54 2.667 5.39 0 6.928l-15 8.66C3.333 28.664 0 26.74 0 23.66V2.34C0-.74 3.333-2.664 6 .876l15 8.66z" fill="#000"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO MODAL -->
+  <div id="video-modal" class="modal-overlay hidden" role="dialog">
+    <div class="relative w-full max-w-2xl mx-4" style="padding-bottom:56.25%;">
+      <iframe class="absolute inset-0 w-full h-full" src="" id="modal-iframe"
+        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <!-- BROWSE THE ROOM -->
+  <section class="flex bg-gray-100 py-16 px-4" id="browse-the-room">
+    <div class="container mx-auto">
+      <div class="mb-6">
+        <h3 class="text-2xl font-semibold capitalize">browse the room <br/>that we designed for you</h3>
+      </div>
+      <div class="grid grid-cols-9 grid-rows-2 gap-4">
+        <!-- card 1 -->
+        <div class="relative col-span-9 md:col-span-4 card" style="height:180px">
+          <div class="card-shadow rounded-xl w-full h-full overflow-hidden">
+            <img src="images/content/image-catalog-1.png" alt="Living Room" class="w-full h-full object-cover rounded-xl" />
+          </div>
+          <div class="absolute left-0 top-0 bottom-0 flex flex-col justify-center pl-48 md:pl-56">
+            <h5 class="text-lg font-semibold">Living Room</h5>
+            <span>18.309 items</span>
+          </div>
+          <a href="details.html" class="stretched-link"></a>
+        </div>
+        <!-- card 2 — tall -->
+        <div class="relative col-span-9 md:col-span-2 md:row-span-2 card" style="min-height:180px">
+          <div class="card-shadow rounded-xl w-full h-full overflow-hidden" style="min-height:180px">
+            <img src="images/content/image-catalog-3.png" alt="Decoration" class="w-full h-full object-cover rounded-xl" style="min-height:180px" />
+          </div>
+          <div class="absolute inset-0 flex flex-col justify-center items-center text-center">
+            <h5 class="text-lg font-semibold">Decoration</h5>
+            <span>77.392 items</span>
+          </div>
+          <a href="details.html" class="stretched-link"></a>
+        </div>
+        <!-- card 3 — tall -->
+        <div class="relative col-span-9 md:col-span-3 md:row-span-2 card" style="min-height:180px">
+          <div class="card-shadow rounded-xl w-full h-full overflow-hidden" style="min-height:180px">
+            <img src="images/content/image-catalog-4.png" alt="Living Room" class="w-full h-full object-cover rounded-xl" style="min-height:180px" />
+          </div>
+          <div class="absolute inset-0 flex flex-col justify-center items-center text-center">
+            <h5 class="text-lg font-semibold">Living Room</h5>
+            <span>22.094 items</span>
+          </div>
+          <a href="details.html" class="stretched-link"></a>
+        </div>
+        <!-- card 4 -->
+        <div class="relative col-span-9 md:col-span-4 card" style="height:180px">
+          <div class="card-shadow rounded-xl w-full h-full overflow-hidden">
+            <img src="images/content/image-catalog-2.png" alt="Children Room" class="w-full h-full object-cover rounded-xl" />
+          </div>
+          <div class="absolute left-0 top-0 bottom-0 flex flex-col justify-center pl-48 md:pl-56">
+            <h5 class="text-lg font-semibold">Children Room</h5>
+            <span>837 items</span>
+          </div>
+          <a href="details.html" class="stretched-link"></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JUST ARRIVED -->
+  <section class="py-16">
+    <div class="container mx-auto mb-6 px-4">
+      <div class="text-center">
+        <h3 class="text-2xl font-semibold capitalize">Just Arrived <br/>this summer for you</h3>
+      </div>
+    </div>
+    <div class="overflow-hidden px-4" id="carousel-wrapper">
+      <div id="carousel-track">
+        <!-- card template repeated -->
+        <div class="carousel-card relative card group" style="width:319px">
+          <div class="rounded-xl overflow-hidden card-shadow relative" style="width:287px;height:386px">
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-200 bg-black bg-opacity-30 flex items-center justify-center z-10">
+              <div class="bg-white rounded-full w-16 h-16 flex items-center justify-center">
+                <svg class="fill-current" width="32" height="18" viewBox="0 0 43 24"><path d="M41.6557 10.0065C39.2794 6.95958 36.2012 4.43931 32.7542 2.71834C29.2355 0.961548 25.4501 0.0500333 21.4985 0.00223289C21.3896-0.000744296 20.9526-0.000744296 20.8438 0.00223289C16.8923 0.050116 13.1068 0.961548 9.58807 2.71834C6.14106 4.43931 3.06307 6.9595 0.686613 10.0065C-0.228871 11.1802-0.228871 12.8198 0.686613 13.9935C3.06299 17.0404 6.14106 19.5607 9.58807 21.2817C13.1068 23.0385 16.8922 23.95 20.8438 23.9978C20.9526 24.0007 21.3896 24.0007 21.4985 23.9978C25.45 23.9499 29.2355 23.0385 32.7542 21.2817C36.2012 19.5607 39.2793 17.0405 41.6557 13.9935C42.5712 12.8196 42.5712 11.1802 41.6557 10.0065Z"/><path d="M21.1712 7.60071C18.7454 7.60071 16.772 9.57417 16.772 11.9999C16.772 14.4257 18.7454 16.3991 21.1712 16.3991C23.5969 16.3991 25.5704 14.4257 25.5704 11.9999C25.5705 9.57417 23.597 7.60071 21.1712 7.60071Z"/></svg>
+              </div>
+            </div>
+            <img src="images/content/image-arrived-1.png" alt="Cangkir Mauttie" class="w-full h-full object-cover" />
+          </div>
+          <h5 class="text-lg font-semibold mt-4">Cangkir Mauttie</h5>
+          <span>IDR 89.300</span>
+          <a href="details.html" class="stretched-link"></a>
+        </div>
+        <div class="carousel-card relative card group" style="width:319px">
+          <div class="rounded-xl overflow-hidden card-shadow relative" style="width:287px;height:386px">
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-200 bg-black bg-opacity-30 flex items-center justify-center z-10">
+              <div class="bg-white rounded-full w-16 h-16 flex items-center justify-center">
+                <svg class="fill-current" width="32" height="18" viewBox="0 0 43 24"><path d="M41.6557 10.0065C39.2794 6.95958 36.2012 4.43931 32.7542 2.71834C29.2355 0.961548 25.4501 0.0500333 21.4985 0.00223289C21.3896-0.000744296 20.9526-0.000744296 20.8438 0.00223289C16.8923 0.050116 13.1068 0.961548 9.58807 2.71834C6.14106 4.43931 3.06307 6.9595 0.686613 10.0065C-0.228871 11.1802-0.228871 12.8198 0.686613 13.9935C3.06299 17.0404 6.14106 19.5607 9.58807 21.2817C13.1068 23.0385 16.8922 23.95 20.8438 23.9978C20.9526 24.0007 21.3896 24.0007 21.4985 23.9978C25.45 23.9499 29.2355 23.0385 32.7542 21.2817C36.2012 19.5607 39.2793 17.0405 41.6557 13.9935C42.5712 12.8196 42.5712 11.1802 41.6557 10.0065Z"/><path d="M21.1712 7.60071C18.7454 7.60071 16.772 9.57417 16.772 11.9999C16.772 14.4257 18.7454 16.3991 21.1712 16.3991C23.5969 16.3991 25.5704 14.4257 25.5704 11.9999C25.5705 9.57417 23.597 7.60071 21.1712 7.60071Z"/></svg>
+              </div>
+            </div>
+            <img src="images/content/image-arrived-2.png" alt="Bankyu Minimay" class="w-full h-full object-cover" />
+          </div>
+          <h5 class="text-lg font-semibold mt-4">Bankyu Minimay</h5>
+          <span>IDR 67.899</span>
+          <a href="details.html" class="stretched-link"></a>
+        </div>
+        <div class="carousel-card relative card group" style="width:319px">
+          <div class="rounded-xl overflow-hidden card-shadow relative" style="width:287px;height:386px">
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-200 bg-black bg-opacity-30 flex items-center justify-center z-10">
+              <div class="bg-white rounded-full w-16 h-16 flex items-center justify-center">
+                <svg class="fill-current" width="32" height="18" viewBox="0 0 43 24"><path d="M41.6557 10.0065C39.2794 6.95958 36.2012 4.43931 32.7542 2.71834C29.2355 0.961548 25.4501 0.0500333 21.4985 0.00223289C21.3896-0.000744296 20.9526-0.000744296 20.8438 0.00223289C16.8923 0.050116 13.1068 0.961548 9.58807 2.71834C6.14106 4.43931 3.06307 6.9595 0.686613 10.0065C-0.228871 11.1802-0.228871 12.8198 0.686613 13.9935C3.06299 17.0404 6.14106 19.5607 9.58807 21.2817C13.1068 23.0385 16.8922 23.95 20.8438 23.9978C20.9526 24.0007 21.3896 24.0007 21.4985 23.9978C25.45 23.9499 29.2355 23.0385 32.7542 21.2817C36.2012 19.5607 39.2793 17.0405 41.6557 13.9935C42.5712 12.8196 42.5712 11.1802 41.6557 10.0065Z"/><path d="M21.1712 7.60071C18.7454 7.60071 16.772 9.57417 16.772 11.9999C16.772 14.4257 18.7454 16.3991 21.1712 16.3991C23.5969 16.3991 25.5704 14.4257 25.5704 11.9999C25.5705 9.57417 23.597 7.60071 21.1712 7.60071Z"/></svg>
+              </div>
+            </div>
+            <img src="images/content/image-arrived-3.png" alt="Buku Sidu Edition" class="w-full h-full object-cover" />
+          </div>
+          <h5 class="text-lg font-semibold mt-4">Buku Sidu Edition</h5>
+          <span>IDR 120.699</span>
+          <a href="details.html" class="stretched-link"></a>
+        </div>
+        <div class="carousel-card relative card group" style="width:319px">
+          <div class="rounded-xl overflow-hidden card-shadow relative" style="width:287px;height:386px">
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-200 bg-black bg-opacity-30 flex items-center justify-center z-10">
+              <div class="bg-white rounded-full w-16 h-16 flex items-center justify-center">
+                <svg class="fill-current" width="32" height="18" viewBox="0 0 43 24"><path d="M41.6557 10.0065C39.2794 6.95958 36.2012 4.43931 32.7542 2.71834C29.2355 0.961548 25.4501 0.0500333 21.4985 0.00223289C21.3896-0.000744296 20.9526-0.000744296 20.8438 0.00223289C16.8923 0.050116 13.1068 0.961548 9.58807 2.71834C6.14106 4.43931 3.06307 6.9595 0.686613 10.0065C-0.228871 11.1802-0.228871 12.8198 0.686613 13.9935C3.06299 17.0404 6.14106 19.5607 9.58807 21.2817C13.1068 23.0385 16.8922 23.95 20.8438 23.9978C20.9526 24.0007 21.3896 24.0007 21.4985 23.9978C25.45 23.9499 29.2355 23.0385 32.7542 21.2817C36.2012 19.5607 39.2793 17.0405 41.6557 13.9935C42.5712 12.8196 42.5712 11.1802 41.6557 10.0065Z"/><path d="M21.1712 7.60071C18.7454 7.60071 16.772 9.57417 16.772 11.9999C16.772 14.4257 18.7454 16.3991 21.1712 16.3991C23.5969 16.3991 25.5704 14.4257 25.5704 11.9999C25.5705 9.57417 23.597 7.60071 21.1712 7.60071Z"/></svg>
+              </div>
+            </div>
+            <img src="images/content/image-arrived-4.png" alt="Watch Notes X" class="w-full h-full object-cover" />
+          </div>
+          <h5 class="text-lg font-semibold mt-4">Watch Notes X</h5>
+          <span>IDR 1.973.000</span>
+          <a href="details.html" class="stretched-link"></a>
+        </div>
+        <div class="carousel-card relative card group" style="width:319px">
+          <div class="rounded-xl overflow-hidden card-shadow relative" style="width:287px;height:386px">
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-200 bg-black bg-opacity-30 flex items-center justify-center z-10">
+              <div class="bg-white rounded-full w-16 h-16 flex items-center justify-center">
+                <svg class="fill-current" width="32" height="18" viewBox="0 0 43 24"><path d="M41.6557 10.0065C39.2794 6.95958 36.2012 4.43931 32.7542 2.71834C29.2355 0.961548 25.4501 0.0500333 21.4985 0.00223289C21.3896-0.000744296 20.9526-0.000744296 20.8438 0.00223289C16.8923 0.050116 13.1068 0.961548 9.58807 2.71834C6.14106 4.43931 3.06307 6.9595 0.686613 10.0065C-0.228871 11.1802-0.228871 12.8198 0.686613 13.9935C3.06299 17.0404 6.14106 19.5607 9.58807 21.2817C13.1068 23.0385 16.8922 23.95 20.8438 23.9978C20.9526 24.0007 21.3896 24.0007 21.4985 23.9978C25.45 23.9499 29.2355 23.0385 32.7542 21.2817C36.2012 19.5607 39.2793 17.0405 41.6557 13.9935C42.5712 12.8196 42.5712 11.1802 41.6557 10.0065Z"/><path d="M21.1712 7.60071C18.7454 7.60071 16.772 9.57417 16.772 11.9999C16.772 14.4257 18.7454 16.3991 21.1712 16.3991C23.5969 16.3991 25.5704 14.4257 25.5704 11.9999C25.5705 9.57417 23.597 7.60071 21.1712 7.60071Z"/></svg>
+              </div>
+            </div>
+            <img src="images/content/image-arrived-5.png" alt="Racking Plants" class="w-full h-full object-cover" />
+          </div>
+          <h5 class="text-lg font-semibold mt-4">Racking Plants</h5>
+          <span>IDR 599.400</span>
+          <a href="details.html" class="stretched-link"></a>
+        </div>
+        <div class="carousel-card relative card group" style="width:319px">
+          <div class="rounded-xl overflow-hidden card-shadow relative" style="width:287px;height:386px">
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-200 bg-black bg-opacity-30 flex items-center justify-center z-10">
+              <div class="bg-white rounded-full w-16 h-16 flex items-center justify-center">
+                <svg class="fill-current" width="32" height="18" viewBox="0 0 43 24"><path d="M41.6557 10.0065C39.2794 6.95958 36.2012 4.43931 32.7542 2.71834C29.2355 0.961548 25.4501 0.0500333 21.4985 0.00223289C21.3896-0.000744296 20.9526-0.000744296 20.8438 0.00223289C16.8923 0.050116 13.1068 0.961548 9.58807 2.71834C6.14106 4.43931 3.06307 6.9595 0.686613 10.0065C-0.228871 11.1802-0.228871 12.8198 0.686613 13.9935C3.06299 17.0404 6.14106 19.5607 9.58807 21.2817C13.1068 23.0385 16.8922 23.95 20.8438 23.9978C20.9526 24.0007 21.3896 24.0007 21.4985 23.9978C25.45 23.9499 29.2355 23.0385 32.7542 21.2817C36.2012 19.5607 39.2793 17.0405 41.6557 13.9935C42.5712 12.8196 42.5712 11.1802 41.6557 10.0065Z"/><path d="M21.1712 7.60071C18.7454 7.60071 16.772 9.57417 16.772 11.9999C16.772 14.4257 18.7454 16.3991 21.1712 16.3991C23.5969 16.3991 25.5704 14.4257 25.5704 11.9999C25.5705 9.57417 23.597 7.60071 21.1712 7.60071Z"/></svg>
+              </div>
+            </div>
+            <img src="images/content/image-arrived-3.png" alt="Racking Plants" class="w-full h-full object-cover" />
+          </div>
+          <h5 class="text-lg font-semibold mt-4">Racking Plants</h5>
+          <span>IDR 599.400</span>
+          <a href="details.html" class="stretched-link"></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENTS -->
+  <section class="container mx-auto py-8 px-4">
+    <div class="flex justify-center flex-wrap gap-8">
+      <img src="images/content/logo-adobe.svg" alt="Adobe" class="mx-auto h-8" />
+      <img src="images/content/logo-ikea.svg" alt="IKEA" class="mx-auto h-8" />
+      <img src="images/content/logo-hermanmiller.svg" alt="Herman Miller" class="mx-auto h-8" />
+      <img src="images/content/logo-miele.svg" alt="Miele" class="mx-auto h-8" />
+    </div>
+  </section>
+
+  <!-- FOOTER NAV -->
+  <section class="border-t border-b border-gray-200 py-12 mt-8 px-4">
+    <div class="flex justify-center mb-8">
+      <img src="images/content/logo.png" alt="LuxSpace" />
+    </div>
+    <div class="container mx-auto flex flex-wrap -mx-4 justify-center">
+      <!-- Overview -->
+      <div class="px-4 w-full md:w-2/12 mb-4 md:mb-0">
+        <h5 class="text-lg font-semibold mb-2 accordion-title cursor-pointer md:cursor-default">Overview</h5>
+        <ul class="accordion-body">
+          <li><a href="#" class="hover:underline py-1 block">Shipping</a></li>
+          <li><a href="#" class="hover:underline py-1 block">Refund</a></li>
+          <li><a href="#" class="hover:underline py-1 block">Promotion</a></li>
+        </ul>
+      </div>
+      <!-- Company -->
+      <div class="px-4 w-full md:w-2/12 mb-4 md:mb-0">
+        <h5 class="text-lg font-semibold mb-2 accordion-title cursor-pointer md:cursor-default">Company</h5>
+        <ul class="accordion-body">
+          <li><a href="#" class="hover:underline py-1 block">About</a></li>
+          <li><a href="#" class="hover:underline py-1 block">Career</a></li>
+          <li><a href="#" class="hover:underline py-1 block">Contact Us</a></li>
+        </ul>
+      </div>
+      <!-- Explore -->
+      <div class="px-4 w-full md:w-2/12 mb-4 md:mb-0">
+        <h5 class="text-lg font-semibold mb-2 accordion-title cursor-pointer md:cursor-default">Explore</h5>
+        <ul class="accordion-body">
+          <li><a href="#" class="hover:underline py-1 block">Terms &amp; Conds</a></li>
+          <li><a href="#" class="hover:underline py-1 block">Privacy Policy</a></li>
+          <li><a href="#" class="hover:underline py-1 block">For Developer</a></li>
+        </ul>
+      </div>
+      <!-- Newsletter -->
+      <div class="px-4 w-full md:w-3/12">
+        <h5 class="text-lg font-semibold mb-2">Special Letter</h5>
+        <form action="#" class="relative">
+          <input type="text" placeholder="Your email address" class="bg-gray-100 rounded-xl py-3 px-5 w-full focus:outline-none pr-14" />
+          <button type="submit" class="bg-pink-400 absolute right-0 top-0 h-full rounded-xl px-3 flex items-center justify-center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M23.6177 0.411971L0.833871 8.13353C0.268743 8.34518-0.0623361 8.87521 0.0098048 9.4523C0.0821332 10.0294 0.53462 10.4694 1.13589 10.547L11.5833 11.8968L13.0301 21.9417C13.1112 22.5177 13.5704 22.9512 14.1729 23.0204C14.8735 23.0298 15.3486 22.7229 15.5495 22.231L23.9077 1.75274C24.0994 1.28302 23.9882 0.76983 23.6177 0.411971Z" fill="white"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="text-center px-4 py-8">
+    <p class="text-sm">Copyright 2021 • All Rights Reserved LuxSpace by BuildWith Angga</p>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    const toggler = document.getElementById('menu-toggler');
+    const menu = document.getElementById('menu');
+    toggler.addEventListener('click', () => {
+      const isOpen = menu.classList.contains('opacity-100');
+      if (isOpen) {
+        menu.classList.remove('opacity-100', 'visible');
+        menu.classList.add('opacity-0', 'invisible');
+      } else {
+        menu.classList.remove('opacity-0', 'invisible');
+        menu.classList.add('opacity-100', 'visible');
+      }
+    });
+
+    // Video modal
+    const playBtn = document.getElementById('play-btn');
+    const modal = document.getElementById('video-modal');
+    const iframe = document.getElementById('modal-iframe');
+    playBtn.addEventListener('click', () => {
+      iframe.src = 'https://www.youtube.com/embed/3h0_v1cdUIA?autoplay=1';
+      modal.classList.remove('hidden');
+    });
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        iframe.src = '';
+        modal.classList.add('hidden');
+      }
+    });
+
+    // Carousel drag
+    const track = document.getElementById('carousel-track');
+    const cardWidth = 319;
+    let index = 0;
+    const totalCards = track.children.length;
+    let startX = 0, isDragging = false, startLeft = 0;
+
+    function goTo(i) {
+      const max = totalCards - (window.innerWidth >= 768 ? 4 : 1);
+      index = Math.max(0, Math.min(i, max));
+      track.style.transform = `translateX(${-index * cardWidth}px)`;
+    }
+
+    track.addEventListener('mousedown', e => { isDragging = true; startX = e.clientX; startLeft = index * cardWidth; track.style.transition = 'none'; });
+    document.addEventListener('mousemove', e => { if (!isDragging) return; const dx = startX - e.clientX; track.style.transform = `translateX(${-(startLeft + dx)}px)`; });
+    document.addEventListener('mouseup', e => {
+      if (!isDragging) return; isDragging = false;
+      track.style.transition = 'transform .3s ease';
+      const dx = startX - e.clientX;
+      if (dx > 50) goTo(index + 1);
+      else if (dx < -50) goTo(index - 1);
+      else goTo(index);
+    });
+    track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; startLeft = index * cardWidth; });
+    track.addEventListener('touchend', e => {
+      const dx = startX - e.changedTouches[0].clientX;
+      if (dx > 40) goTo(index + 1);
+      else if (dx < -40) goTo(index - 1);
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+
+    // Mobile accordion footer
+    document.querySelectorAll('.accordion-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const body = title.nextElementSibling;
+        body.classList.toggle('open');
+      });
+    });
+  </script>
+</body>
+</html>

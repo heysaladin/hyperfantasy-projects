@@ -1,0 +1,65 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="1160" height="800" viewBox="0 0 1160 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="map">
+<mask id="mask0_0_57" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="1160" height="800">
+<rect id="Rectangle 16" width="1160" height="800" fill="#F5F5F5"/>
+</mask>
+<g mask="url(#mask0_0_57)">
+<rect id="Rectangle 17" width="1160" height="800" fill="#F6F5F8"/>
+<path id="Vector 6" d="M451 -34.5V430.102C451 434.652 451.941 439.152 453.763 443.32L548.36 659.716C557.607 680.87 585.16 686.234 601.667 670.094L865.278 412.359C882.949 395.082 912.641 402.644 919.895 426.269L972.78 598.513C974.87 605.321 979.107 611.27 984.858 615.472L1176.5 755.5" stroke="white" stroke-width="30" stroke-linecap="round"/>
+<path id="Vector 7" d="M205.002 641L205.5 -18" stroke="white" stroke-width="30" stroke-linecap="round"/>
+<path id="Vector 5" d="M4 823.5L970.5 -19.5" stroke="white" stroke-width="30" stroke-linecap="round"/>
+<path id="Vector 8" d="M975.5 184.5V266C975.5 282.569 962.069 296 945.5 296H825.167C817.964 296 811.001 298.592 805.551 303.302L409.452 645.621C398.478 655.105 382.292 655.38 371.002 646.275L98.5 426.5" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<circle id="Ellipse 12" cx="975.5" cy="135.5" r="48.5" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<path id="Vector 9" d="M1024.5 130L1165 60.5" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<path id="Vector 10" d="M777 501.5L682 411.5" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<path id="Vector 11" d="M207 114L309.758 208.081C315.965 213.764 319.5 221.792 319.5 230.208V340.5C319.5 357.069 332.931 370.5 349.5 370.5H448" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<path id="Vector 12" d="M204 281H316.5" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<path id="Vector 13" d="M210.5 648H247C263.569 648 277 661.431 277 678V687C277 703.569 290.431 717 307 717H361C377.569 717 391 730.431 391 747V810.5" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<path id="Vector 15" d="M696.5 579L789.711 639.606C804.768 649.397 807.907 670.134 796.422 683.942L684.5 818.5" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<path id="Vector 16" d="M605 -26.5V294" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<path id="Vector 17" d="M451.5 82.5H849.5" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<path id="Vector 18" d="M190 644.5L-37 454.5" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<path id="Vector 19" d="M205.5 123.5H-23.5" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<path id="Vector 20" d="M93 -18.5V562" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<path id="Vector 21" d="M202.5 647.5H-22.5" stroke="white" stroke-width="20" stroke-linecap="round"/>
+<g id="Group 18">
+<mask id="mask1_0_57" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="118" y="277" width="834" height="399">
+<rect id="Rectangle 18" x="118" y="277" width="834" height="399" fill="#C4C4C4"/>
+</mask>
+<g mask="url(#mask1_0_57)">
+<g id="Vector 22" filter="url(#filter0_d_0_57)">
+<path d="M929.5 296H825.114C817.943 296 811.009 298.569 805.568 303.241L407.923 644.749C396.955 654.168 380.83 654.425 369.568 645.361L138 459" stroke="#055FFC" stroke-width="5" stroke-linecap="round"/>
+</g>
+</g>
+</g>
+</g>
+<g id="ic_order_selected" clip-path="url(#clip0_0_57)">
+<g id="Group 17">
+<mask id="mask2_0_57" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="902" y="238" width="46" height="34">
+<path id="Rectangle 12" d="M902 249C902 243.137 906.753 238.385 912.615 238.385H937.385C943.247 238.385 948 243.137 948 249V261.385C948 267.247 943.247 272 937.385 272H912.615C906.753 272 902 267.247 902 261.385V249Z" fill="#BFC3C9"/>
+</mask>
+<g mask="url(#mask2_0_57)">
+<path id="Rectangle 13" d="M902 249C902 243.137 906.753 238.385 912.615 238.385H937.385C943.247 238.385 948 243.137 948 249V261.385C948 267.247 943.247 272 937.385 272H912.615C906.753 272 902 267.247 902 261.385V249Z" fill="#055FFC"/>
+<path id="Rectangle 14" d="M902 252.538H948V272H902V252.538Z" fill="#0E1657"/>
+<circle id="Ellipse 6" cx="925" cy="252.538" r="5.30769" fill="white"/>
+</g>
+</g>
+<path id="Vector 4" d="M912.615 241.923L915.505 236.143C919.417 228.319 930.583 228.319 934.495 236.143L937.385 241.923" stroke="#0E1657" stroke-width="7.07692" stroke-linecap="round"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_d_0_57" x="125.5" y="289.5" width="816.5" height="380.99" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="6"/>
+<feGaussianBlur stdDeviation="5"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.0196078 0 0 0 0 0.372549 0 0 0 0 0.988235 0 0 0 0.28 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_57"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_57" result="shape"/>
+</filter>
+<clipPath id="clip0_0_57">
+<rect width="46" height="46" fill="white" transform="translate(902 226)"/>
+</clipPath>
+</defs>
+</svg>

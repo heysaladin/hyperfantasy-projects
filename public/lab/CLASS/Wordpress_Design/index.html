@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1440">
+  <title>Autodrone – Landing Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-width: 1440px;
+      background: #fff;
+      color: #222;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── NAV ─── */
+    .navbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      padding: 0 184px;
+      height: 95px;
+    }
+
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar .logo img { width: 75px; height: 35px; }
+
+    .navbar .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .navbar .nav-links a {
+      font-size: 18px;
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .navbar .search {
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+    }
+
+    .navbar .search img { width: 100%; height: 100%; }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      height: 750px;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+    }
+
+    .hero-content {
+      position: absolute;
+      top: 155px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      color: #fff;
+      width: 800px;
+    }
+
+    .hero-content h1 {
+      font-size: 36px;
+      font-weight: 500;
+      margin-bottom: 24px;
+      white-space: nowrap;
+    }
+
+    .hero-content p {
+      font-size: 18px;
+      font-weight: 300;
+      color: #969696;
+      line-height: 1.6;
+      margin-bottom: 45px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: #2e4dec;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
+      width: 200px;
+      height: 50px;
+      line-height: 50px;
+      border-radius: 30px;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* ─── FEATURE SECTION ─── */
+    .feature-section {
+      display: flex;
+      height: 660px;
+      margin: 30px auto;
+      padding: 0 30px;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .feature-item {
+      position: relative;
+      width: 680px;
+      height: 660px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .feature-item img.feature-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .feature-item .feature-overlay {
+      position: absolute;
+      bottom: 155px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      padding: 0 40px;
+    }
+
+    .feature-item .feature-overlay h2 {
+      font-size: 48px;
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+
+    .feature-item .feature-overlay p {
+      font-size: 28px;
+      font-weight: 300;
+      line-height: 50px;
+    }
+
+    .feature-item.light .feature-overlay h2 { color: #222; }
+    .feature-item.light .feature-overlay p { color: rgba(34,34,34,0.5); }
+    .feature-item.light .feature-overlay p span.highlight { color: #222; }
+
+    .feature-item.dark .feature-overlay h2 { color: #fff; }
+    .feature-item.dark .feature-overlay p { color: rgba(255,255,255,0.5); }
+    .feature-item.dark .feature-overlay p span.highlight { color: #fff; }
+
+    /* ─── BENEFIT SECTION ─── */
+    .benefit-section {
+      background: #f7f8fa;
+      height: 530px;
+      display: flex;
+      align-items: flex-start;
+      padding: 86px 139px 0 139px;
+      gap: 60px;
+    }
+
+    .benefit-section .benefit-image {
+      width: 342px;
+      height: 358px;
+      flex-shrink: 0;
+      object-fit: cover;
+    }
+
+    .benefit-section .benefit-content { flex: 1; }
+
+    .benefit-section .benefit-content h2 {
+      font-size: 48px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 20px;
+      white-space: nowrap;
+    }
+
+    .benefit-section .benefit-content p {
+      font-size: 24px;
+      font-weight: 300;
+      color: #222;
+      line-height: 44px;
+      margin-bottom: 40px;
+    }
+
+    .benefit-stats {
+      display: flex;
+      gap: 60px;
+    }
+
+    .benefit-stat { text-align: center; }
+
+    .benefit-stat .stat-value {
+      font-size: 36px;
+      font-weight: 600;
+      color: #222;
+      display: block;
+    }
+
+    .benefit-stat .stat-label {
+      font-size: 20px;
+      font-weight: 300;
+      color: rgba(34,34,34,0.75);
+      line-height: 1.4;
+    }
+
+    /* ─── NEW PRODUCTS SECTION ─── */
+    .products-section {
+      padding: 80px 150px 100px;
+    }
+
+    .products-section .section-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .products-section .section-title h2 {
+      font-size: 36px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 12px;
+    }
+
+    .products-section .section-title p {
+      font-size: 16px;
+      font-weight: 300;
+      color: #818181;
+      line-height: 32px;
+    }
+
+    .products-grid {
+      display: flex;
+      gap: 40px;
+      margin-top: 60px;
+      justify-content: center;
+    }
+
+    .product-card {
+      width: 500px;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      padding: 40px 45px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .product-card .product-img {
+      width: 410px;
+      height: 240px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 40px;
+    }
+
+    .product-card h3 {
+      font-size: 36px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 20px;
+    }
+
+    .product-card p {
+      font-size: 20px;
+      font-weight: 300;
+      color: #222;
+      line-height: 36px;
+      margin-bottom: 40px;
+      flex: 1;
+    }
+
+    /* ─── TESTIMONIALS SECTION ─── */
+    .testimonials-section {
+      padding: 0 150px 100px;
+    }
+
+    .testimonials-section h2 {
+      font-size: 64px;
+      font-weight: 600;
+      color: #222;
+      line-height: 104px;
+      margin-bottom: 80px;
+    }
+
+    .testimonials-grid {
+      display: flex;
+      gap: 50px;
+    }
+
+    .testimonial-card {
+      width: 347px;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      padding: 30px;
+    }
+
+    .testimonial-card .quote {
+      font-size: 16px;
+      font-weight: 300;
+      color: #222;
+      line-height: 30px;
+      margin-bottom: 30px;
+    }
+
+    .testimonial-card .profile {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .testimonial-card .profile img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .testimonial-card .profile .profile-info .name {
+      font-size: 20px;
+      font-weight: 600;
+      color: #222;
+      display: block;
+    }
+
+    .testimonial-card .profile .profile-info .role {
+      font-size: 18px;
+      font-weight: 300;
+      color: #818181;
+      display: block;
+    }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      background: #000;
+      height: 410px;
+      display: flex;
+      padding: 100px 150px;
+      gap: 100px;
+    }
+
+    .footer-col { color: #fff; }
+
+    .footer-col.brand { min-width: 200px; }
+
+    .footer-col .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .footer-col .footer-logo img { width: 68px; height: 32px; }
+
+    .footer-col .brand-name {
+      font-size: 26px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .footer-col .brand-tagline {
+      font-size: 18px;
+      font-weight: 300;
+      color: #fff;
+      line-height: 1.5;
+    }
+
+    .footer-col h4 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 30px;
+    }
+
+    .footer-col ul { list-style: none; }
+
+    .footer-col ul li {
+      font-size: 18px;
+      font-weight: 300;
+      color: #fff;
+      margin-bottom: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── HERO SECTION ─── -->
+<section class="hero">
+  <img class="hero-bg" src="assets/images/hero_image.jpg" alt="Hero Drone">
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <img src="assets/logo/logo.svg" alt="Autodrone Logo">
+    </div>
+    <div class="nav-links">
+      <a href="#">HOME</a>
+      <a href="#">GALLERY</a>
+      <a href="#">PRODUCTS</a>
+      <a href="#">REVIEW</a>
+      <a href="#">SUPPORT</a>
+    </div>
+    <div class="search">
+      <img src="assets/icons/search.svg" alt="Search">
+    </div>
+  </nav>
+
+  <!-- Hero Content -->
+  <div class="hero-content">
+    <h1>Representing Drone Light</h1>
+    <p>
+      Look up the sky and beautiful world with simple navigation.<br>
+      Just record and get a lot memories to share, lightly and fast like a lightning
+    </p>
+    <a href="detail-product.html" class="btn-primary">GET NOW</a>
+  </div>
+</section>
+
+<!-- ─── FEATURE SECTION ─── -->
+<section class="feature-section">
+  <!-- Ultra Light -->
+  <div class="feature-item light">
+    <img class="feature-bg" src="assets/images/ultra_light.jpg" alt="Ultra Light">
+    <div class="feature-overlay">
+      <h2>Ultra Light</h2>
+      <p>
+        Drone move faster with weighing<br>
+        component <span class="highlight">under 200 g</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Best Resolution -->
+  <div class="feature-item dark">
+    <img class="feature-bg" src="assets/images/best_resolution.jpg" alt="Best Resolution">
+    <div class="feature-overlay">
+      <h2>Best Resolution</h2>
+      <p>
+        Take a beautiful view with best camera<br>
+        up to <span class="highlight">4K Camera Resolution</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── BENEFIT SECTION ─── -->
+<section class="benefit-section">
+  <img class="benefit-image" src="assets/images/features_cut.png" alt="Drone Features">
+
+  <div class="benefit-content">
+    <h2>Why Drone Light?</h2>
+    <p>
+      We provide a best self drone easy to use and operate. With<br>
+      auto pilot, the device will take a beautiful view for the<br>
+      best of flying operation.
+    </p>
+
+    <div class="benefit-stats">
+      <div class="benefit-stat">
+        <span class="stat-value">4K</span>
+        <span class="stat-label">Camera<br>Resolution</span>
+      </div>
+      <div class="benefit-stat">
+        <span class="stat-value">2 TB</span>
+        <span class="stat-label">Storage<br>Capacity</span>
+      </div>
+      <div class="benefit-stat">
+        <span class="stat-value">60 m/s</span>
+        <span class="stat-label">Super<br>Max Speed</span>
+      </div>
+      <div class="benefit-stat">
+        <span class="stat-value">30 mins</span>
+        <span class="stat-label">Long Flight<br>Time</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── NEW PRODUCTS SECTION ─── -->
+<section class="products-section">
+  <div class="section-title">
+    <h2>New Products</h2>
+    <p>
+      New innovation, best quality than before.<br>
+      Make every moment flying operation become unforgettable.
+    </p>
+  </div>
+
+  <div class="products-grid">
+    <!-- Mini Drone -->
+    <div class="product-card">
+      <img class="product-img" src="assets/images/mini_drone.jpg" alt="Mini Drone">
+      <h3>Mini Drone</h3>
+      <p>
+        Powerful camera drone at an<br>
+        affordable price range. Camera<br>
+        up to 4K resolution, optimize shots<br>
+        automatically.
+      </p>
+      <a href="detail-product.html" class="btn-primary">GET NOW</a>
+    </div>
+
+    <!-- Drone Light -->
+    <div class="product-card">
+      <img class="product-img" src="assets/images/drone_light.jpg" alt="Drone Light">
+      <h3>Drone Light</h3>
+      <p>
+        Drone light is every creators dream.<br>
+        Setting apperture manually and high<br>
+        battery performance. Drone light is<br>
+        everything you need.
+      </p>
+      <a href="detail-product.html" class="btn-primary">GET NOW</a>
+    </div>
+
+    <!-- Phantom Drone -->
+    <div class="product-card">
+      <img class="product-img" src="assets/images/phantom_drone.jpg" alt="Phantom Drone">
+      <h3>Phantom Drone</h3>
+      <p>
+        Inspired by phantom, drone<br>
+        can move faster and quickly like a ghost.<br>
+        Focus on speed so you can investigate<br>
+        environtment quickly.
+      </p>
+      <a href="detail-product.html" class="btn-primary">GET NOW</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TESTIMONIALS SECTION ─── -->
+<section class="testimonials-section">
+  <h2>What Our "Pilots<br>Are Saying</h2>
+
+  <div class="testimonials-grid">
+    <!-- Testimonial 1 -->
+    <div class="testimonial-card">
+      <p class="quote">
+        With high resolution camera,<br>
+        picture become clear and beautiful.<br>
+        It's so easy to operate drone.
+      </p>
+      <div class="profile">
+        <img src="assets/images/profile1.jpg" alt="Hugo Adams">
+        <div class="profile-info">
+          <span class="name">Hugo Adams</span>
+          <span class="role">Content Creator</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testimonial 2 -->
+    <div class="testimonial-card">
+      <p class="quote">
+        Taking high view video become<br>
+        easy and faster. Battery performance<br>
+        really helping for making film.
+      </p>
+      <div class="profile">
+        <img src="assets/images/profile2.jpg" alt="Jennie Obrien">
+        <div class="profile-info">
+          <span class="name">Jennie Obrien</span>
+          <span class="role">Director Film</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testimonial 3 -->
+    <div class="testimonial-card">
+      <p class="quote">
+        Making video content for my trip<br>
+        vlog so powerful and wonderful.<br>
+        Love the video quality.
+      </p>
+      <div class="profile">
+        <img src="assets/images/profile3.jpg" alt="Lisa Millz">
+        <div class="profile-info">
+          <span class="name">Lisa Millz</span>
+          <span class="role">Content Creator</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+  <!-- Brand -->
+  <div class="footer-col brand">
+    <div class="footer-logo">
+      <img src="assets/logo/small_logo_footer.svg" alt="Autodrone">
+    </div>
+    <p class="brand-name">autodrone</p>
+    <p class="brand-tagline">Look up the sky and beautiful<br>world easily.</p>
+  </div>
+
+  <!-- Explore -->
+  <div class="footer-col">
+    <h4>Explore</h4>
+    <ul>
+      <li>Our Services</li>
+      <li>Specification</li>
+      <li>Refund</li>
+      <li>Playlist</li>
+    </ul>
+  </div>
+
+  <!-- Account -->
+  <div class="footer-col">
+    <h4>Account</h4>
+    <ul>
+      <li>My Account</li>
+      <li>Top Benefit</li>
+      <li>How-to Tutorials</li>
+      <li>Moment</li>
+    </ul>
+  </div>
+
+  <!-- Office -->
+  <div class="footer-col">
+    <h4>Office</h4>
+    <ul>
+      <li>+021 2208 1996</li>
+      <li>SCBD, Jakarta</li>
+      <li>No.2 (Autodrone)</li>
+      <li>support@autodrone.id</li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>

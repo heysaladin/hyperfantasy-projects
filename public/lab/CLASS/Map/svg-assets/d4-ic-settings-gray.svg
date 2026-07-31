@@ -1,0 +1,13 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 19">
+<circle id="Ellipse 13" cx="25" cy="25" r="25" fill="#055FFC" fill-opacity="0.1"/>
+<mask id="mask0_0_16" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="9" y="9" width="32" height="32">
+<circle id="Ellipse 14" cx="25" cy="25" r="16" fill="#055FFC"/>
+</mask>
+<g mask="url(#mask0_0_16)">
+<circle id="Ellipse 15" cx="25" cy="25" r="16" fill="#055FFC"/>
+<circle id="Ellipse 6" cx="25" cy="19" r="5" fill="white"/>
+<path id="Ellipse 7" d="M41 43.36C41 51.8431 33.8366 52 25 52C16.1634 52 9 51.8431 9 43.36C9 34.8769 16.1634 28 25 28C33.8366 28 41 34.8769 41 43.36Z" fill="white"/>
+</g>
+</g>
+</svg>

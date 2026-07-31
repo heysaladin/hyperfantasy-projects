@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StoreGG - Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #ffffff;
+      color: #0c145a;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .split-layout {
+      display: flex;
+      width: 100vw;
+      min-height: 100vh;
+    }
+
+    /* ===== LEFT PANEL ===== */
+    .left-panel {
+      width: 50%;
+      min-height: 100vh;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      padding: 80px 80px;
+    }
+
+    .left-panel .logo-wrapper {
+      flex-shrink: 0;
+    }
+
+    .signin-heading {
+      font-size: 32px;
+      font-weight: 700;
+      color: #0c145a;
+      margin-top: 60px;
+      margin-bottom: 8px;
+    }
+
+    .signin-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: #7e8cac;
+      margin-bottom: 40px;
+    }
+
+    /* Form */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group + .form-group {
+      margin-top: 24px;
+    }
+
+    .form-label {
+      font-size: 18px;
+      font-weight: 500;
+      color: #0c145a;
+    }
+
+    .form-input {
+      border: 1px solid #e7eaf5;
+      border-radius: 12px;
+      padding: 14px 20px;
+      width: 100%;
+      font-size: 16px;
+      color: #7e8cac;
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: #4d17e2;
+      color: #0c145a;
+    }
+
+    .form-input::placeholder {
+      color: #b0b8d0;
+    }
+
+    .btn-primary-full {
+      display: block;
+      width: 100%;
+      background: #4d17e2;
+      color: #ffffff;
+      border-radius: 100px;
+      padding: 16px 30px;
+      font-weight: 500;
+      font-size: 16px;
+      font-family: 'Poppins', sans-serif;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      margin-top: 32px;
+      transition: background 0.2s;
+    }
+
+    .btn-primary-full:hover {
+      background: #3b10c4;
+    }
+
+    .signup-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .signup-link a {
+      font-size: 18px;
+      color: #0c145a;
+      text-decoration: underline;
+      font-weight: 400;
+    }
+
+    .signup-link a:hover {
+      color: #4d17e2;
+    }
+
+    /* ===== RIGHT PANEL ===== */
+    .right-panel {
+      width: 50%;
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .right-panel-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('assets/images/story-1.png');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .right-panel-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(13,20,90,0.75) 0%, rgba(77,23,226,0.5) 100%);
+    }
+
+    .right-panel-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 60px 60px;
+    }
+
+    .right-panel-logo {
+      flex-shrink: 0;
+    }
+
+    .right-panel-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-bottom: 60px;
+    }
+
+    .right-panel-text h2 {
+      font-size: 42px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+
+    .right-panel-text p {
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.85);
+      line-height: 32px;
+      max-width: 380px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="split-layout">
+
+    <!-- ===== LEFT PANEL ===== -->
+    <div class="left-panel">
+      <!-- Logo -->
+      <div class="logo-wrapper">
+        <a href="landing.html">
+          <div style="position:relative;width:60px;height:60px;flex-shrink:0;">
+            <div style="position:absolute;inset:0;-webkit-mask-image:url(assets/images/logo-mask.png);mask-image:url(assets/images/logo-mask.png);-webkit-mask-size:100% 100%;mask-size:100% 100%;">
+              <img src="assets/images/logo-bg.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <div style="position:absolute;inset:0;-webkit-mask-image:url(assets/images/logo-mask.png);mask-image:url(assets/images/logo-mask.png);-webkit-mask-size:100% 100%;mask-size:100% 100%;">
+              <img src="assets/images/logo-vector.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Heading -->
+      <h1 class="signin-heading">Sign In</h1>
+      <p class="signin-subtitle">Masuk untuk melakukan proses top up</p>
+
+      <!-- Form -->
+      <form action="#" method="post">
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-input"
+            placeholder="Enter your email address"
+          >
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-input"
+            placeholder="Your password"
+          >
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-primary-full">Continue to Sign In</button>
+      </form>
+
+      <!-- Sign Up Link -->
+      <div class="signup-link">
+        <a href="#">Sign Up</a>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT PANEL ===== -->
+    <div class="right-panel">
+      <!-- Background image -->
+      <div class="right-panel-bg"></div>
+      <!-- Dark overlay -->
+      <div class="right-panel-overlay"></div>
+
+      <!-- Content -->
+      <div class="right-panel-content">
+        <!-- Logo on top-left inside right panel -->
+        <div class="right-panel-logo">
+          <div style="position:relative;width:60px;height:60px;flex-shrink:0;">
+            <div style="position:absolute;inset:0;-webkit-mask-image:url(assets/images/logo-mask.png);mask-image:url(assets/images/logo-mask.png);-webkit-mask-size:100% 100%;mask-size:100% 100%;">
+              <img src="assets/images/logo-bg.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <div style="position:absolute;inset:0;-webkit-mask-image:url(assets/images/logo-mask.png);mask-image:url(assets/images/logo-mask.png);-webkit-mask-size:100% 100%;mask-size:100% 100%;">
+              <img src="assets/images/logo-vector.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Center Text -->
+        <div class="right-panel-text">
+          <h2>Win the battle.<br>Be the Champion.</h2>
+          <p>Kami menyediakan jutaan cara untuk membantu players menjadi pemenang sejati</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

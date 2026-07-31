@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LuxSpace — Chair Thatty</title>
+  <link rel="icon" href="images/content/favicon.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { 'pink-400': '#F9CADA' }, fontFamily: { sans: ['Open Sans','sans-serif'] } } }
+    }
+  </script>
+  <style>
+    body { font-family: 'Open Sans', sans-serif; }
+    .stretched-link { position: absolute; inset: 0; z-index: 10; }
+    .card:hover .card-shadow { box-shadow: 0 10px 15px -3px rgba(0,0,0,.1); }
+    ul.breadcrumb { display: flex; }
+    ul.breadcrumb li { font-weight: 300; }
+    ul.breadcrumb li:last-child { font-weight: 600; }
+    ul.breadcrumb li:not(:last-child)::after { content: ' / '; margin: 0 6px; }
+    /* Slider */
+    .slider { display: flex; flex-direction: column; gap: 16px; padding: 16px; }
+    .slider .thumbnail { display: flex; flex-direction: row; overflow-x: auto; gap: 8px; }
+    .slider .thumbnail .item { width: 80px; height: 80px; flex: none; border-radius: 8px; overflow: hidden; cursor: pointer; border: 2px solid transparent; }
+    .slider .thumbnail .item.selected { border-color: #000; position: relative; }
+    .slider .thumbnail .item.selected::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,.2); }
+    .slider .preview { width: 100%; height: 360px; border-radius: 12px; overflow: hidden; }
+    @media (min-width: 768px) {
+      .slider { flex-direction: row; }
+      .slider .thumbnail { flex-direction: column; overflow-y: auto; overflow-x: hidden; width: 100px; }
+      .slider .thumbnail .item { width: 90px; height: 90px; }
+      .slider .preview { flex: 1; height: 560px; }
+    }
+    /* accordion */
+    .accordion-body { overflow: hidden; }
+    @media (max-width: 767px) {
+      .accordion-body { max-height: 0; transition: max-height .3s ease; }
+      .accordion-body.open { max-height: 200px; }
+    }
+  </style>
+</head>
+<body class="text-black">
+
+  <!-- HEADER -->
+  <header class="w-full z-50 px-4">
+    <div class="container mx-auto py-5">
+      <div class="flex items-center">
+        <div class="w-56 flex items-center">
+          <a href="home.html"><img src="images/content/logo.png" alt="LuxSpace" /></a>
+        </div>
+        <div class="flex-1"></div>
+        <nav id="menu" class="fixed bg-white inset-0 flex flex-col invisible items-center justify-center opacity-0 md:visible md:flex-row md:bg-transparent md:relative md:opacity-100 md:flex md:items-center z-40">
+          <a href="#" class="mx-3 py-6 md:py-0 text-black hover:underline block">Showcase</a>
+          <a href="#" class="mx-3 py-6 md:py-0 text-black hover:underline block">Catalog</a>
+          <a href="#" class="mx-3 py-6 md:py-0 text-black hover:underline block">Delivery</a>
+          <a href="#" class="mx-3 py-6 md:py-0 text-black hover:underline block">Rewards</a>
+        </nav>
+        <div class="flex items-center ml-6">
+          <button id="menu-toggler" class="flex md:hidden items-center justify-center w-8 h-8 focus:outline-none z-50">
+            <svg class="fill-current" width="18" height="17" viewBox="0 0 18 17">
+              <path d="M15.9773 0.461304H1.04219C0.466585 0.461304 0 0.790267 0 1.19609C0 1.60192 0.466668 1.93088 1.04219 1.93088H15.9773C16.5529 1.93088 17.0195 1.60192 17.0195 1.19609C17.0195 0.790208 16.5529 0.461304 15.9773 0.461304Z"/>
+              <path d="M15.9773 7.68802H1.04219C0.466585 7.68802 0 8.01698 0 8.42281C0 8.82864 0.466668 9.1576 1.04219 9.1576H15.9773C16.5529 9.1576 17.0195 8.82864 17.0195 8.42281C17.0195 8.01692 16.5529 7.68802 15.9773 7.68802Z"/>
+              <path d="M15.9773 14.9147H1.04219C0.466585 14.9147 0 15.2437 0 15.6495C0 16.0553 0.466668 16.3843 1.04219 16.3843H15.9773C16.5529 16.3843 17.0195 16.0553 17.0195 15.6495C17.0195 15.2436 16.5529 14.9147 15.9773 14.9147Z"/>
+            </svg>
+          </button>
+          <a href="cart.html" class="ml-6 flex items-center justify-center w-8 h-8 text-black relative">
+            <svg class="fill-current" width="26" height="24" viewBox="0 0 29 25">
+              <path d="M10.8754 19.9824C9.61762 19.9824 8.59436 21.023 8.59436 22.3021C8.59436 23.5812 9.61762 24.6218 10.8754 24.6218C12.1331 24.6218 13.1564 23.5812 13.1564 22.3021C13.1563 21.023 12.1331 19.9824 10.8754 19.9824ZM10.8754 23.3265C10.3199 23.3265 9.86796 22.8669 9.86796 22.302C9.86796 21.7371 10.3199 21.2775 10.8754 21.2775C11.4308 21.2775 11.8828 21.7371 11.8828 22.302C11.8828 22.867 11.4308 23.3265 10.8754 23.3265Z"/>
+              <path d="M18.8764 19.9824C17.6186 19.9824 16.5953 21.023 16.5953 22.3021C16.5953 23.5812 17.6186 24.6218 18.8764 24.6218C20.1342 24.6218 21.1575 23.5812 21.1575 22.3021C21.1574 21.023 20.1341 19.9824 18.8764 19.9824ZM18.8764 23.3265C18.3209 23.3265 17.869 22.8669 17.869 22.302C17.869 21.7371 18.3209 21.2775 18.8764 21.2775C19.4319 21.2775 19.8838 21.7371 19.8838 22.302C19.8838 22.867 19.4319 23.3265 18.8764 23.3265Z"/>
+              <path d="M25.6499 4.88404C25.407 4.58092 25.0472 4.40711 24.6626 4.40711H4.82655L4.42595 2.42947C4.34232 2.01694 4.06563 1.67055 3.68565 1.50276L0.890528 0.268963C0.567841 0.126419 0.192825 0.276999 0.0528584 0.60505C-0.0872597 0.933204 0.0608116 1.31463 0.383347 1.45696L3.17852 2.69081L6.2598 17.9014C6.38117 18.5004 6.90578 18.9352 7.50723 18.9352H22.7635C23.1152 18.9352 23.4003 18.6452 23.4003 18.2876C23.4003 17.9299 23.1152 17.64 22.7635 17.64H7.50728L7.13247 15.7897H22.8814C23.4828 15.7897 24.0075 15.3549 24.1288 14.7559L25.9101 5.96349C25.9876 5.58063 25.8928 5.1871 25.6499 4.88404ZM22.8814 14.4946H6.87012L5.08895 5.70226L24.6626 5.70231L22.8814 14.4946Z"/>
+              <circle cx="25" cy="4.89023" r="4" fill="#F9CADA"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- BREADCRUMB -->
+  <section class="bg-gray-100 py-8 px-4">
+    <div class="container mx-auto">
+      <ul class="breadcrumb">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Office Room</a></li>
+        <li><a href="#" aria-current="page">Details</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PRODUCT DETAIL -->
+  <section class="container mx-auto my-8 md:my-12 px-0">
+    <!-- mobile title -->
+    <div class="px-4 mb-4 md:hidden">
+      <h2 class="text-4xl font-semibold">Chair Thatty</h2>
+      <span class="text-xl">IDR 12.000.000</span>
+    </div>
+
+    <div class="flex flex-wrap">
+      <!-- Image slider -->
+      <div class="w-full md:flex-1">
+        <div class="slider">
+          <div class="thumbnail">
+            <div class="item selected" data-img="images/content/showcase-1.front.jpg">
+              <img src="images/content/showcase-1.front.jpg" alt="front" class="w-full h-full object-cover" />
+            </div>
+            <div class="item" data-img="images/content/showcase-1.back.jpg">
+              <img src="images/content/showcase-1.back.jpg" alt="back" class="w-full h-full object-cover" />
+            </div>
+            <div class="item" data-img="images/content/showcase-1.rear.jpg">
+              <img src="images/content/showcase-1.rear.jpg" alt="rear" class="w-full h-full object-cover" />
+            </div>
+            <div class="item" data-img="images/content/showcase-1.side.jpg">
+              <img src="images/content/showcase-1.side.jpg" alt="side" class="w-full h-full object-cover" />
+            </div>
+            <div class="item" data-img="images/content/showcase-1.top.jpg">
+              <img src="images/content/showcase-1.top.jpg" alt="top" class="w-full h-full object-cover" />
+            </div>
+          </div>
+          <div class="preview">
+            <img id="preview-img" src="images/content/showcase-1.front.jpg" alt="preview" class="w-full h-full object-cover rounded-xl" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="w-full md:flex-1 px-4 md:p-8">
+        <h2 class="hidden md:block text-5xl font-semibold">Chair Thatty</h2>
+        <p class="hidden md:block text-xl mt-2">IDR 12.000.000</p>
+
+        <a href="cart.html" class="bg-pink-400 text-black hover:bg-black hover:text-pink-400 rounded-full px-8 py-3 mt-6 inline-flex items-center gap-3 transition duration-200">
+          <svg class="fill-current" width="22" height="20" viewBox="0 0 26 24">
+            <path d="M10.8754 18.7312C9.61762 18.7312 8.59436 19.7115 8.59436 20.9164C8.59436 22.1214 9.61762 23.1017 10.8754 23.1017C12.1331 23.1017 13.1564 22.1214 13.1564 20.9164C13.1563 19.7115 12.1331 18.7312 10.8754 18.7312Z"/>
+            <path d="M18.8764 18.7312C17.6186 18.7312 16.5953 19.7115 16.5953 20.9164C16.5953 22.1214 17.6186 23.1017 18.8764 23.1017C20.1342 23.1017 21.1575 22.1214 21.1575 20.9164C21.1574 19.7115 20.1341 18.7312 18.8764 18.7312Z"/>
+            <path d="M25.6499 4.508C25.407 4.22245 25.0472 4.05871 24.6626 4.05871H4.82655L4.42595 2.19571C4.34232 1.80709 4.06563 1.48078 3.68565 1.32272L0.890528 0.160438C0.567841 0.0261566 0.192825 0.168008 0.0528584 0.477043C-0.0872597 0.786176 0.0608116 1.14549 0.383347 1.27957L3.17852 2.4419L6.2598 16.7708C6.38117 17.3351 6.90578 17.7446 7.50723 17.7446H22.7635C23.1152 17.7446 23.4003 17.4715 23.4003 17.1346C23.4003 16.7976 23.1152 16.5245 22.7635 16.5245H7.50728L7.13247 14.7815H22.8814C23.4828 14.7815 24.0075 14.3719 24.1288 13.8076L25.9101 5.52488C25.9876 5.16421 25.8928 4.79349 25.6499 4.508ZM22.8814 13.5615H6.87012L5.08895 5.27879L24.6626 5.27884L22.8814 13.5615Z"/>
+          </svg>
+          Add to Cart
+        </a>
+
+        <hr class="my-8" />
+        <h6 class="text-xl font-semibold mb-4">About the product</h6>
+        <p class="text-base md:text-xl leading-7 mb-6">
+          Tailored to a level of perfection synonymous with that of a Savile Row suit and with understated quality in the detail, Jetty has been influenced by timeless 1950s style.
+        </p>
+        <p class="text-base md:text-xl leading-7">
+          Providing a subtle nod to the past, Jetty also provides a perfect solution for the way we work today. A comprehensive product family, Jetty features a variety of elegant chairs and sofas.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLETE YOUR ROOM -->
+  <section class="bg-gray-100 px-4 py-16">
+    <div class="container mx-auto">
+      <h3 class="text-2xl font-semibold capitalize mb-6">Complete your room <br/>with what we designed</h3>
+      <div class="flex overflow-x-auto gap-4 pb-2 -mx-2">
+        <div class="px-2 flex-none" style="width:300px">
+          <div class="rounded-xl p-4 pb-8 relative bg-white card">
+            <div class="rounded-xl overflow-hidden card-shadow w-full h-36">
+              <img src="images/content/chair-1.png" alt="Cangkir Mauttie" class="w-full h-full object-cover" />
+            </div>
+            <h5 class="text-lg font-semibold mt-4">Cangkir Mauttie</h5>
+            <span>IDR 89.300.000</span>
+            <a href="details.html" class="stretched-link"></a>
+          </div>
+        </div>
+        <div class="px-2 flex-none" style="width:300px">
+          <div class="rounded-xl p-4 pb-8 relative bg-white card">
+            <div class="rounded-xl overflow-hidden card-shadow w-full h-36">
+              <img src="images/content/chair-2.png" alt="Saman Kakka" class="w-full h-full object-cover" />
+            </div>
+            <h5 class="text-lg font-semibold mt-4">Saman Kakka</h5>
+            <span>IDR 14.500.399</span>
+            <a href="details.html" class="stretched-link"></a>
+          </div>
+        </div>
+        <div class="px-2 flex-none" style="width:300px">
+          <div class="rounded-xl p-4 pb-8 relative bg-white card">
+            <div class="rounded-xl overflow-hidden card-shadow w-full h-36">
+              <img src="images/content/chair-3.png" alt="Lino Dino" class="w-full h-full object-cover" />
+            </div>
+            <h5 class="text-lg font-semibold mt-4">Lino Dino</h5>
+            <span>IDR 22.000.000</span>
+            <a href="details.html" class="stretched-link"></a>
+          </div>
+        </div>
+        <div class="px-2 flex-none" style="width:300px">
+          <div class="rounded-xl p-4 pb-8 relative bg-white card">
+            <div class="rounded-xl overflow-hidden card-shadow w-full h-36">
+              <img src="images/content/chair-1.png" alt="Syail Ammeno" class="w-full h-full object-cover" />
+            </div>
+            <h5 class="text-lg font-semibold mt-4">Syail Ammeno</h5>
+            <span>IDR 6.399.999</span>
+            <a href="details.html" class="stretched-link"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER NAV -->
+  <section class="border-t border-b border-gray-200 py-12 mt-8 px-4">
+    <div class="flex justify-center mb-8">
+      <img src="images/content/logo.png" alt="LuxSpace" />
+    </div>
+    <div class="container mx-auto flex flex-wrap -mx-4 justify-center">
+      <div class="px-4 w-full md:w-2/12 mb-4 md:mb-0">
+        <h5 class="text-lg font-semibold mb-2 accordion-title cursor-pointer md:cursor-default">Overview</h5>
+        <ul class="accordion-body">
+          <li><a href="#" class="hover:underline py-1 block">Shipping</a></li>
+          <li><a href="#" class="hover:underline py-1 block">Refund</a></li>
+          <li><a href="#" class="hover:underline py-1 block">Promotion</a></li>
+        </ul>
+      </div>
+      <div class="px-4 w-full md:w-2/12 mb-4 md:mb-0">
+        <h5 class="text-lg font-semibold mb-2 accordion-title cursor-pointer md:cursor-default">Company</h5>
+        <ul class="accordion-body">
+          <li><a href="#" class="hover:underline py-1 block">About</a></li>
+          <li><a href="#" class="hover:underline py-1 block">Career</a></li>
+          <li><a href="#" class="hover:underline py-1 block">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="px-4 w-full md:w-2/12 mb-4 md:mb-0">
+        <h5 class="text-lg font-semibold mb-2 accordion-title cursor-pointer md:cursor-default">Explore</h5>
+        <ul class="accordion-body">
+          <li><a href="#" class="hover:underline py-1 block">Terms &amp; Conds</a></li>
+          <li><a href="#" class="hover:underline py-1 block">Privacy Policy</a></li>
+          <li><a href="#" class="hover:underline py-1 block">For Developer</a></li>
+        </ul>
+      </div>
+      <div class="px-4 w-full md:w-3/12">
+        <h5 class="text-lg font-semibold mb-2">Special Letter</h5>
+        <form action="#" class="relative">
+          <input type="text" placeholder="Your email address" class="bg-gray-100 rounded-xl py-3 px-5 w-full focus:outline-none pr-14" />
+          <button type="submit" class="bg-pink-400 absolute right-0 top-0 h-full rounded-xl px-3">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M23.6177 0.411971L0.833871 8.13353C0.268743 8.34518-0.0623361 8.87521 0.0098048 9.4523C0.0821332 10.0294 0.53462 10.4694 1.13589 10.547L11.5833 11.8968L13.0301 21.9417C13.1112 22.5177 13.5704 22.9512 14.1729 23.0204C14.8735 23.0298 15.3486 22.7229 15.5495 22.231L23.9077 1.75274C24.0994 1.28302 23.9882 0.76983 23.6177 0.411971Z" fill="white"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+  <footer class="text-center px-4 py-8">
+    <p class="text-sm">Copyright 2021 • All Rights Reserved LuxSpace by BuildWith Angga</p>
+  </footer>
+
+  <script>
+    // Mobile nav
+    document.getElementById('menu-toggler').addEventListener('click', () => {
+      const m = document.getElementById('menu');
+      m.classList.toggle('invisible'); m.classList.toggle('opacity-0'); m.classList.toggle('opacity-100'); m.classList.toggle('visible');
+    });
+
+    // Image slideshow
+    document.querySelectorAll('.slider .thumbnail .item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.slider .thumbnail .item').forEach(i => i.classList.remove('selected'));
+        item.classList.add('selected');
+        document.getElementById('preview-img').src = item.dataset.img;
+      });
+    });
+
+    // Mobile accordion
+    document.querySelectorAll('.accordion-title').forEach(t => {
+      t.addEventListener('click', () => t.nextElementSibling.classList.toggle('open'));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="ic_payment_gray" clip-path="url(#clip0_0_181)">
+<path id="Rectangle 12" d="M0 10H26V18C26 20.7614 23.7614 23 21 23H5C2.23858 23 0 20.7614 0 18V10Z" fill="#BFC3C9"/>
+<path id="Vector 3" d="M5 16H13" stroke="#6A6F7B" stroke-width="4" stroke-linecap="round"/>
+<path id="Rectangle 13" d="M26 10L0 10L1.57361e-07 8C3.74631e-07 5.23857 2.23858 3 5 3L21 3C23.7614 3 26 5.23858 26 8L26 10Z" fill="#6A6F7B"/>
+</g>
+<defs>
+<clipPath id="clip0_0_181">
+<rect width="26" height="26" fill="white"/>
+</clipPath>
+</defs>
+</svg>

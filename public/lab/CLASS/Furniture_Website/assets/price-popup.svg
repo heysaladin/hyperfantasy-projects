@@ -1,0 +1,6 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="243" height="250.404" viewBox="0 0 243 250.404" fill="none" xmlns="http://www.w3.org/2000/svg">
+<foreignObject x="-7" y="-7" width="257" height="264.404"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(3.5px);clip-path:url(#bgblur_0_0_17_clip_path);height:100%;width:100%"></div></foreignObject><path id="Rectangle 1" data-figma-bg-blur-radius="7" d="M0 8C0 3.58173 3.58172 0 8 0H235C239.418 0 243 3.58172 243 8V225.625C243 230.043 239.418 233.625 235 233.625H151.964C150.359 233.625 148.79 234.108 147.463 235.011L126.882 249.018C124.226 250.826 120.746 250.869 118.046 249.128L95.9796 234.901C94.6873 234.068 93.1822 233.625 91.6446 233.625H8C3.58172 233.625 0 230.043 0 225.625V8Z" fill="#030303" fill-opacity="0.2"/>
+<defs>
+<clipPath id="bgblur_0_0_17_clip_path" transform="translate(7 7)"><path d="M0 8C0 3.58173 3.58172 0 8 0H235C239.418 0 243 3.58172 243 8V225.625C243 230.043 239.418 233.625 235 233.625H151.964C150.359 233.625 148.79 234.108 147.463 235.011L126.882 249.018C124.226 250.826 120.746 250.869 118.046 249.128L95.9796 234.901C94.6873 234.068 93.1822 233.625 91.6446 233.625H8C3.58172 233.625 0 230.043 0 225.625V8Z"/>
+</clipPath></defs>
+</svg>

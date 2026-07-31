@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1440">
+  <title>Autodrone – Drone Light</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-width: 1440px;
+      background: #fff;
+      color: #222;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── HEADER ─── */
+    .header {
+      background: #000;
+      height: 110px;
+      display: flex;
+      align-items: center;
+      padding: 0 184px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-right: auto;
+    }
+
+    .header .logo img { width: 75px; height: 35px; }
+
+    .header nav {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+    }
+
+    .header nav a {
+      font-size: 18px;
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .header .search {
+      margin-left: auto;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+    }
+
+    .header .search img { width: 100%; height: 100%; }
+
+    /* ─── PRODUCT SECTION ─── */
+    .product-section {
+      padding: 90px 150px 60px;
+      display: flex;
+      gap: 55px;
+      align-items: flex-start;
+    }
+
+    /* Gallery */
+    .gallery { flex-shrink: 0; }
+
+    .gallery .main-image-wrap {
+      width: 725px;
+      height: 550px;
+      border: 1px solid #e5e5e5;
+      border-radius: 15px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .gallery .main-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery .thumbnails {
+      display: flex;
+      gap: 15px;
+    }
+
+    .gallery .thumbnails .thumb {
+      width: 170px;
+      height: 120px;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .gallery .thumbnails .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery .thumbnails .thumb.active {
+      border-color: #2e4dec;
+      border-width: 2px;
+    }
+
+    /* Product Info */
+    .product-info { flex: 1; }
+
+    .product-info .product-name {
+      font-size: 28px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 8px;
+    }
+
+    .product-info .product-subtitle {
+      font-size: 20px;
+      font-weight: 300;
+      color: #222;
+      margin-bottom: 16px;
+    }
+
+    .product-info .product-price {
+      font-size: 48px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 40px;
+    }
+
+    .product-info .features-title {
+      font-size: 22px;
+      font-weight: 500;
+      color: #222;
+      margin-bottom: 24px;
+    }
+
+    .product-info .feature-list {
+      list-style: none;
+      margin-bottom: 40px;
+    }
+
+    .product-info .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 20px;
+      font-weight: 300;
+      color: #000;
+      margin-bottom: 24px;
+    }
+
+    .product-info .feature-list li img {
+      width: 25px;
+      height: 25px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: #2e4dec;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
+      width: 280px;
+      height: 50px;
+      line-height: 50px;
+      border-radius: 30px;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* ─── DESCRIPTION SECTION ─── */
+    .description-section {
+      padding: 0 150px 80px;
+    }
+
+    .description-box {
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      padding: 24px 22px;
+    }
+
+    .description-box h2 {
+      font-size: 28px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 24px;
+    }
+
+    .description-box p {
+      font-size: 20px;
+      font-weight: 300;
+      color: #222;
+      line-height: 38px;
+    }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      background: #000;
+      height: 410px;
+      display: flex;
+      padding: 100px 150px;
+      gap: 100px;
+    }
+
+    .footer-col { color: #fff; }
+
+    .footer-col.brand { min-width: 200px; }
+
+    .footer-col .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .footer-col .footer-logo img { width: 68px; height: 32px; }
+
+    .footer-col .brand-name {
+      font-size: 26px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .footer-col .brand-tagline {
+      font-size: 18px;
+      font-weight: 300;
+      color: #fff;
+      line-height: 1.5;
+    }
+
+    .footer-col h4 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 30px;
+    }
+
+    .footer-col ul { list-style: none; }
+
+    .footer-col ul li {
+      font-size: 18px;
+      font-weight: 300;
+      color: #fff;
+      margin-bottom: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<header class="header">
+  <div class="logo">
+    <img src="assets/logo/logo.svg" alt="Autodrone Logo">
+  </div>
+  <nav>
+    <a href="index.html">HOME</a>
+    <a href="#">GALLERY</a>
+    <a href="#">PRODUCTS</a>
+    <a href="#">REVIEW</a>
+    <a href="#">SUPPORT</a>
+  </nav>
+  <div class="search">
+    <img src="assets/icons/search.svg" alt="Search">
+  </div>
+</header>
+
+<!-- ─── PRODUCT SECTION ─── -->
+<section class="product-section">
+
+  <!-- Gallery -->
+  <div class="gallery">
+    <div class="main-image-wrap">
+      <img id="main-img" src="assets/images/highlight_large.jpg" alt="Drone Light">
+    </div>
+    <div class="thumbnails">
+      <div class="thumb" onclick="setMain('assets/images/highlight1.jpg', this)">
+        <img src="assets/images/highlight1.jpg" alt="View 1">
+      </div>
+      <div class="thumb active" onclick="setMain('assets/images/highlight_large.jpg', this)">
+        <img src="assets/images/highlight_large.jpg" alt="View 2">
+      </div>
+      <div class="thumb" onclick="setMain('assets/images/highlight3.jpg', this)">
+        <img src="assets/images/highlight3.jpg" alt="View 3">
+      </div>
+      <div class="thumb" onclick="setMain('assets/images/highlight4.jpg', this)">
+        <img src="assets/images/highlight4.jpg" alt="View 4">
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Info -->
+  <div class="product-info">
+    <p class="product-name">Drone Light</p>
+    <p class="product-subtitle">Super fast, easy control drone</p>
+    <p class="product-price">$ 4.500,00</p>
+
+    <p class="features-title">Drone features:</p>
+    <ul class="feature-list">
+      <li>
+        <img src="assets/icons/camera.svg" alt="Camera">
+        4K Camera Resolution
+      </li>
+      <li>
+        <img src="assets/icons/memory.svg" alt="Storage">
+        2 TB Storage
+      </li>
+      <li>
+        <img src="assets/icons/speed.svg" alt="Speed">
+        60 m/s Speed
+      </li>
+      <li>
+        <img src="assets/icons/battery.svg" alt="Battery">
+        5000 mAh Battery
+      </li>
+    </ul>
+
+    <a href="#" class="btn-primary">ORDER IT NOW</a>
+  </div>
+</section>
+
+<!-- ─── DESCRIPTION SECTION ─── -->
+<section class="description-section">
+  <div class="description-box">
+    <h2>Description</h2>
+    <p>
+      We provide a best self drone easy to use and operate. With auto pilot, the device will take a beautiful view for
+      the best of flying operation. Drone light is every creators dream. Setting apperture manually and high battery
+      performance. With 2 Terabyte storage, you can take a lot of picture in one take. 4K Camera resolution make
+      your video clean and feels like a real environtment. Capture your moment in easy way effortlesly with auto
+      pilot system. No need to learn how to fly and operate drone. Enjoy your simple and easy flying experience.
+      Drone light is everything you need.
+    </p>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+  <!-- Brand -->
+  <div class="footer-col brand">
+    <div class="footer-logo">
+      <img src="assets/logo/small_logo_footer.svg" alt="Autodrone">
+    </div>
+    <p class="brand-name">autodrone</p>
+    <p class="brand-tagline">Look up the sky and beautiful<br>world easily.</p>
+  </div>
+
+  <!-- Explore -->
+  <div class="footer-col">
+    <h4>Explore</h4>
+    <ul>
+      <li>Our Services</li>
+      <li>Specification</li>
+      <li>Refund</li>
+      <li>Playlist</li>
+    </ul>
+  </div>
+
+  <!-- Account -->
+  <div class="footer-col">
+    <h4>Account</h4>
+    <ul>
+      <li>My Account</li>
+      <li>Top Benefit</li>
+      <li>How-to Tutorials</li>
+      <li>Moment</li>
+    </ul>
+  </div>
+
+  <!-- Office -->
+  <div class="footer-col">
+    <h4>Office</h4>
+    <ul>
+      <li>+021 2208 1996</li>
+      <li>SCBD, Jakarta</li>
+      <li>No.2 (Autodrone)</li>
+      <li>support@autodrone.id</li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  function setMain(src, el) {
+    document.getElementById('main-img').src = src;
+    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+
+</body>
+</html>

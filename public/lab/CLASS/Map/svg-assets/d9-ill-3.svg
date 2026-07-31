@@ -1,0 +1,20 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="ic_order" clip-path="url(#clip0_0_241)">
+<g id="Group 17">
+<mask id="mask0_0_241" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="12" width="46" height="34">
+<path id="Rectangle 12" d="M0 23C0 17.1373 4.75267 12.3846 10.6154 12.3846H35.3846C41.2473 12.3846 46 17.1373 46 23V35.3846C46 41.2473 41.2473 46 35.3846 46H10.6154C4.75267 46 0 41.2473 0 35.3846V23Z" fill="#BFC3C9"/>
+</mask>
+<g mask="url(#mask0_0_241)">
+<path id="Rectangle 13" d="M0 23C0 17.1373 4.75267 12.3846 10.6154 12.3846H35.3846C41.2473 12.3846 46 17.1373 46 23V35.3846C46 41.2473 41.2473 46 35.3846 46H10.6154C4.75267 46 0 41.2473 0 35.3846V23Z" fill="#BFC3C9"/>
+<path id="Rectangle 14" d="M0 26.5385H46V46H0V26.5385Z" fill="#6A6F7B"/>
+<circle id="Ellipse 6" cx="23" cy="26.5385" r="5.30769" fill="white"/>
+</g>
+</g>
+<path id="Vector 4" d="M10.6154 15.9231L13.5053 10.1432C17.4173 2.31916 28.5827 2.31916 32.4947 10.1432L35.3846 15.9231" stroke="#6A6F7B" stroke-width="7.07692" stroke-linecap="round"/>
+</g>
+<defs>
+<clipPath id="clip0_0_241">
+<rect width="46" height="46" fill="white"/>
+</clipPath>
+</defs>
+</svg>

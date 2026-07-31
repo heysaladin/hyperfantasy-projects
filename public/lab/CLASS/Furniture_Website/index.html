@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1440" />
+  <title>Interio. - Discover The Best Furniture for You!</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Nunito:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      min-width: 1440px;
+      overflow-x: hidden;
+    }
+
+    /* ─── HERO ────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      width: 1440px;
+      height: 995px;
+      overflow: hidden;
+    }
+
+    .hero__bg {
+      position: absolute;
+      left: -49px;
+      top: -30px;
+      width: 1537px;
+      height: 1025px;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    /* dark overlay to ensure text legibility */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.08);
+      pointer-events: none;
+    }
+
+    .hero__nav {
+      position: absolute;
+      top: 59px;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 135px;
+      z-index: 10;
+    }
+
+    .hero__logo {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+
+    .hero__logo span {
+      color: #f6b50e;
+    }
+
+    .hero__nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .hero__nav-links a {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .hero__nav-links a:hover {
+      color: #f6b50e;
+    }
+
+    .hero__content {
+      position: absolute;
+      top: 202px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 10;
+      width: 611px;
+    }
+
+    .hero__title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 64px;
+      line-height: 1.2;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    .hero__underline {
+      display: block;
+      margin: 12px auto 0;
+      width: 295px;
+    }
+
+    .hero__cta {
+      display: inline-block;
+      margin-top: 48px;
+      background: #f6b50e;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      padding: 20px 40px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .hero__cta:hover {
+      background: #e0a20c;
+    }
+
+    /* ─── HERO HOTSPOTS ──────────────────────────────────────── */
+    .hotspot {
+      position: absolute;
+      width: 243px;
+      height: 313px;
+      cursor: pointer;
+      z-index: 20;
+    }
+
+    .hotspot__dot {
+      position: absolute;
+      left: 109px;
+      top: 260px;
+      width: 24px;
+      height: 24px;
+      transition: transform 0.2s;
+    }
+
+    .hotspot:hover .hotspot__dot {
+      transform: scale(1.15);
+    }
+
+    .hotspot__popup {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 243px;
+      height: 252px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+    }
+
+    .hotspot:hover .hotspot__popup {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .hotspot__popup-blur {
+      position: absolute;
+      inset: 0;
+      width: 243px;
+      height: 252px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      /* clip to the callout card shape from the SVG */
+      clip-path: path('M0 8C0 3.58173 3.58172 0 8 0H235C239.418 0 243 3.58172 243 8V225.625C243 230.043 239.418 233.625 235 233.625H151.964C150.359 233.625 148.79 234.108 147.463 235.011L126.882 249.018C124.226 250.826 120.746 250.869 118.046 249.128L95.9796 234.901C94.6873 234.068 93.1822 233.625 91.6446 233.625H8C3.58172 233.625 0 230.043 0 225.625V8Z');
+    }
+
+    .hotspot__popup-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hotspot__popup-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 243px;
+      height: 226px; /* above the callout tail */
+      padding: 22px 20px 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hotspot__name {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #fff;
+      line-height: 1.2;
+      white-space: nowrap;
+      margin-bottom: 14px;
+    }
+
+    .hotspot__desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+
+    .hotspot__price {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: auto;
+    }
+
+    .hotspot__btn {
+      display: block;
+      background: #fff;
+      color: #000;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      text-align: center;
+      padding: 14px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      margin-top: 12px;
+      transition: background 0.2s;
+    }
+
+    .hotspot__btn:hover {
+      background: #f6b50e;
+      color: #fff;
+    }
+
+    /* ─── CATEGORIES ─────────────────────────────────────────── */
+    .categories {
+      background: #fff;
+      padding: 80px 0 80px;
+    }
+
+    .categories__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 133px;
+      margin-bottom: 44px;
+    }
+
+    .categories__title-wrap {
+      position: relative;
+    }
+
+    .categories__title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 38px;
+      color: #000;
+      white-space: nowrap;
+    }
+
+    .categories__underline {
+      display: block;
+      margin-top: 8px;
+      width: 289px;
+    }
+
+    .categories__see-all {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: #000;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .categories__see-all:hover {
+      color: #f6b50e;
+    }
+
+    .categories__grid {
+      display: flex;
+      gap: 30px;
+      padding: 0 133px;
+      justify-content: space-between;
+    }
+
+    .card {
+      position: relative;
+      width: 270px;
+      height: 363px;
+      cursor: pointer;
+      flex-shrink: 0;
+      text-decoration: none;
+      display: block;
+      transition: filter 0.25s, height 0.25s;
+    }
+
+    .card:hover {
+      height: 351px;
+      filter: drop-shadow(0px 20px 22px rgba(0,0,0,0.05));
+    }
+
+    .card__bg {
+      position: absolute;
+      inset: 0 0 25px 0;
+      background: #f1f1f1;
+      border-radius: 16px;
+      transition: inset 0.25s;
+    }
+
+    .card:hover .card__bg {
+      inset: 0 0 13px 0;
+    }
+
+    .card__label {
+      position: absolute;
+      top: 52px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 32px;
+      color: #000;
+      transition: top 0.25s;
+      z-index: 1;
+    }
+
+    .card:hover .card__label {
+      top: 30px;
+    }
+
+    .card__count {
+      position: absolute;
+      top: 74px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: 'Nunito', sans-serif;
+      font-size: 18px;
+      color: #959595;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity 0.2s 0.05s, transform 0.2s 0.05s;
+      z-index: 1;
+    }
+
+    .card:hover .card__count {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* default image visible, active hidden */
+    .card__img {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 85%;
+      max-height: 240px;
+      object-fit: contain;
+      transition: opacity 0.25s;
+    }
+
+    .card__img--default {
+      opacity: 1;
+    }
+
+    .card:hover .card__img--default {
+      opacity: 0;
+    }
+
+    .card__img--active {
+      opacity: 0;
+    }
+
+    .card:hover .card__img--active {
+      opacity: 1;
+    }
+
+    /* ─── FEATURED PRODUCT ───────────────────────────────────── */
+    .featured {
+      background: #fff;
+      padding: 80px 133px;
+      display: flex;
+      align-items: center;
+      gap: 64px;
+    }
+
+    .featured__image {
+      flex-shrink: 0;
+      width: 644px;
+      height: 425px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .featured__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .featured__content {
+      flex: 1;
+    }
+
+    .featured__title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 38px;
+      color: #000;
+      line-height: 1.15;
+      margin-bottom: 32px;
+    }
+
+    .featured__desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      line-height: 1.4;
+      color: #686767;
+      margin-bottom: 48px;
+      max-width: 328px;
+    }
+
+    .btn-yellow {
+      display: inline-block;
+      background: #f6b50e;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      padding: 20px 40px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-yellow:hover {
+      background: #e0a20c;
+    }
+
+    /* ─── PROMO BANNER ───────────────────────────────────────── */
+    .promo {
+      padding: 80px 135px;
+      background: #fff;
+    }
+
+    .promo__banner {
+      position: relative;
+      width: 1170px;
+      height: 399px;
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .promo__bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .promo__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.8) 11.88%,
+        rgba(0, 0, 0, 0) 52.6%
+      );
+      border-radius: 24px;
+    }
+
+    .promo__content {
+      position: absolute;
+      left: 106px;
+      top: 73px;
+      z-index: 2;
+    }
+
+    .promo__title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 42px;
+      color: #fff;
+      line-height: 1.2;
+      max-width: 332px;
+      margin-bottom: 44px;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    .footer {
+      background: #29795a;
+      padding: 64px 165px;
+    }
+
+    .footer__grid {
+      display: flex;
+      gap: 30px;
+    }
+
+    .footer__col {
+      flex: 1;
+    }
+
+    .footer__col-title {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 28px;
+      color: #f4f5f7;
+      margin-bottom: 24px;
+    }
+
+    .footer__links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      list-style: none;
+    }
+
+    .footer__links a {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 24px;
+      color: #eeeff4;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer__links a:hover {
+      color: #f6b50e;
+    }
+
+    .footer__badges {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .footer__badge {
+      height: 48px;
+      width: 162px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── HERO ──────────────────────────────────────────────── -->
+  <section class="hero">
+    <img class="hero__bg" src="assets/hero-bg.jpeg" alt="Modern green living room" />
+
+    <nav class="hero__nav">
+      <a href="#" class="hero__logo">Inte<span>rio.</span></a>
+      <ul class="hero__nav-links">
+        <li><a href="#">Categories</a></li>
+        <li><a href="#">Furniture</a></li>
+        <li><a href="#">Interior Design</a></li>
+        <li><a href="#">Property</a></li>
+      </ul>
+    </nav>
+
+    <div class="hero__content">
+      <h1 class="hero__title">Discover The Best Furniture for You!</h1>
+      <img class="hero__underline" src="assets/underline.svg" alt="" aria-hidden="true" />
+      <br />
+      <a href="#" class="hero__cta">Explore All Products</a>
+    </div>
+
+    <!-- Hotspot: Cabinet (x=27, y=414) -->
+    <div class="hotspot" style="left:27px; top:414px;">
+      <img class="hotspot__dot" src="assets/dot.svg" alt="" />
+      <div class="hotspot__popup">
+        <div class="hotspot__popup-blur"></div>
+        <img class="hotspot__popup-bg" src="assets/price-popup.svg" alt="" />
+        <div class="hotspot__popup-content">
+          <p class="hotspot__name">Aise Cabinet</p>
+          <p class="hotspot__desc">Wooden Cabinet with Premium Quality</p>
+          <p class="hotspot__price">Rp. 799.000</p>
+          <a href="cabinet.html" class="hotspot__btn">View Product</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hotspot: Sofa (x=418, y=472) -->
+    <div class="hotspot" style="left:418px; top:472px;">
+      <img class="hotspot__dot" src="assets/dot.svg" alt="" />
+      <div class="hotspot__popup">
+        <div class="hotspot__popup-blur"></div>
+        <img class="hotspot__popup-bg" src="assets/price-popup.svg" alt="" />
+        <div class="hotspot__popup-content">
+          <p class="hotspot__name">Noiso Sofa</p>
+          <p class="hotspot__desc">Wooden Sofa with Premium Quality</p>
+          <p class="hotspot__price">Rp. 4.499.000</p>
+          <a href="#" class="hotspot__btn">View Product</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hotspot: Table (x=748, y=500) -->
+    <div class="hotspot" style="left:748px; top:500px;">
+      <img class="hotspot__dot" src="assets/dot.svg" alt="" />
+      <div class="hotspot__popup">
+        <div class="hotspot__popup-blur"></div>
+        <img class="hotspot__popup-bg" src="assets/price-popup.svg" alt="" />
+        <div class="hotspot__popup-content">
+          <p class="hotspot__name">Wood Table</p>
+          <p class="hotspot__desc">Wooden Table with Premium Quality</p>
+          <p class="hotspot__price">Rp. 2.799.000</p>
+          <a href="#" class="hotspot__btn">View Product</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hotspot: Pot (x=1168, y=500) -->
+    <div class="hotspot" style="left:1168px; top:500px;">
+      <img class="hotspot__dot" src="assets/dot.svg" alt="" />
+      <div class="hotspot__popup">
+        <div class="hotspot__popup-blur"></div>
+        <img class="hotspot__popup-bg" src="assets/price-popup.svg" alt="" />
+        <div class="hotspot__popup-content">
+          <p class="hotspot__name">Leaf Pot</p>
+          <p class="hotspot__desc">Premium Quality Plant Pot</p>
+          <p class="hotspot__price">Rp. 499.000</p>
+          <a href="#" class="hotspot__btn">View Product</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CATEGORIES ────────────────────────────────────────── -->
+  <section class="categories">
+    <div class="categories__header">
+      <div class="categories__title-wrap">
+        <h2 class="categories__title">Shop Popular Categories</h2>
+        <img class="categories__underline" src="assets/underline.svg" alt="" aria-hidden="true" />
+      </div>
+      <a href="cabinet.html" class="categories__see-all">See All</a>
+    </div>
+
+    <div class="categories__grid">
+      <!-- Chair -->
+      <div class="card">
+        <div class="card__bg"></div>
+        <p class="card__label">Chair</p>
+        <p class="card__count">125 Items</p>
+        <img class="card__img card__img--default" src="assets/chair-default.png" alt="Chair" />
+        <img class="card__img card__img--active"  src="assets/chair-active.png"  alt="Chair" />
+      </div>
+
+      <!-- Cabinet -->
+      <a href="cabinet.html" class="card">
+        <div class="card__bg"></div>
+        <p class="card__label">Cabinet</p>
+        <p class="card__count">98 Items</p>
+        <img class="card__img card__img--default" src="assets/cabinet-default.png" alt="Cabinet" />
+        <img class="card__img card__img--active"  src="assets/cabinet-active.png"  alt="Cabinet" />
+      </a>
+
+      <!-- Table -->
+      <div class="card">
+        <div class="card__bg"></div>
+        <p class="card__label">Table</p>
+        <p class="card__count">74 Items</p>
+        <img class="card__img card__img--default" src="assets/table-default.png" alt="Table" />
+        <img class="card__img card__img--active"  src="assets/table-active.png"  alt="Table" />
+      </div>
+
+      <!-- Lamp -->
+      <div class="card">
+        <div class="card__bg"></div>
+        <p class="card__label">Lamp</p>
+        <p class="card__count">52 Items</p>
+        <img class="card__img card__img--default" src="assets/lamp-default.png" alt="Lamp" />
+        <img class="card__img card__img--active"  src="assets/lamp-active.png"  alt="Lamp" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FEATURED PRODUCT ──────────────────────────────────── -->
+  <section class="featured">
+    <div class="featured__image">
+      <img src="assets/bedroom.jpeg" alt="Simple Bed" />
+    </div>
+    <div class="featured__content">
+      <h2 class="featured__title">Simple Bed for Your Weekend</h2>
+      <p class="featured__desc">
+        Enjoy your weekends with your families using our lastest Simple Bed set!
+      </p>
+      <a href="#" class="btn-yellow">Explore All Products</a>
+    </div>
+  </section>
+
+  <!-- ─── PROMO BANNER ──────────────────────────────────────── -->
+  <section class="promo">
+    <div class="promo__banner">
+      <img class="promo__bg" src="assets/promo-banner.jpeg" alt="Promo" />
+      <div class="promo__overlay"></div>
+      <div class="promo__content">
+        <h2 class="promo__title">Get Discount up to 50% off Today!</h2>
+        <a href="#" class="btn-yellow">Explore All Products</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer__grid">
+      <!-- Col 1: Company -->
+      <div class="footer__col">
+        <p class="footer__col-title">Company</p>
+        <ul class="footer__links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 2: Support -->
+      <div class="footer__col">
+        <p class="footer__col-title">Support</p>
+        <ul class="footer__links">
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Safety Center</a></li>
+          <li><a href="#">Community Guidelines</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Legal -->
+      <div class="footer__col">
+        <p class="footer__col-title">Legal</p>
+        <ul class="footer__links">
+          <li><a href="#">Cookies Policy</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Law Enforcement</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Install App -->
+      <div class="footer__col">
+        <p class="footer__col-title">Install App</p>
+        <div class="footer__badges">
+          <img class="footer__badge" src="assets/badge-google-play.jpg" alt="Get it on Google Play" />
+          <img class="footer__badge" src="assets/badge-app-store.jpg" alt="Download on the App Store" />
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
