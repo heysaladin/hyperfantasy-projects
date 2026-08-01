@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BerbaGive - Charity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #1E6B5A;
+      --teal-light: #237d6a;
+      --bg: #E8EEF0;
+      --bg-section: #EDF2F4;
+      --white: #ffffff;
+      --text: #1A1A1A;
+      --text-muted: #6B7280;
+      --border: #D1D5DB;
+      --progress-bg: #D1D9DB;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ─── NAVBAR ─────────────────────────────────────────── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+      height: 68px;
+      background: var(--white);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+    .logo span {
+      color: var(--teal);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .nav-links a.active,
+    .nav-links a:hover { color: var(--text); }
+
+    .btn-primary {
+      background: var(--teal);
+      color: var(--white);
+      border: none;
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--teal-light); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 2px solid var(--white);
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    /* ─── HERO ───────────────────────────────────────────── */
+    .hero {
+      background: var(--bg);
+      padding: 72px 60px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: end;
+      min-height: 480px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-text {
+      padding-bottom: 60px;
+    }
+
+    .hero-text h1 {
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-text h1 u {
+      text-decoration-color: var(--teal);
+      text-decoration-thickness: 2px;
+    }
+
+    .hero-text p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+      max-width: 340px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .btn-hero-primary {
+      background: var(--teal);
+      color: var(--white);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-hero-primary:hover { background: var(--teal-light); }
+
+    .btn-text {
+      background: none;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .btn-text:hover { color: var(--text); }
+
+    .hero-image {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    .hero-image img {
+      width: 100%;
+      max-width: 440px;
+      height: 380px;
+      object-fit: cover;
+      border-radius: 12px 12px 0 0;
+      display: block;
+    }
+
+    /* hero image placeholder */
+    .hero-img-placeholder {
+      width: 440px;
+      height: 380px;
+      border-radius: 12px 12px 0 0;
+      background: linear-gradient(160deg, #c8d8da 0%, #b0c4c8 100%);
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-img-placeholder::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('http://127.0.0.1:3845/mcp/../assets/80694bb196e45bb005c3fef83848b963cffbf897.png') center/cover no-repeat;
+    }
+
+    /* ─── PROGRAMS SECTION ───────────────────────────────── */
+    .programs {
+      background: var(--white);
+      padding: 72px 60px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-header h2 {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.4px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-img-placeholder {
+      width: 100%;
+      height: 160px;
+      background: #c8d4d8;
+    }
+    .card-img-placeholder.p1 { background: linear-gradient(135deg, #8da8b0, #6b8a94); }
+    .card-img-placeholder.p2 { background: linear-gradient(135deg, #7a9098, #5c7880); }
+    .card-img-placeholder.p3 { background: linear-gradient(135deg, #9aacb0, #7a9098); }
+    .card-img-placeholder.p4 { background: linear-gradient(135deg, #a8b8bc, #8a9ca0); }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--progress-bg);
+      border-radius: 3px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--teal);
+      border-radius: 3px;
+    }
+
+    .card-amounts {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .card-amounts .raised {
+      color: var(--teal);
+      font-weight: 600;
+    }
+
+    .btn-fund {
+      display: block;
+      width: 100%;
+      background: var(--teal);
+      color: var(--white);
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .btn-fund:hover { background: var(--teal-light); }
+
+    /* ─── CTA BANNER ─────────────────────────────────────── */
+    .cta-banner {
+      background: var(--teal);
+      padding: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .cta-text h2 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .cta-text p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .btn-cta {
+      background: var(--white);
+      color: var(--teal);
+      border: none;
+      padding: 13px 28px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+      flex-shrink: 0;
+    }
+    .btn-cta:hover { opacity: 0.9; }
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    footer {
+      background: #1A2A28;
+      padding: 48px 60px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 40px;
+    }
+
+    .footer-brand .logo {
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .footer-brand p {
+      font-size: 13px;
+      line-height: 1.6;
+      max-width: 240px;
+    }
+
+    .footer-col h4 {
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col ul a {
+      text-decoration: none;
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      transition: color 0.2s;
+    }
+    .footer-col ul a:hover { color: var(--white); }
+
+    .footer-bottom {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="logo">Berba<span>give</span></div>
+    <ul class="nav-links">
+      <li><a href="#" class="active">Landing</a></li>
+      <li><a href="#programs">Programs</a></li>
+      <li><a href="#">Stories</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+    <button class="btn-primary">Start Funding</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>We will <u>help you</u> to give<br>your fortune to help more<br>people in the world.</h1>
+      <p>Find our best program that might fit for your ipsum si amet urang Bandung.</p>
+      <div class="hero-actions">
+        <button class="btn-hero-primary">View Programs</button>
+        <button class="btn-text">Learn More</button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img
+        src="http://127.0.0.1:3845/assets/80694bb196e45bb005c3fef83848b963cffbf897.png"
+        alt="Child reading a book"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
+      />
+      <div class="hero-img-placeholder" style="display:none;"></div>
+    </div>
+  </section>
+
+  <!-- PROGRAMS -->
+  <section class="programs" id="programs">
+    <div class="section-header">
+      <h2>Help them to get a better future</h2>
+    </div>
+    <div class="cards-grid">
+
+      <div class="card">
+        <div class="card-img-placeholder p1"></div>
+        <div class="card-body">
+          <div class="card-title">Free Perpus</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:21%"></div></div>
+          <div class="card-amounts">
+            <span class="raised">$4,100</span>
+            <span>$20,000</span>
+          </div>
+          <button class="btn-fund">Fund Now</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-placeholder p2"></div>
+        <div class="card-body">
+          <div class="card-title">Edukasi Penting</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:31%"></div></div>
+          <div class="card-amounts">
+            <span class="raised">$78,000</span>
+            <span>$250,000</span>
+          </div>
+          <button class="btn-fund">Fund Now</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-placeholder p3"></div>
+        <div class="card-body">
+          <div class="card-title">Bantu Nelayan</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div>
+          <div class="card-amounts">
+            <span class="raised">$11,000</span>
+            <span>$20,000</span>
+          </div>
+          <button class="btn-fund">Fund Now</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-placeholder p4"></div>
+        <div class="card-body">
+          <div class="card-title">Sekolah Anak</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div>
+          <div class="card-amounts">
+            <span class="raised">$34,000</span>
+            <span>$50,000</span>
+          </div>
+          <button class="btn-fund">Fund Now</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <div class="cta-text">
+      <h2>Make a difference, start from us.</h2>
+      <p>Join thousands of donors supporting communities across BerbaGive Indonesia.</p>
+    </div>
+    <button class="btn-cta">Start Funding</button>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo">Berba<span>give</span></div>
+        <p>A platform to help you channel your fortune to those who need it most across Indonesia.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">Programs</a></li>
+          <li><a href="#">Stories</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Follow Us</h4>
+        <ul>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">Twitter</a></li>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 BerbaGive Indonesia. All rights reserved.
+    </div>
+  </footer>
+
+</body>
+</html>

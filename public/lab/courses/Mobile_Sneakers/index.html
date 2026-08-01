@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sneakers App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #111018;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* ── Phone Shell ── */
+    .phone {
+      width: 375px;
+      height: 812px;
+      background: #1f1d2b;
+      overflow: hidden;
+      position: relative;
+      border-radius: 40px;
+      box-shadow: 0 40px 100px rgba(0,0,0,.6);
+    }
+
+    /* ── Screens ── */
+    .screen {
+      position: absolute;
+      inset: 0;
+      width: 375px;
+      height: 812px;
+      background: #1f1d2b;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .35s ease;
+    }
+    .screen.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ── Scrollable inner ── */
+    .scroll-body {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .scroll-body::-webkit-scrollbar { display: none; }
+
+    /* ══════════════════════════════════════════
+       SPLASH SCREEN
+    ══════════════════════════════════════════ */
+    #splash {
+      background: #1f1d2b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #splash .logo {
+      width: 130px;
+      height: 150px;
+    }
+
+    /* ══════════════════════════════════════════
+       SIGN IN
+    ══════════════════════════════════════════ */
+    .auth-screen {
+      padding: 30px;
+    }
+    .auth-screen h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #f1f0f2;
+      letter-spacing: 1.2px;
+      margin-bottom: 8px;
+    }
+    .auth-screen .subtitle {
+      font-size: 14px;
+      font-weight: 400;
+      color: #504f5e;
+      letter-spacing: 0.7px;
+      margin-bottom: 30px;
+    }
+    .field-label {
+      font-size: 16px;
+      font-weight: 500;
+      color: #f1f0f2;
+      letter-spacing: 0.16px;
+      margin-bottom: 12px;
+    }
+    .input-wrap {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .input-wrap .icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .input-wrap .icon svg { width: 100%; height: 100%; }
+    .input-wrap input {
+      width: 100%;
+      height: 50px;
+      background: #2b2937;
+      border: none;
+      border-radius: 12px;
+      padding: 0 18px 0 48px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      color: #504f5e;
+      outline: none;
+      letter-spacing: 0.07px;
+    }
+    .input-wrap input::placeholder { color: #504f5e; }
+    .btn-primary {
+      width: 100%;
+      height: 50px;
+      background: #6c5ecf;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: #f1f0f2;
+      letter-spacing: 0.16px;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .btn-primary:active { opacity: .8; }
+    .auth-footer {
+      position: absolute;
+      bottom: 30px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 400;
+      color: #504f5e;
+      letter-spacing: 0.06px;
+    }
+    .auth-footer span {
+      font-weight: 500;
+      color: #6c5ecf;
+      letter-spacing: 0.08px;
+      cursor: pointer;
+    }
+
+    /* ══════════════════════════════════════════
+       HOME
+    ══════════════════════════════════════════ */
+    #home .header {
+      position: relative;
+      padding: 30px 30px 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    #home .header .greeting h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #f1f0f2;
+      letter-spacing: 0.24px;
+    }
+    #home .header .greeting p {
+      font-size: 16px;
+      font-weight: 400;
+      color: #504f5e;
+      letter-spacing: 0.08px;
+      margin-top: 4px;
+    }
+    #home .header .avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: #3a3749;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    #home .header .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Category chips */
+    .category-strip {
+      display: flex;
+      gap: 12px;
+      padding: 20px 30px 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .category-strip::-webkit-scrollbar { display: none; }
+    .chip {
+      flex-shrink: 0;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 400;
+      color: #504f5e;
+      border: 0.5px solid #302f37;
+      background: transparent;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: all .2s;
+    }
+    .chip.active {
+      background: #6c5ecf;
+      color: #f1f0f2;
+      border-color: #6c5ecf;
+      font-weight: 500;
+    }
+
+    /* Section heading */
+    .section-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #f1f0f2;
+      letter-spacing: 0.22px;
+      padding: 26px 30px 16px;
+    }
+
+    /* Popular Products carousel */
+    .popular-scroll {
+      display: flex;
+      gap: 20px;
+      padding: 0 30px 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .popular-scroll::-webkit-scrollbar { display: none; }
+    .product-card {
+      flex-shrink: 0;
+      width: 215px;
+      height: 278px;
+      background: #f1f0f2;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card .prod-img-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 16px 8px;
+      overflow: hidden;
+    }
+    .product-card .prod-img {
+      width: 100%;
+      height: 130px;
+      object-fit: contain;
+      object-position: center;
+    }
+    .product-card .prod-info {
+      padding: 0 20px 18px;
+    }
+    .product-card .prod-cat {
+      font-size: 12px;
+      font-weight: 400;
+      color: #999;
+      margin-bottom: 4px;
+    }
+    .product-card .prod-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2e2e2e;
+      letter-spacing: 0.18px;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .product-card .prod-price {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2c96f1;
+    }
+
+    /* New Arrivals list */
+    .arrivals-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding: 0 30px;
+      margin-bottom: 100px;
+    }
+    .arrival-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid #2b2937;
+      cursor: pointer;
+    }
+    .arrival-item:last-child { border-bottom: none; }
+    .arrival-thumb {
+      width: 90px;
+      height: 90px;
+      background: #2b2937;
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .arrival-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .arrival-info .arr-cat {
+      font-size: 12px;
+      font-weight: 400;
+      color: #999;
+      margin-bottom: 4px;
+    }
+    .arrival-info .arr-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #f1f0f2;
+      letter-spacing: 0.16px;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+    .arrival-info .arr-price {
+      font-size: 14px;
+      font-weight: 500;
+      color: #2c96f1;
+    }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 375px;
+      height: 80px;
+      background: #252330;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 10px;
+      border-top: 1px solid #2b2937;
+    }
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 60px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    .nav-btn svg { width: 22px; height: 22px; }
+    .nav-btn.active svg path,
+    .nav-btn.active svg rect { fill: #6c5ecf; }
+    .cart-fab {
+      width: 60px;
+      height: 60px;
+      background: #6c5ecf;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -30px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(108,94,207,.5);
+      border: none;
+    }
+    .cart-fab svg { width: 26px; height: 26px; }
+
+    /* ══════════════════════════════════════════
+       PRODUCT DETAIL
+    ══════════════════════════════════════════ */
+    #detail .hero {
+      width: 375px;
+      height: 310px;
+      background: #e8e7ef;
+      position: relative;
+      overflow: hidden;
+    }
+    #detail .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    #detail .hero-actions {
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      background: rgba(31,29,43,.7);
+      border-radius: 10px;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+    .icon-btn svg { width: 16px; height: 16px; }
+    .pagination {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .dot {
+      width: 4px;
+      height: 4px;
+      background: #c4c4c4;
+      border-radius: 10px;
+    }
+    .dot.active {
+      width: 16px;
+      background: #6c5ecf;
+    }
+    #detail .info-panel {
+      background: #1f1d2b;
+      border-radius: 24px 24px 0 0;
+      margin-top: -20px;
+      position: relative;
+      padding: 30px 30px 120px;
+    }
+    #detail .prod-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+    #detail .prod-header h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #f1f0f2;
+      letter-spacing: 0.18px;
+    }
+    #detail .prod-header .love-btn {
+      width: 46px;
+      height: 46px;
+      background: #2b2937;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    #detail .prod-header .love-btn svg { width: 20px; height: 20px; }
+    #detail .prod-cat-tag {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 20px;
+    }
+    .price-row {
+      background: #2b2937;
+      border-radius: 4px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      margin-bottom: 24px;
+    }
+    .price-row .price-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: #f1f0f2;
+    }
+    .price-row .price-val {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2c96f1;
+    }
+    #detail .desc-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #f1f0f2;
+      margin-bottom: 10px;
+    }
+    #detail .desc-text {
+      font-size: 14px;
+      font-weight: 300;
+      color: #999;
+      line-height: 1.6;
+      letter-spacing: 0.14px;
+      margin-bottom: 24px;
+    }
+    #detail .similar-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #f1f0f2;
+      margin-bottom: 14px;
+    }
+    .similar-scroll {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
+    .similar-scroll::-webkit-scrollbar { display: none; }
+    .similar-thumb {
+      flex-shrink: 0;
+      width: 54px;
+      height: 54px;
+      background: #2b2937;
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .similar-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .detail-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 375px;
+      height: 90px;
+      background: #1f1d2b;
+      border-top: 1px solid #2b2937;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 30px;
+    }
+    .chat-btn {
+      width: 54px;
+      height: 54px;
+      border: 1.5px solid #6c5ecf;
+      border-radius: 12px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .chat-btn svg { width: 22px; height: 22px; }
+    .add-cart-btn {
+      flex: 1;
+      height: 54px;
+      background: #6c5ecf;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #f1f0f2;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .add-cart-btn:active { opacity: .8; }
+
+    /* ══════════════════════════════════════════
+       SHARED: TOP BAR
+    ══════════════════════════════════════════ */
+    .page-top {
+      height: 87px;
+      background: #1f1d2b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+      border-bottom: 1px solid #2b2937;
+    }
+    .page-top h2 {
+      font-size: 18px;
+      font-weight: 500;
+      color: #f1f0f2;
+      letter-spacing: 0.18px;
+    }
+
+    /* ══════════════════════════════════════════
+       SHARED: EMPTY STATE
+    ══════════════════════════════════════════ */
+    .empty-wrap {
+      display: flex;
+      flex-direction: column;
+      height: calc(812px - 87px - 80px);
+      align-items: center;
+      justify-content: center;
+      padding: 0 30px;
+      gap: 0;
+    }
+    .empty-icon {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      margin-bottom: 22px;
+    }
+    .empty-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #f1f0f2;
+      letter-spacing: 0.08px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .empty-sub {
+      font-size: 14px;
+      font-weight: 400;
+      color: #999;
+      letter-spacing: 0.07px;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .btn-explore {
+      background: #6c5ecf;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 28px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: #f1f0f2;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .btn-explore:active { opacity: .8; }
+
+    /* ══════════════════════════════════════════
+       PROFILE
+    ══════════════════════════════════════════ */
+    #profile .profile-header {
+      background: #1f1d2b;
+      padding: 28px 30px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+    }
+    .profile-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-name h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #f1f0f2;
+      letter-spacing: 0.24px;
+    }
+    .profile-name p {
+      font-size: 16px;
+      font-weight: 400;
+      color: #504f5e;
+      letter-spacing: 0.08px;
+      margin-top: 4px;
+    }
+    .exit-btn {
+      position: absolute;
+      right: 30px;
+      top: 30px;
+      width: 36px;
+      height: 36px;
+      background: #ed6363;
+      border-radius: 8px;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .exit-btn svg { width: 18px; height: 18px; }
+    .profile-panel {
+      background: #242231;
+      border-radius: 30px 30px 0 0;
+      padding: 30px 30px 100px;
+      flex: 1;
+    }
+    .menu-section-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #f1f0f2;
+      margin-bottom: 6px;
+      margin-top: 24px;
+    }
+    .menu-section-label:first-child { margin-top: 0; }
+    .menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid #2b2937;
+      cursor: pointer;
+    }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-item span {
+      font-size: 13px;
+      font-weight: 400;
+      color: #999;
+      letter-spacing: 0.13px;
+    }
+    .chevron { width: 8px; height: 14px; }
+
+    /* ══════════════════════════════════════════
+       EDIT PROFILE
+    ══════════════════════════════════════════ */
+    #edit-profile .ep-header {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: #1f1d2b;
+      flex-shrink: 0;
+      border-bottom: 1px solid #2b2937;
+    }
+    #edit-profile .ep-header h2 {
+      font-size: 18px;
+      font-weight: 500;
+      color: #f1f0f2;
+    }
+    .ep-close, .ep-check {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .ep-close { left: 26px; }
+    .ep-check { right: 26px; }
+    .ep-close svg { width: 16px; height: 16px; }
+    .ep-check svg { width: 18px; height: 14px; }
+    .ep-avatar-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 28px 0 32px;
+    }
+    .ep-avatar-wrap img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .ep-field {
+      padding: 0 30px;
+      margin-bottom: 24px;
+    }
+    .ep-label {
+      font-size: 13px;
+      font-weight: 400;
+      color: #999;
+      letter-spacing: 0.13px;
+      margin-bottom: 6px;
+    }
+    .ep-value {
+      font-size: 16px;
+      font-weight: 400;
+      color: #f1f0f2;
+      letter-spacing: 0.16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #302f37;
+    }
+
+    /* ══════════════════════════════════════════
+       CHAT TALK
+    ══════════════════════════════════════════ */
+    .chat-top {
+      background: #1f1d2b;
+      height: 90px;
+      border-radius: 0 0 20px 20px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .chat-top .shop-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .chat-top .shop-logo img { width: 100%; height: 100%; object-fit: cover; }
+    .chat-top .shop-info .shop-name { font-size: 14px; font-weight: 500; color: #f1f0f2; }
+    .chat-top .shop-info .shop-status { font-size: 13px; font-weight: 300; color: #b4b4b4; }
+    .chat-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scrollbar-width: none;
+    }
+    .chat-area::-webkit-scrollbar { display: none; }
+    .chat-product-card {
+      width: 220px;
+      background: #1e1c2b;
+      border-radius: 12px;
+      padding: 12px;
+      align-self: flex-end;
+    }
+    .chat-product-card .cp-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .chat-product-card .cp-thumb {
+      width: 70px;
+      height: 70px;
+      background: #2b2937;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .chat-product-card .cp-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .chat-product-card .cp-name { font-size: 14px; color: #f1f0f2; margin-bottom: 4px; line-height: 1.3; }
+    .chat-product-card .cp-price { font-size: 14px; font-weight: 500; color: #2c96f1; }
+    .chat-product-card .cp-actions { display: flex; gap: 8px; }
+    .cp-btn-cart {
+      flex: 1;
+      padding: 8px 0;
+      border: 1px solid #6c5ecf;
+      border-radius: 8px;
+      background: transparent;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      color: #6c5ecf;
+      cursor: pointer;
+      text-align: center;
+    }
+    .cp-btn-buy {
+      flex: 1;
+      padding: 8px 0;
+      background: #6c5ecf;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      color: #2f2579;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+    }
+    .bubble-right {
+      background: #2b2844;
+      border-radius: 12px 12px 0 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: #f1f0f2;
+      align-self: flex-end;
+      max-width: 80%;
+    }
+    .bubble-left {
+      background: #252836;
+      border-radius: 0 12px 12px 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: #f1f0f2;
+      align-self: flex-start;
+      max-width: 80%;
+    }
+    .chat-input-bar {
+      display: flex;
+      gap: 10px;
+      padding: 12px 20px;
+      background: #242231;
+      border-top: 1px solid #2b2937;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .chat-input-field {
+      flex: 1;
+      background: #252836;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      color: #676a77;
+      border: none;
+      outline: none;
+    }
+    .chat-send-btn {
+      width: 45px;
+      height: 45px;
+      background: #6c5ecf;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .chat-send-btn svg { width: 18px; height: 18px; }
+
+    /* ══════════════════════════════════════════
+       CHECKOUT DETAILS
+    ══════════════════════════════════════════ */
+    .checkout-panel {
+      background: #242231;
+      border-radius: 30px 30px 0 0;
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 30px 100px;
+      scrollbar-width: none;
+    }
+    .checkout-panel::-webkit-scrollbar { display: none; }
+    .checkout-section-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #f1f0f2;
+      margin-bottom: 12px;
+    }
+    .checkout-item-card {
+      background: #252836;
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .co-thumb {
+      width: 60px;
+      height: 60px;
+      background: #2b2937;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .co-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .co-info { flex: 1; }
+    .co-name { font-size: 14px; font-weight: 600; color: #f1f0f2; letter-spacing: 0.14px; margin-bottom: 4px; }
+    .co-price { font-size: 14px; color: #2c96f1; }
+    .co-qty { font-size: 12px; color: #999; }
+    .address-card {
+      background: #252836;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+    .address-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 0;
+    }
+    .address-row + .address-row { border-top: none; position: relative; }
+    .addr-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #2b2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .addr-icon svg { width: 20px; height: 20px; }
+    .addr-info .addr-label { font-size: 12px; font-weight: 300; color: #999; }
+    .addr-info .addr-value { font-size: 14px; font-weight: 500; color: #f1f0f2; margin-top: 2px; }
+    .addr-divider {
+      width: 1px;
+      height: 28px;
+      background: #504f5e;
+      margin: 0 auto 0 39px;
+      opacity: .5;
+    }
+    .payment-card {
+      background: #252836;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+    .pay-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+    }
+    .pay-row .pay-label { font-size: 12px; color: #999; }
+    .pay-row .pay-value { font-size: 14px; font-weight: 500; color: #f1f0f2; }
+    .pay-divider { height: 1px; background: #302f37; margin: 6px 0; }
+    .pay-total .pay-label { font-size: 14px; font-weight: 600; color: #2c96f1; }
+    .pay-total .pay-value { font-size: 14px; font-weight: 600; color: #2c96f1; }
+    .checkout-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 375px;
+      background: #242231;
+      border-top: 1px solid #2b2937;
+      padding: 14px 30px 20px;
+    }
+    .checkout-now-btn {
+      width: 100%;
+      height: 50px;
+      background: #6c5ecf;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #f1f0f2;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .checkout-now-btn:active { opacity: .8; }
+
+    /* ══════════════════════════════════════════
+       CHECKOUT SUCCESS
+    ══════════════════════════════════════════ */
+    #checkout-success .success-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: calc(812px - 87px);
+      padding: 0 30px;
+      gap: 12px;
+    }
+    #checkout-success .success-icon { width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; }
+    #checkout-success .success-title { font-size: 16px; font-weight: 500; color: #f1f0f2; letter-spacing: 0.08px; text-align: center; }
+    #checkout-success .success-sub { font-size: 14px; color: #999; text-align: center; letter-spacing: 0.07px; line-height: 1.6; margin-bottom: 16px; }
+    .btn-order-other {
+      background: #6c5ecf;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 28px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: #f1f0f2;
+      cursor: pointer;
+      width: 200px;
+      text-align: center;
+    }
+    .btn-view-order {
+      background: #39374b;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 28px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: #b7b6bf;
+      cursor: pointer;
+      width: 200px;
+      text-align: center;
+    }
+
+    /* ══════════════════════════════════════════
+       CART SCREENS
+    ══════════════════════════════════════════ */
+    .cart-top {
+      height: 87px;
+      background: #1f1d2b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+      border-bottom: 1px solid #2b2937;
+    }
+    .cart-top h2 {
+      font-size: 18px;
+      font-weight: 500;
+      color: #f1f0f2;
+      letter-spacing: 0.18px;
+    }
+    .cart-back {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .cart-back svg { width: 8px; height: 14px; }
+    .cart-panel {
+      background: #242231;
+      border-radius: 30px 30px 0 0;
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: none;
+      padding: 16px 0 0;
+    }
+    .cart-panel::-webkit-scrollbar { display: none; }
+    .cart-item-card {
+      background: #252836;
+      border-radius: 12px;
+      margin: 0 30px 12px;
+      padding: 14px 14px 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .cart-item-thumb {
+      width: 60px;
+      height: 60px;
+      background: #2b2937;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .cart-item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f1f0f2;
+      letter-spacing: 0.14px;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cart-item-price { font-size: 14px; color: #2c96f1; }
+    .cart-item-remove {
+      font-size: 12px;
+      color: #ed6363;
+      margin-top: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .cart-qty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .qty-btn {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1;
+      color: white;
+    }
+    .qty-btn.add { background: #6c5ecf; }
+    .qty-btn.sub { background: #3f4251; }
+    .qty-val { font-size: 14px; font-weight: 500; color: #f1f0f2; }
+    .cart-footer {
+      background: #242231;
+      border-top: 1px solid #2b2937;
+      padding: 16px 30px 20px;
+      flex-shrink: 0;
+    }
+    .cart-subtotal {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .cart-subtotal .s-label { font-size: 14px; color: #f1f0f2; }
+    .cart-subtotal .s-amount { font-size: 16px; font-weight: 600; color: #2c96f1; }
+    .checkout-btn {
+      width: 100%;
+      height: 50px;
+      background: #6c5ecf;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #f1f0f2;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      transition: opacity .2s;
+    }
+    .checkout-btn:active { opacity: .8; }
+    .checkout-btn svg { width: 12px; height: 12px; }
+
+    /* ── Success modal overlay ── */
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(26,25,34,.82);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+    .modal-card {
+      width: 315px;
+      background: #242231;
+      border-radius: 30px;
+      padding: 30px 24px 28px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .modal-close-btn {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .modal-close-btn svg { width: 14px; height: 14px; }
+    .modal-icon-ring {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid #38b2c8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+    .modal-icon-ring svg { width: 46px; height: 38px; }
+    .modal-title { font-size: 18px; font-weight: 600; color: #f1f0f2; letter-spacing: 0.18px; }
+    .modal-sub { font-size: 14px; color: #999; letter-spacing: 0.14px; }
+    .modal-cta {
+      margin-top: 10px;
+      background: #6c5ecf;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 28px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: #f1f0f2;
+      cursor: pointer;
+    }
+
+    /* ── Responsive on very small screens ── */
+    @media (max-width: 420px) {
+      body { align-items: flex-start; padding-top: 0; }
+      .phone { border-radius: 0; width: 100vw; height: 100dvh; }
+      .screen { width: 100vw; height: 100dvh; }
+      .bottom-nav { width: 100vw; }
+      .detail-bottom { width: 100vw; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- ══════════════════ SPLASH ══════════════════ -->
+  <div class="screen active" id="splash">
+    <svg class="logo" viewBox="0 0 130 150" fill="none" xmlns="http://www.w3.org/2000/svg"
+         style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">
+      <path d="M65 5L120 35V105L65 135L10 105V35L65 5Z"
+            stroke="#38b2c8" stroke-width="8" fill="none" stroke-linejoin="round"/>
+      <path d="M65 35L100 55V95L65 115L30 95V55L65 35Z"
+            stroke="#38b2c8" stroke-width="4" fill="none" stroke-linejoin="round"/>
+      <path d="M42 80L65 60L88 80" stroke="#38b2c8" stroke-width="8"
+            fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <!-- ══════════════════ SIGN IN ══════════════════ -->
+  <div class="screen" id="signin">
+    <div class="auth-screen">
+      <h1>Login</h1>
+      <p class="subtitle">Sign In to Continue</p>
+
+      <p class="field-label" style="margin-top:30px">Email Address</p>
+      <div class="input-wrap">
+        <div class="icon">
+          <svg viewBox="0 0 17 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1H16V11H1V1Z" stroke="#6c5ecf" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M1 1L8.5 7L16 1" stroke="#6c5ecf" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <input type="email" placeholder="Your Email Address" />
+      </div>
+
+      <p class="field-label">Password</p>
+      <div class="input-wrap">
+        <div class="icon">
+          <svg viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="8" width="16" height="10" rx="2" stroke="#6c5ecf" stroke-width="1.5"/>
+            <path d="M5 8V5.5C5 3 13 3 13 5.5V8" stroke="#6c5ecf" stroke-width="1.5"/>
+            <circle cx="9" cy="13" r="1.5" fill="#6c5ecf"/>
+          </svg>
+        </div>
+        <input type="password" placeholder="Your Password" />
+      </div>
+
+      <div style="height:20px"></div>
+      <button class="btn-primary" onclick="goTo('home')">Sign In</button>
+    </div>
+    <div class="auth-footer">
+      Don't have an account? <span onclick="goTo('signup')">Sign up</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════ SIGN UP ══════════════════ -->
+  <div class="screen" id="signup">
+    <div class="auth-screen">
+      <h1>Sign Up</h1>
+      <p class="subtitle">Register and Happy Shopping</p>
+
+      <p class="field-label" style="margin-top:20px">Full Name</p>
+      <div class="input-wrap">
+        <div class="icon">
+          <svg viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="8" cy="5" r="4" stroke="#6c5ecf" stroke-width="1.5"/>
+            <path d="M1 17C1 13.134 4.134 10 8 10C11.866 10 15 13.134 15 17" stroke="#6c5ecf" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <input type="text" placeholder="Your Full Name" />
+      </div>
+
+      <p class="field-label">Username</p>
+      <div class="input-wrap">
+        <div class="icon">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="8" cy="8" r="7" stroke="#6c5ecf" stroke-width="1.5"/>
+            <circle cx="8" cy="8" r="3" stroke="#6c5ecf" stroke-width="1.5"/>
+            <path d="M11 8H15M1 8H5" stroke="#6c5ecf" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <input type="text" placeholder="Your Username" />
+      </div>
+
+      <p class="field-label">Email Address</p>
+      <div class="input-wrap">
+        <div class="icon">
+          <svg viewBox="0 0 17 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1H16V11H1V1Z" stroke="#6c5ecf" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M1 1L8.5 7L16 1" stroke="#6c5ecf" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <input type="email" placeholder="Your Email Address" />
+      </div>
+
+      <p class="field-label">Password</p>
+      <div class="input-wrap">
+        <div class="icon">
+          <svg viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="8" width="16" height="10" rx="2" stroke="#6c5ecf" stroke-width="1.5"/>
+            <path d="M5 8V5.5C5 3 13 3 13 5.5V8" stroke="#6c5ecf" stroke-width="1.5"/>
+            <circle cx="9" cy="13" r="1.5" fill="#6c5ecf"/>
+          </svg>
+        </div>
+        <input type="password" placeholder="Your Password" />
+      </div>
+
+      <button class="btn-primary" onclick="goTo('home')">Sign Up</button>
+    </div>
+    <div class="auth-footer">
+      Already have an account? <span onclick="goTo('signin')">Sign In</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════ HOME ══════════════════ -->
+  <div class="screen" id="home">
+    <div class="scroll-body" style="padding-bottom:80px">
+
+      <!-- Header -->
+      <div class="header">
+        <div class="greeting">
+          <h2>Hallo, Alex</h2>
+          <p>@alexkeinn</p>
+        </div>
+        <div class="avatar">
+          <img src="http://localhost:3845/assets/9430b62553ba07e79db284cd8ee98c54da41956c.svg" alt="avatar"
+               onerror="this.style.display='none';this.parentNode.style.background='#6c5ecf'" />
+        </div>
+      </div>
+
+      <!-- Category -->
+      <div class="category-strip">
+        <button class="chip active" onclick="setCategory(this)">All Shoes</button>
+        <button class="chip" onclick="setCategory(this)">Running</button>
+        <button class="chip" onclick="setCategory(this)">Training</button>
+        <button class="chip" onclick="setCategory(this)">Basketball</button>
+        <button class="chip" onclick="setCategory(this)">Hiking</button>
+      </div>
+
+      <!-- Popular Products -->
+      <p class="section-title">Popular Products</p>
+      <div class="popular-scroll">
+
+        <div class="product-card" onclick="goTo('detail')">
+          <div class="prod-img-wrap">
+            <img class="prod-img" src="http://localhost:3845/assets/94135bb5e17c899ca73317d62a5acdbb1dea8f17.png" alt="TERREX URBAN LOW" />
+          </div>
+          <div class="prod-info">
+            <p class="prod-cat">Hiking</p>
+            <p class="prod-name">TERREX URBAN LOW</p>
+            <p class="prod-price">$143,98</p>
+          </div>
+        </div>
+
+        <div class="product-card" onclick="goTo('detail')">
+          <div class="prod-img-wrap">
+            <img class="prod-img" src="http://localhost:3845/assets/a6f20b1111c353d1295f61fb28f05c1dd9b1d86e.png" alt="COURT VISION 2.0" />
+          </div>
+          <div class="prod-info">
+            <p class="prod-cat">Hiking</p>
+            <p class="prod-name">COURT VISION 2.0</p>
+            <p class="prod-price">$58,67</p>
+          </div>
+        </div>
+
+        <div class="product-card" onclick="goTo('detail')">
+          <div class="prod-img-wrap">
+            <img class="prod-img" src="http://localhost:3845/assets/4c502357492dd001919e5c905f5664f1b5dcbaf1.png" alt="SL 72 SHOES" />
+          </div>
+          <div class="prod-info">
+            <p class="prod-cat">Training</p>
+            <p class="prod-name">SL 72 SHOES</p>
+            <p class="prod-price">$115,19</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- New Arrivals -->
+      <p class="section-title">New Arrivals</p>
+      <div class="arrivals-list">
+
+        <div class="arrival-item" onclick="goTo('detail')">
+          <div class="arrival-thumb">
+            <img src="http://localhost:3845/assets/9ba1d29a04dfb0a88b387bcd32e47a83a001d01d.png" alt="Predator" />
+          </div>
+          <div class="arrival-info">
+            <p class="arr-cat">Football</p>
+            <p class="arr-name">Predator 20.3 Firm Ground</p>
+            <p class="arr-price">$68,47</p>
+          </div>
+        </div>
+
+        <div class="arrival-item" onclick="goTo('detail')">
+          <div class="arrival-thumb">
+            <img src="http://localhost:3845/assets/4f822ac248263e9e60512ada98a2be06d936ccfa.png" alt="Ultra 4D" />
+          </div>
+          <div class="arrival-info">
+            <p class="arr-cat">Running</p>
+            <p class="arr-name">Ultra 4D 5 Shoes</p>
+            <p class="arr-price">$285,73</p>
+          </div>
+        </div>
+
+        <div class="arrival-item" onclick="goTo('detail')">
+          <div class="arrival-thumb">
+            <img src="http://localhost:3845/assets/bfad75f4494bbbe206b22a492015f524c0ba7031.png" alt="Court Vision" />
+          </div>
+          <div class="arrival-info">
+            <p class="arr-cat">Basketball</p>
+            <p class="arr-name">Court Vision 2.0 Shoes</p>
+            <p class="arr-price">$57,15</p>
+          </div>
+        </div>
+
+        <div class="arrival-item" onclick="goTo('detail')">
+          <div class="arrival-thumb">
+            <img src="http://localhost:3845/assets/053b422963c96b550e8e56b63e16f7d7fcace2cd.png" alt="LEGO Sport" />
+          </div>
+          <div class="arrival-info">
+            <p class="arr-cat">Training</p>
+            <p class="arr-name">LEGO® SPORT SHOES</p>
+            <p class="arr-price">$92,72</p>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- end scroll-body -->
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+      <button class="nav-btn active" onclick="goTo('home')">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M2 9.5L11 2L20 9.5V20H14V14H8V20H2V9.5Z" stroke="#6c5ecf" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="nav-btn" onclick="goTo('chat')">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M3 3H19C20.1 3 21 3.9 21 5V15C21 16.1 20.1 17 19 17H7L3 21V5C3 3.9 3.9 3 5 3H3Z" stroke="#504f5e" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="cart-fab" onclick="goTo('cart-empty')">
+        <svg viewBox="0 0 26 26" fill="none"><path d="M3 3H5.5L7 14H19L21 7H7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="19" r="2" fill="white"/><circle cx="17" cy="19" r="2" fill="white"/></svg>
+      </button>
+      <button class="nav-btn" onclick="goTo('favorite')">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M11 19C11 19 2 13.5 2 7.5C2 5 4 3 6.5 3C8.2 3 9.7 4 11 5.5C12.3 4 13.8 3 15.5 3C18 3 20 5 20 7.5C20 13.5 11 19 11 19Z" stroke="#504f5e" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="nav-btn" onclick="goTo('profile')">
+        <svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="7" r="4" stroke="#504f5e" stroke-width="1.8"/><path d="M2 19C2 15.134 6.134 12 11 12C15.866 12 20 15.134 20 19" stroke="#504f5e" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div><!-- end #home -->
+
+  <!-- ══════════════════ PRODUCT DETAIL ══════════════════ -->
+  <div class="screen" id="detail">
+    <div class="scroll-body" style="padding-bottom:90px">
+
+      <!-- Hero image -->
+      <div class="hero">
+        <img src="http://localhost:3845/assets/547742b4c18818e5a58ea164089e62dd2af6ac9b.png" alt="TERREX URBAN LOW" />
+        <div class="hero-actions">
+          <button class="icon-btn" onclick="goTo('home')">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 3L5 8L10 13" stroke="#f1f0f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="icon-btn">
+            <svg viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 3H5.5L7 14H17L19 7H7" stroke="#f1f0f2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="9" cy="18" r="1.5" fill="#f1f0f2"/>
+              <circle cx="16" cy="18" r="1.5" fill="#f1f0f2"/>
+            </svg>
+          </button>
+        </div>
+        <div class="pagination">
+          <div class="dot active"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+
+      <!-- Info panel -->
+      <div class="info-panel">
+        <div class="prod-header">
+          <div>
+            <h2>TERREX URBAN LOW</h2>
+            <p class="prod-cat-tag">Hiking</p>
+          </div>
+          <button class="love-btn" onclick="showFavToast()">
+            <svg viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 17C10 17 1 11.5 1 5.5C1 3.015 3.015 1 5.5 1C7.2 1 8.7 2 10 3.5C11.3 2 12.8 1 14.5 1C16.985 1 19 3.015 19 5.5C19 11.5 10 17 10 17Z"
+                    fill="#6c5ecf" stroke="#6c5ecf" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Price -->
+        <div class="price-row">
+          <span class="price-label">Price starts from</span>
+          <span class="price-val">$143,98</span>
+        </div>
+
+        <!-- Description -->
+        <p class="desc-title">Description</p>
+        <p class="desc-text">
+          Unpaved trails and mixed surfaces are easy when you have the traction and support you need. Casual enough for the daily commute.
+        </p>
+
+        <!-- Similar Shoes -->
+        <p class="similar-title">Fimiliar Shoes</p>
+        <div class="similar-scroll">
+          <div class="similar-thumb">
+            <img src="http://localhost:3845/assets/053b422963c96b550e8e56b63e16f7d7fcace2cd.png" alt="" />
+          </div>
+          <div class="similar-thumb">
+            <img src="http://localhost:3845/assets/bfad75f4494bbbe206b22a492015f524c0ba7031.png" alt="" />
+          </div>
+          <div class="similar-thumb">
+            <img src="http://localhost:3845/assets/4f822ac248263e9e60512ada98a2be06d936ccfa.png" alt="" />
+          </div>
+          <div class="similar-thumb">
+            <img src="http://localhost:3845/assets/9ba1d29a04dfb0a88b387bcd32e47a83a001d01d.png" alt="" />
+          </div>
+          <div class="similar-thumb">
+            <img src="http://localhost:3845/assets/547742b4c18818e5a58ea164089e62dd2af6ac9b.png" alt="" />
+          </div>
+          <div class="similar-thumb">
+            <img src="http://localhost:3845/assets/350a242b2011c545b5a3ea21f8faf8efb5e855ee.png" alt="" />
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end scroll-body -->
+
+    <!-- Bottom CTA -->
+    <div class="detail-bottom">
+      <button class="chat-btn" onclick="goTo('chat-talk')">
+        <svg viewBox="0 0 23 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 2H21C22.1 2 23 2.9 23 4V15C23 16.1 22.1 17 21 17H8L2 22V4C2 2.9 2.9 2 4 2H2Z"
+                stroke="#6c5ecf" stroke-width="1.8" stroke-linejoin="round"/>
+          <circle cx="7" cy="10" r="1.2" fill="#6c5ecf"/>
+          <circle cx="12" cy="10" r="1.2" fill="#6c5ecf"/>
+          <circle cx="17" cy="10" r="1.2" fill="#6c5ecf"/>
+        </svg>
+      </button>
+      <button class="add-cart-btn" onclick="showDetailModal()">Add to Cart</button>
+    </div>
+
+    <!-- Favorite toast -->
+    <div id="fav-toast" style="position:absolute;top:20px;left:30px;right:30px;background:#38abbe;border-radius:12px;padding:12px 16px;display:none;z-index:30;text-align:center;">
+      <span style="font-family:'Poppins',sans-serif;font-size:12px;color:#ecedef;letter-spacing:.12px;">Has been added to the favorite menu</span>
+    </div>
+
+    <!-- Add to Cart success modal overlay -->
+    <div id="detail-cart-modal" style="position:absolute;inset:0;background:rgba(26,25,34,.82);display:none;align-items:center;justify-content:center;z-index:20;">
+      <div style="width:315px;background:#242231;border-radius:30px;padding:30px 24px 28px;position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;">
+        <button onclick="hideDetailModal()" style="position:absolute;left:20px;top:20px;background:none;border:none;cursor:pointer;padding:4px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="#f1f0f2" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <img src="http://localhost:3845/assets/8c5c8c5bc32a18bace3395daf2c661e42953c81c.svg" alt="" style="width:100px;height:100px;object-fit:contain;margin-bottom:6px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div style="display:none;width:100px;height:100px;border-radius:50%;border:3px solid #38b2c8;align-items:center;justify-content:center;margin-bottom:6px;">
+          <svg viewBox="0 0 46 38" fill="none" style="width:46px;height:38px;"><path d="M3 20L16 33L43 3" stroke="#38b2c8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p style="font-family:'Poppins',sans-serif;font-size:18px;font-weight:600;color:#f1f0f2;letter-spacing:.18px;margin:0;">Hurray :)</p>
+        <p style="font-family:'Poppins',sans-serif;font-size:14px;color:#999;letter-spacing:.14px;margin:0;">Item added successfully</p>
+        <button onclick="hideDetailModal();goTo('cart')" style="margin-top:10px;background:#6c5ecf;border:none;border-radius:12px;padding:10px 28px;font-family:'Poppins',sans-serif;font-size:16px;font-weight:500;color:#f1f0f2;cursor:pointer;">View My Cart</button>
+      </div>
+    </div>
+  </div><!-- end #detail -->
+
+
+  <!-- ══════════════════ CHAT TALK ══════════════════ -->
+  <div class="screen" id="chat-talk" style="display:flex;flex-direction:column;background:#242231;">
+    <div class="chat-top">
+      <button onclick="goTo('detail')" style="background:none;border:none;cursor:pointer;padding:6px 10px 6px 0;flex-shrink:0;">
+        <svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7L7 13" stroke="#f1f0f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="shop-logo">
+        <img src="http://localhost:3845/assets/ec1705e1b01382bb4749906e532622b2f7f0cddc.svg" alt="shop"
+             onerror="this.style.display='none';this.parentNode.style.background='#6c5ecf'" />
+      </div>
+      <div class="shop-info">
+        <p class="shop-name">Shoe Store</p>
+        <p class="shop-status">● Online</p>
+      </div>
+    </div>
+
+    <div class="chat-area">
+      <!-- product card shared by seller -->
+      <div class="chat-product-card">
+        <div class="cp-inner">
+          <div class="cp-thumb">
+            <img src="http://localhost:3845/assets/547742b4c18818e5a58ea164089e62dd2af6ac9b.png" alt="" />
+          </div>
+          <div>
+            <p class="cp-name">Terrex Urban<br>Low</p>
+            <p class="cp-price">$143,98</p>
+          </div>
+        </div>
+        <div class="cp-actions">
+          <button class="cp-btn-cart" onclick="goTo('detail-success')">Add to Cart</button>
+          <button class="cp-btn-buy" onclick="goTo('checkout')">Buy Now</button>
+        </div>
+      </div>
+      <!-- user message -->
+      <div class="bubble-right">Hi, This item is still available?</div>
+      <!-- store reply -->
+      <div class="bubble-left">Good night, This item is only available in size 42 and 43</div>
+    </div>
+
+    <div class="chat-input-bar">
+      <input class="chat-input-field" type="text" placeholder="Type Message..." />
+      <button class="chat-send-btn">
+        <svg viewBox="0 0 18 18" fill="none"><path d="M16 2L2 8L8 10L10 16L16 2Z" fill="#f1f0f2"/></svg>
+      </button>
+    </div>
+  </div><!-- end #chat-talk -->
+
+  <!-- ══════════════════ CHECKOUT ══════════════════ -->
+  <div class="screen" id="checkout" style="display:flex;flex-direction:column;">
+    <div class="cart-top">
+      <button class="cart-back" onclick="goTo('cart')">
+        <svg viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7L7 13" stroke="#f1f0f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h2>Checkout Details</h2>
+    </div>
+    <div class="checkout-panel">
+
+      <!-- List Items -->
+      <p class="checkout-section-title">List Items</p>
+      <div class="checkout-item-card">
+        <div class="co-thumb">
+          <img src="http://localhost:3845/assets/d86a0b6e779efbcda981d8c1ae1bd79571b1b164.png" alt="" />
+        </div>
+        <div class="co-info">
+          <p class="co-name">Terrex Urban Low</p>
+          <p class="co-price">$143,98</p>
+        </div>
+        <p class="co-qty">2 Items</p>
+      </div>
+
+      <!-- Address Details -->
+      <p class="checkout-section-title">Address Details</p>
+      <div class="address-card">
+        <div class="address-row">
+          <div class="addr-icon" style="background:#2b2937;">
+            <img src="http://localhost:3845/assets/8aeb90c571a00986934f0a163f2361218af9de32.svg" alt="" style="width:24px;height:24px;object-fit:contain;"
+                 onerror="this.replaceWith(document.createTextNode(''))" />
+          </div>
+          <div class="addr-info">
+            <p class="addr-label">Store Location</p>
+            <p class="addr-value">Adidas Core</p>
+          </div>
+        </div>
+        <div class="addr-divider"></div>
+        <div class="address-row">
+          <div class="addr-icon" style="background:#2b2937;">
+            <img src="http://localhost:3845/assets/21685c87dbcda9270be3a2eee096e6613848f275.svg" alt="" style="width:24px;height:24px;object-fit:contain;"
+                 onerror="this.replaceWith(document.createTextNode(''))" />
+          </div>
+          <div class="addr-info">
+            <p class="addr-label">Your Address</p>
+            <p class="addr-value">Mars</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Summary -->
+      <p class="checkout-section-title">Payment Summary</p>
+      <div class="payment-card">
+        <div class="pay-row">
+          <span class="pay-label">Product Quantity</span>
+          <span class="pay-value">2 Items</span>
+        </div>
+        <div class="pay-row">
+          <span class="pay-label">Product Price</span>
+          <span class="pay-value">$287,96</span>
+        </div>
+        <div class="pay-row">
+          <span class="pay-label">Shipping</span>
+          <span class="pay-value">Free</span>
+        </div>
+        <div class="pay-divider"></div>
+        <div class="pay-row pay-total">
+          <span class="pay-label">Total</span>
+          <span class="pay-value">$287.96</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="checkout-footer">
+      <button class="checkout-now-btn" onclick="goTo('checkout-success')">Checkout Now</button>
+    </div>
+  </div><!-- end #checkout -->
+
+  <!-- ══════════════════ CHECKOUT SUCCESS ══════════════════ -->
+  <div class="screen" id="checkout-success" style="background:#242231;display:flex;flex-direction:column;">
+    <div class="page-top" style="background:#1f1d2b;">
+      <h2>Checkout Success</h2>
+    </div>
+    <div class="success-wrap">
+      <img class="success-icon" src="http://localhost:3845/assets/61dff5f794bee8dc7af5dface0169150f6743afa.svg" alt=""
+           onerror="this.style.display='none'" />
+      <p class="success-title">You made a transaction</p>
+      <p class="success-sub">Stay at home while we<br>prepare your dream shoes</p>
+      <button class="btn-order-other" onclick="goTo('home')">Order Other Shoes</button>
+      <button class="btn-view-order">View My Order</button>
+    </div>
+  </div><!-- end #checkout-success -->
+
+  <!-- ══════════════════ CART EMPTY ══════════════════ -->
+  <div class="screen" id="cart-empty" style="display:flex;flex-direction:column;">
+    <div class="cart-top">
+      <button class="cart-back" onclick="goTo('home')">
+        <svg viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7L7 13" stroke="#f1f0f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h2>Your Cart</h2>
+    </div>
+    <div class="empty-wrap" style="background:#1f1d2b;">
+      <svg class="empty-icon" viewBox="0 0 80 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 6H17L24 46H64L72 16H24" stroke="#38b2c8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="30" cy="60" r="7" fill="#38b2c8"/>
+        <circle cx="58" cy="60" r="7" fill="#38b2c8"/>
+        <rect x="34" y="26" width="4" height="12" rx="2" fill="#38b2c8"/>
+        <rect x="46" y="26" width="4" height="12" rx="2" fill="#38b2c8"/>
+      </svg>
+      <p class="empty-title">Opss! Your Cart is Empty</p>
+      <p class="empty-sub">Let's find your favorite shoes</p>
+      <button class="btn-explore" onclick="goTo('home')">Explore Store</button>
+    </div>
+  </div><!-- end #cart-empty -->
+
+  <!-- ══════════════════ CART WITH ITEMS ══════════════════ -->
+  <div class="screen" id="cart" style="display:flex;flex-direction:column;background:#242231;">
+    <div class="cart-top">
+      <button class="cart-back" onclick="goTo('home')">
+        <svg viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7L7 13" stroke="#f1f0f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h2>Your Cart</h2>
+    </div>
+    <div class="cart-panel">
+      <div class="cart-item-card">
+        <div class="cart-item-thumb">
+          <img src="http://localhost:3845/assets/d86a0b6e779efbcda981d8c1ae1bd79571b1b164.png" alt="Terrex Urban Low" />
+        </div>
+        <div class="cart-item-info">
+          <p class="cart-item-name">Terrex Urban Low</p>
+          <p class="cart-item-price">$143,98</p>
+          <p class="cart-item-remove">
+            <svg width="10" height="12" viewBox="0 0 10 12" fill="none"><path d="M1 3H9M8 3L7.5 10H2.5L2 3" stroke="#ed6363" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 3V2H6.5V3" stroke="#ed6363" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Remove
+          </p>
+        </div>
+        <div class="cart-qty">
+          <button class="qty-btn add">+</button>
+          <span class="qty-val">1</span>
+          <button class="qty-btn sub">−</button>
+        </div>
+      </div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-subtotal">
+        <span class="s-label">Subtotal</span>
+        <span class="s-amount">$143,98</span>
+      </div>
+      <button class="checkout-btn" onclick="goTo('checkout')">
+        Continue to Checkout
+        <svg viewBox="0 0 12 12" fill="none"><path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div><!-- end #cart -->
+
+  <!-- ══════════════════ DETAIL SUCCESS POPUP ══════════════════ -->
+  <div class="screen" id="detail-success">
+    <!-- hero -->
+    <div class="hero">
+      <img src="http://localhost:3845/assets/547742b4c18818e5a58ea164089e62dd2af6ac9b.png" alt="TERREX URBAN LOW" />
+      <div class="hero-actions">
+        <button class="icon-btn" onclick="goTo('home')">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="#f1f0f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn">
+          <svg viewBox="0 0 20 22" fill="none"><path d="M3 3H5.5L7 14H17L19 7H7" stroke="#f1f0f2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="18" r="1.5" fill="#f1f0f2"/><circle cx="16" cy="18" r="1.5" fill="#f1f0f2"/></svg>
+        </button>
+      </div>
+      <div class="pagination">
+        <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+    <!-- info panel (dimmed) -->
+    <div class="info-panel" style="opacity:.4;pointer-events:none;">
+      <div class="prod-header">
+        <div><h2>TERREX URBAN LOW</h2><p class="prod-cat-tag">Hiking</p></div>
+        <button class="love-btn" style="opacity:0"></button>
+      </div>
+      <div class="price-row">
+        <span class="price-label">Price starts from</span>
+        <span class="price-val">$143,98</span>
+      </div>
+      <p class="desc-title">Description</p>
+      <p class="desc-text">Unpaved trails and mixed surfaces are easy when you have the traction and support you need.</p>
+    </div>
+    <!-- success modal overlay -->
+    <div class="modal-overlay">
+      <div class="modal-card">
+        <button class="modal-close-btn" onclick="goTo('detail')">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="#f1f0f2" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="modal-icon-ring">
+          <svg viewBox="0 0 46 38" fill="none"><path d="M3 20L16 33L43 3" stroke="#38b2c8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="modal-title">Hurray :)</p>
+        <p class="modal-sub">Item added successfully</p>
+        <button class="modal-cta" onclick="goTo('cart')">View My Cart</button>
+      </div>
+    </div>
+  </div><!-- end #detail-success -->
+
+  <!-- ══════════════════ CHAT ══════════════════ -->
+  <div class="screen" id="chat" style="background:#242231; display:flex; flex-direction:column;">
+    <div class="page-top" style="background:#1f1d2b; border-bottom:1px solid #2b2937;">
+      <h2>Message Support</h2>
+    </div>
+    <div class="empty-wrap">
+      <img class="empty-icon" src="http://localhost:3845/assets/1d5dad5940e17db1dcf9fb65721b7644ef1dc928.svg" alt=""
+           onerror="this.replaceWith(document.createTextNode(''))" />
+      <p class="empty-title">Opss no message yet?</p>
+      <p class="empty-sub">You have never done a transaction</p>
+      <button class="btn-explore" onclick="goTo('home')">Explore Store</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="nav-btn" onclick="goTo('home')">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M2 9.5L11 2L20 9.5V20H14V14H8V20H2V9.5Z" stroke="#504f5e" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="nav-btn active">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M3 3H19C20.1 3 21 3.9 21 5V15C21 16.1 20.1 17 19 17H7L3 21V5C3 3.9 3.9 3 5 3H3Z" stroke="#6c5ecf" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="cart-fab" onclick="goTo('cart-empty')">
+        <svg viewBox="0 0 26 26" fill="none"><path d="M3 3H5.5L7 14H19L21 7H7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="19" r="2" fill="white"/><circle cx="17" cy="19" r="2" fill="white"/></svg>
+      </button>
+      <button class="nav-btn" onclick="goTo('favorite')">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M11 19C11 19 2 13.5 2 7.5C2 5 4 3 6.5 3C8.2 3 9.7 4 11 5.5C12.3 4 13.8 3 15.5 3C18 3 20 5 20 7.5C20 13.5 11 19 11 19Z" stroke="#504f5e" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="nav-btn" onclick="goTo('profile')">
+        <svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="7" r="4" stroke="#504f5e" stroke-width="1.8"/><path d="M2 19C2 15.134 6.134 12 11 12C15.866 12 20 15.134 20 19" stroke="#504f5e" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div><!-- end #chat -->
+
+  <!-- ══════════════════ FAVORITE ══════════════════ -->
+  <div class="screen" id="favorite" style="display:flex; flex-direction:column;">
+    <div class="page-top">
+      <h2>Favorite Shoes</h2>
+    </div>
+    <div class="empty-wrap">
+      <!-- teal heart SVG inline -->
+      <svg class="empty-icon" viewBox="0 0 74 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M37 61C37 61 2 39.5 2 18C2 8.611 9.611 1 19 1C26 1 32 5 37 11C42 5 48 1 55 1C64.389 1 72 8.611 72 18C72 39.5 37 61 37 61Z"
+              fill="#38b2c8"/>
+      </svg>
+      <p class="empty-title">You don't have dream shoes?</p>
+      <p class="empty-sub">Let's find your favorite shoes</p>
+      <button class="btn-explore" onclick="goTo('home')">Explore Store</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="nav-btn" onclick="goTo('home')">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M2 9.5L11 2L20 9.5V20H14V14H8V20H2V9.5Z" stroke="#504f5e" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="nav-btn" onclick="goTo('chat')">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M3 3H19C20.1 3 21 3.9 21 5V15C21 16.1 20.1 17 19 17H7L3 21V5C3 3.9 3.9 3 5 3H3Z" stroke="#504f5e" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="cart-fab" onclick="goTo('cart-empty')">
+        <svg viewBox="0 0 26 26" fill="none"><path d="M3 3H5.5L7 14H19L21 7H7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="19" r="2" fill="white"/><circle cx="17" cy="19" r="2" fill="white"/></svg>
+      </button>
+      <button class="nav-btn active">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M11 19C11 19 2 13.5 2 7.5C2 5 4 3 6.5 3C8.2 3 9.7 4 11 5.5C12.3 4 13.8 3 15.5 3C18 3 20 5 20 7.5C20 13.5 11 19 11 19Z" fill="#6c5ecf" stroke="#6c5ecf" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="nav-btn" onclick="goTo('profile')">
+        <svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="7" r="4" stroke="#504f5e" stroke-width="1.8"/><path d="M2 19C2 15.134 6.134 12 11 12C15.866 12 20 15.134 20 19" stroke="#504f5e" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div><!-- end #favorite -->
+
+  <!-- ══════════════════ PROFILE ══════════════════ -->
+  <div class="screen" id="profile" style="display:flex; flex-direction:column;">
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <img src="http://localhost:3845/assets/356bc59df1aeb5350268f69bcced6758fc86b45f.svg" alt="avatar"
+             onerror="this.style.display='none';this.parentNode.style.background='#6c5ecf'" />
+      </div>
+      <div class="profile-name">
+        <h2>Hallo, Alex</h2>
+        <p>@alexkeinn</p>
+      </div>
+      <button class="exit-btn" onclick="goTo('signin')">
+        <svg viewBox="0 0 18 18" fill="none"><path d="M13 9H3M3 9L6 6M3 9L6 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 3H15C15.6 3 16 3.4 16 4V14C16 14.6 15.6 15 15 15H9" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="profile-panel" style="flex:1; overflow-y:auto; scrollbar-width:none;">
+      <p class="menu-section-label">Account</p>
+      <div class="menu-item" onclick="goTo('edit-profile')">
+        <span>Edit Profile</span>
+        <svg class="chevron" viewBox="0 0 8 14" fill="none"><path d="M1 1L7 7L1 13" stroke="#504f5e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="menu-item">
+        <span>Your Orders</span>
+        <svg class="chevron" viewBox="0 0 8 14" fill="none"><path d="M1 1L7 7L1 13" stroke="#504f5e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="menu-item">
+        <span>Help</span>
+        <svg class="chevron" viewBox="0 0 8 14" fill="none"><path d="M1 1L7 7L1 13" stroke="#504f5e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <p class="menu-section-label">General</p>
+      <div class="menu-item">
+        <span>Privacy &amp; Policy</span>
+        <svg class="chevron" viewBox="0 0 8 14" fill="none"><path d="M1 1L7 7L1 13" stroke="#504f5e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="menu-item">
+        <span>Term of Service</span>
+        <svg class="chevron" viewBox="0 0 8 14" fill="none"><path d="M1 1L7 7L1 13" stroke="#504f5e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="menu-item">
+        <span>Rate App</span>
+        <svg class="chevron" viewBox="0 0 8 14" fill="none"><path d="M1 1L7 7L1 13" stroke="#504f5e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="nav-btn" onclick="goTo('home')">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M2 9.5L11 2L20 9.5V20H14V14H8V20H2V9.5Z" stroke="#504f5e" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="nav-btn" onclick="goTo('chat')">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M3 3H19C20.1 3 21 3.9 21 5V15C21 16.1 20.1 17 19 17H7L3 21V5C3 3.9 3.9 3 5 3H3Z" stroke="#504f5e" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="cart-fab" onclick="goTo('cart-empty')">
+        <svg viewBox="0 0 26 26" fill="none"><path d="M3 3H5.5L7 14H19L21 7H7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="19" r="2" fill="white"/><circle cx="17" cy="19" r="2" fill="white"/></svg>
+      </button>
+      <button class="nav-btn" onclick="goTo('favorite')">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M11 19C11 19 2 13.5 2 7.5C2 5 4 3 6.5 3C8.2 3 9.7 4 11 5.5C12.3 4 13.8 3 15.5 3C18 3 20 5 20 7.5C20 13.5 11 19 11 19Z" stroke="#504f5e" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="nav-btn active">
+        <svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="7" r="4" stroke="#6c5ecf" stroke-width="1.8"/><path d="M2 19C2 15.134 6.134 12 11 12C15.866 12 20 15.134 20 19" stroke="#6c5ecf" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div><!-- end #profile -->
+
+  <!-- ══════════════════ EDIT PROFILE ══════════════════ -->
+  <div class="screen" id="edit-profile" style="display:flex; flex-direction:column;">
+    <div class="ep-header">
+      <button class="ep-close" onclick="goTo('profile')">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M2 2L14 14M14 2L2 14" stroke="#f1f0f2" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <h2>Edit Profile</h2>
+      <button class="ep-check">
+        <svg viewBox="0 0 18 14" fill="none"><path d="M1 7L6.5 12.5L17 1" stroke="#6c5ecf" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <div style="flex:1; overflow-y:auto; scrollbar-width:none; background:#1f1d2b;">
+      <div style="background:#242231; border-radius:30px 30px 0 0; min-height:100%; padding-bottom:40px;">
+      <div class="ep-avatar-wrap">
+        <img src="http://localhost:3845/assets/721751cbbdcdaa32a65daa4e496134dc63c438cd.svg" alt="avatar"
+             onerror="this.style.background='#6c5ecf';this.style.borderRadius='50%'" />
+      </div>
+
+      <div class="ep-field">
+        <p class="ep-label">Name</p>
+        <p class="ep-value">Alex keinnzal</p>
+      </div>
+      <div class="ep-field">
+        <p class="ep-label">Username</p>
+        <p class="ep-value">@alexkeinn</p>
+      </div>
+      <div class="ep-field">
+        <p class="ep-label">Email Address</p>
+        <p class="ep-value">alex.kein@gmail.com</p>
+      </div>
+      <div class="ep-field">
+        <p class="ep-label">Phone Number</p>
+        <p class="ep-value">6289631452165</p>
+      </div>
+      </div><!-- end rounded panel -->
+    </div>
+  </div><!-- end #edit-profile -->
+
+</div><!-- end .phone -->
+
+<script>
+  // ── Navigation ──
+  function goTo(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    // reset scroll
+    const body = document.getElementById(id).querySelector('.scroll-body');
+    if (body) body.scrollTop = 0;
+    // hide detail overlays when leaving
+    const modal = document.getElementById('detail-cart-modal');
+    if (modal) modal.style.display = 'none';
+    const toast = document.getElementById('fav-toast');
+    if (toast) toast.style.display = 'none';
+  }
+
+  // ── Category chips ──
+  function setCategory(el) {
+    el.closest('.category-strip').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // ── Auto-advance splash ──
+  setTimeout(() => goTo('signin'), 2200);
+
+  // ── Detail: Add to Cart modal ──
+  function showDetailModal() {
+    const m = document.getElementById('detail-cart-modal');
+    m.style.display = 'flex';
+  }
+  function hideDetailModal() {
+    const m = document.getElementById('detail-cart-modal');
+    m.style.display = 'none';
+  }
+
+  // ── Detail: Favorite toast ──
+  function showFavToast() {
+    const t = document.getElementById('fav-toast');
+    t.style.display = 'block';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.style.display = 'none'; }, 2500);
+  }
+</script>
+</body>
+</html>

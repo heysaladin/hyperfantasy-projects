@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StoreGG - Checkout Completed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #ffffff;
+      color: #0c145a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .card {
+      width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .illustration {
+      width: 342px;
+      height: 300px;
+      margin-bottom: 40px;
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #0c145a;
+      margin-bottom: 16px;
+    }
+
+    .page-desc {
+      font-size: 18px;
+      font-weight: 400;
+      color: #0c145a;
+      line-height: 32px;
+      width: 344px;
+      margin-bottom: 40px;
+    }
+
+    .btn-primary {
+      display: block;
+      width: 240px;
+      height: 50px;
+      background: #4d17e2;
+      color: #ffffff;
+      border-radius: 100px;
+      font-weight: 500;
+      font-size: 18px;
+      font-family: 'Poppins', sans-serif;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      line-height: 50px;
+      margin-bottom: 16px;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover { background: #3b10c4; }
+
+    .btn-secondary {
+      display: block;
+      width: 240px;
+      height: 50px;
+      background: #e7eaf5;
+      color: #0c145a;
+      border-radius: 100px;
+      font-weight: 400;
+      font-size: 18px;
+      font-family: 'Poppins', sans-serif;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      line-height: 50px;
+      transition: background 0.2s;
+    }
+
+    .btn-secondary:hover { background: #d5d9ef; }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      body { align-items: flex-start; }
+      .card {
+        width: 100%;
+        padding: 60px 24px;
+      }
+      .illustration {
+        width: 100%;
+        max-width: 270px;
+        height: auto;
+      }
+      .page-title { font-size: 26px; }
+      .page-desc { width: 100%; font-size: 16px; line-height: 28px; }
+      .btn-primary, .btn-secondary {
+        width: 100%;
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <img class="illustration" src="http://localhost:3845/assets/611cb62ea8d076502c73a0e17ccee22796c604e3.svg" alt="Checkout Completed Illustration">
+
+    <h1 class="page-title">Checkout Completed</h1>
+    <p class="page-desc">Kami akan periksa pembayaran Anda dan menghubungi via WhatsApp</p>
+
+    <a href="#" class="btn-primary">My Dashboard</a>
+    <a href="#" class="btn-secondary">WhatsApp ke Admin</a>
+  </div>
+
+</body>
+</html>

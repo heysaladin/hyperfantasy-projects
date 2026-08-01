@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StoreGG - Sign Up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #ffffff;
+      color: #0c145a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .card {
+      width: 437px;
+      display: flex;
+      flex-direction: column;
+      padding: 60px 0;
+    }
+
+    .logo-link {
+      display: inline-block;
+      margin-bottom: 50px;
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #0c145a;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: #0c145a;
+      line-height: 32px;
+      margin-bottom: 40px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .form-label {
+      font-size: 18px;
+      font-weight: 500;
+      color: #0c145a;
+    }
+
+    .pill-input {
+      width: 100%;
+      height: 50px;
+      border: 1px solid #0c145a;
+      border-radius: 100px;
+      padding: 0 26px;
+      font-size: 18px;
+      font-family: 'Poppins', sans-serif;
+      color: #0c145a;
+      outline: none;
+      background: transparent;
+      transition: border-color 0.2s;
+    }
+
+    .pill-input::placeholder { color: #ccd0dd; }
+    .pill-input:focus { border-color: #4d17e2; }
+
+    .btn-primary {
+      display: block;
+      width: 100%;
+      height: 50px;
+      background: #4d17e2;
+      color: #ffffff;
+      border-radius: 100px;
+      font-weight: 500;
+      font-size: 18px;
+      font-family: 'Poppins', sans-serif;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      line-height: 50px;
+      margin-bottom: 16px;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover { background: #3b10c4; }
+
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      height: 50px;
+      background: #e7eaf5;
+      color: #0c145a;
+      border-radius: 100px;
+      font-weight: 400;
+      font-size: 18px;
+      font-family: 'Poppins', sans-serif;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      line-height: 50px;
+      transition: background 0.2s;
+    }
+
+    .btn-secondary:hover { background: #d5d9ef; }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      body {
+        align-items: flex-start;
+        padding: 0;
+      }
+      .card {
+        width: 100%;
+        padding: 40px 24px 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <!-- Logo -->
+    <a href="landing.html" class="logo-link">
+      <div style="position:relative;width:60px;height:60px;">
+        <div style="position:absolute;inset:0;-webkit-mask-image:url(assets/images/logo-mask.png);mask-image:url(assets/images/logo-mask.png);-webkit-mask-size:100% 100%;mask-size:100% 100%;">
+          <img src="assets/images/logo-bg.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+        <div style="position:absolute;inset:0;-webkit-mask-image:url(assets/images/logo-mask.png);mask-image:url(assets/images/logo-mask.png);-webkit-mask-size:100% 100%;mask-size:100% 100%;">
+          <img src="assets/images/logo-vector.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+      </div>
+    </a>
+
+    <h1 class="page-title">Sign Up</h1>
+    <p class="page-subtitle">Daftar dan bergabung dengan kami</p>
+
+    <form action="signup-photo.html" method="get">
+      <div class="form-group">
+        <label class="form-label" for="fullname">Full Name</label>
+        <input type="text" id="fullname" name="fullname" class="pill-input" placeholder="Write your name">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input type="email" id="email" name="email" class="pill-input" placeholder="Enter your email address">
+      </div>
+
+      <div class="form-group" style="margin-bottom:32px;">
+        <label class="form-label" for="password">Password</label>
+        <input type="password" id="password" name="password" class="pill-input" placeholder="Your password">
+      </div>
+
+      <button type="submit" class="btn-primary">Continue</button>
+    </form>
+
+    <a href="signin.html" class="btn-secondary">Sign In</a>
+  </div>
+
+</body>
+</html>

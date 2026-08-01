@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StoreGG - Sign Up Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #ffffff;
+      color: #0c145a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .card {
+      width: 437px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 0;
+    }
+
+    /* ===== PHOTO UPLOAD ===== */
+    .photo-wrapper {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    .photo-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #f0f1fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .photo-circle img.avatar-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .photo-circle img.avatar-photo.visible {
+      display: block;
+    }
+
+    .upload-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .photo-circle.has-photo .upload-icon-wrapper {
+      display: none;
+    }
+
+    #photo-input {
+      display: none;
+    }
+
+    /* ===== USER INFO ===== */
+    .user-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0c145a;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+
+    .user-email {
+      font-size: 18px;
+      font-weight: 400;
+      color: #0c145a;
+      line-height: 32px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    /* ===== FORM ===== */
+    .form-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .form-label {
+      font-size: 18px;
+      font-weight: 500;
+      color: #0c145a;
+    }
+
+    .select-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .pill-select {
+      width: 100%;
+      height: 50px;
+      border: 1px solid #0c145a;
+      border-radius: 100px;
+      padding: 0 26px;
+      font-size: 18px;
+      font-family: 'Poppins', sans-serif;
+      color: #0c145a;
+      outline: none;
+      background: transparent;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .select-arrow {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      pointer-events: none;
+    }
+
+    .btn-primary {
+      display: block;
+      width: 100%;
+      height: 50px;
+      background: #4d17e2;
+      color: #ffffff;
+      border-radius: 100px;
+      font-weight: 500;
+      font-size: 18px;
+      font-family: 'Poppins', sans-serif;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      line-height: 50px;
+      margin-bottom: 24px;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover { background: #3b10c4; }
+
+    .terms-link {
+      font-size: 18px;
+      font-weight: 400;
+      color: #0c145a;
+      text-decoration: underline;
+      text-align: center;
+    }
+
+    .terms-link:hover { color: #4d17e2; }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      body {
+        align-items: flex-start;
+        padding: 0;
+      }
+      .card {
+        width: 100%;
+        padding: 40px 24px 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <!-- Photo Upload -->
+    <div class="photo-wrapper" onclick="document.getElementById('photo-input').click()">
+      <div class="photo-circle" id="photoCircle">
+        <div class="upload-icon-wrapper">
+          <img class="upload-icon" src="http://localhost:3845/assets/bae0b56c6e84fcaaf1ddc9bec2ea7c016d446794.svg" alt="Upload">
+        </div>
+        <img class="avatar-photo" id="avatarPhoto" src="" alt="Profile Photo">
+      </div>
+    </div>
+    <input type="file" id="photo-input" accept="image/*">
+
+    <p class="user-name">Shayna Anne</p>
+    <p class="user-email">shayna@anne.com</p>
+
+    <!-- Favorite Game -->
+    <div class="form-group">
+      <label class="form-label">Favorite Game</label>
+      <div class="select-wrapper">
+        <select class="pill-select">
+          <option value="" disabled selected>Select Category</option>
+          <option value="mobile">Mobile Legends</option>
+          <option value="fps">Call of Duty</option>
+          <option value="battle">PUBG Mobile</option>
+          <option value="rpg">Genshin Impact</option>
+        </select>
+        <img class="select-arrow" src="http://localhost:3845/assets/9239992be5ea57ce7dd8f1909ef8ccf457117532.svg" alt="">
+      </div>
+    </div>
+
+    <a href="signup-success.html" class="btn-primary">Create My Account</a>
+    <a href="#" class="terms-link">Terms &amp; Conditions</a>
+  </div>
+
+  <script>
+    const photoInput = document.getElementById('photo-input');
+    const avatarPhoto = document.getElementById('avatarPhoto');
+    const photoCircle = document.getElementById('photoCircle');
+
+    photoInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        avatarPhoto.src = e.target.result;
+        avatarPhoto.classList.add('visible');
+        photoCircle.querySelector('.upload-icon-wrapper').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    });
+  </script>
+
+</body>
+</html>

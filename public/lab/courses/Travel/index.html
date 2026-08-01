@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Travel App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #dce6ef;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: #fff;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.18);
+    }
+
+    /* ─── SCREENS ─────────────────────────────────── */
+    .screen {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(.77,0,.18,1), opacity 0.4s;
+    }
+
+    .screen.hidden {
+      transform: translateX(100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ─── SCREEN 1 — SPLASH ────────────────────────── */
+    #splash {
+      background: #1a1a2e;
+    }
+
+    .splash-bg {
+      position: absolute;
+      inset: 0;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+
+    .splash-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 35%, rgba(10,12,26,0.92) 100%);
+    }
+
+    .splash-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0 32px 52px;
+    }
+
+    .splash-content h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 14px;
+      letter-spacing: -0.5px;
+    }
+
+    .splash-content p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+
+    .btn-start {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #1acf8f;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 16px 32px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.2px;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-start:active {
+      transform: scale(0.97);
+    }
+
+    .btn-start svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ─── SCREEN 2 — HOME ──────────────────────────── */
+    #home {
+      background: #f4f7fc;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    #home::-webkit-scrollbar { display: none; }
+
+    .home-header {
+      background: #fff;
+      padding: 52px 24px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 0 #eef1f7;
+    }
+
+    .home-header-left h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #12183a;
+      letter-spacing: -0.4px;
+    }
+
+    .home-header-left span {
+      font-size: 13px;
+      color: #9ba3b8;
+      font-weight: 500;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2.5px solid #1acf8f;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      padding: 20px 24px 0;
+      background: #fff;
+    }
+
+    .tab {
+      padding: 9px 22px;
+      border-radius: 50px;
+      font-size: 13.5px;
+      font-weight: 600;
+      border: 1.5px solid #e2e7f0;
+      background: transparent;
+      color: #8891a8;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      background: #12183a;
+      color: #fff;
+      border-color: #12183a;
+    }
+
+    /* Section */
+    .section {
+      padding: 28px 24px 0;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #12183a;
+      margin-bottom: 16px;
+      letter-spacing: -0.2px;
+    }
+
+    /* City list */
+    .city-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .city-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      padding: 0;
+      box-shadow: 0 2px 12px rgba(18,24,58,0.06);
+      position: relative;
+    }
+
+    .city-card-img {
+      width: 88px;
+      height: 76px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border-radius: 14px;
+      margin: 8px 0 8px 10px;
+    }
+
+    .city-card-info {
+      flex: 1;
+    }
+
+    .city-card-info h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #12183a;
+      margin-bottom: 4px;
+    }
+
+    .city-card-info p {
+      font-size: 12.5px;
+      color: #9ba3b8;
+      font-weight: 500;
+    }
+
+    .badge-hot {
+      position: absolute;
+      top: 10px;
+      left: 62px;
+      background: #12183a;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 3px 7px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .city-card-arrow {
+      width: 32px;
+      height: 32px;
+      background: #f4f7fc;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 14px;
+      flex-shrink: 0;
+    }
+
+    .city-card-arrow svg {
+      width: 14px;
+      height: 14px;
+      color: #12183a;
+    }
+
+    /* Most Visited */
+    .most-visited-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding-bottom: 40px;
+    }
+
+    .visit-card {
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(18,24,58,0.06);
+    }
+
+    .visit-card-img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+    }
+
+    .visit-card-body {
+      padding: 12px 14px 14px;
+    }
+
+    .visit-card-body h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #12183a;
+      margin-bottom: 2px;
+    }
+
+    .visit-card-body .category {
+      font-size: 11.5px;
+      color: #9ba3b8;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .stars {
+      display: flex;
+      gap: 2px;
+    }
+
+    .stars svg {
+      width: 13px;
+      height: 13px;
+      fill: #f5a623;
+    }
+
+    /* Back button on home */
+    .back-btn {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 50%;
+      display: none;
+    }
+
+    /* ─── RESPONSIVE: show as page on mobile ───────── */
+    @media (max-width: 480px) {
+      body {
+        background: #f4f7fc;
+        align-items: flex-start;
+      }
+      .phone {
+        width: 100%;
+        height: 100dvh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- ── SCREEN 1: SPLASH ── -->
+  <div class="screen" id="splash">
+    <img
+      class="splash-bg"
+      src="https://images.unsplash.com/photo-1502784444187-359ac186c5bb?w=800&q=80"
+      alt="Cabin in the mountains"
+    />
+    <div class="splash-overlay"></div>
+    <div class="splash-content">
+      <h1>Discover More</h1>
+      <p>Forget about your job and let's<br>do something new today</p>
+      <button class="btn-start" onclick="goHome()">
+        Get Started
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 2: HOME ── -->
+  <div class="screen hidden" id="home">
+
+    <!-- Header -->
+    <div class="home-header">
+      <div class="home-header-left">
+        <h2>Shayna Anne</h2>
+        <span>Photographer</span>
+      </div>
+      <img
+        class="avatar"
+        src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=200&q=80"
+        alt="Shayna Anne"
+      />
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active">Popular</button>
+      <button class="tab">Newest</button>
+      <button class="tab">Top Rated</button>
+    </div>
+
+    <!-- Explore by City -->
+    <div class="section">
+      <p class="section-title">Explore by City</p>
+      <div class="city-list">
+
+        <div class="city-card">
+          <img class="city-card-img"
+            src="https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=300&q=80"
+            alt="New York" />
+          <div class="city-card-info">
+            <h3>New York</h3>
+            <p>12,500 wisata</p>
+          </div>
+          <div class="city-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="city-card">
+          <img class="city-card-img"
+            src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=300&q=80"
+            alt="Bandung Boss" />
+          <span class="badge-hot">HOT</span>
+          <div class="city-card-info">
+            <h3>Bandung Boss</h3>
+            <p>580 wisata</p>
+          </div>
+          <div class="city-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="city-card">
+          <img class="city-card-img"
+            src="https://images.unsplash.com/photo-1555899434-94d1368aa7af?w=300&q=80"
+            alt="Jakarta" />
+          <div class="city-card-info">
+            <h3>Jakarta</h3>
+            <p>43,600 wisata</p>
+          </div>
+          <div class="city-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Most Visited -->
+    <div class="section">
+      <p class="section-title">Most Visited</p>
+      <div class="most-visited-grid">
+
+        <div class="visit-card">
+          <img class="visit-card-img"
+            src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400&q=80"
+            alt="Stadium Bae" />
+          <div class="visit-card-body">
+            <h3>Stadium Bae</h3>
+            <p class="category">Sport</p>
+            <div class="stars">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="visit-card">
+          <img class="visit-card-img"
+            src="https://images.unsplash.com/photo-1502784444187-359ac186c5bb?w=400&q=80"
+            alt="Rumah Single" />
+          <div class="visit-card-body">
+            <h3>Rumah Single</h3>
+            <p class="category">Nature</p>
+            <div class="stars">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /#home -->
+
+</div><!-- /.phone -->
+
+<script>
+  function goHome() {
+    document.getElementById('splash').classList.add('hidden');
+    document.getElementById('home').classList.remove('hidden');
+  }
+
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>

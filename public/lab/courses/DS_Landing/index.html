@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laracamp — Start Your Developer Journey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple: #7839f3;
+      --purple-light: #f5efff;
+      --purple-border: #ece3fe;
+      --purple-dark: #4d1dab;
+      --green: #31b380;
+      --dark: #211b3d;
+      --gray: #5b5575;
+      --gray-light: #e7e5f4;
+      --bg-light: #f7f7fb;
+    }
+    body { font-family: 'Poppins', sans-serif; color: var(--dark); background: #fff; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: #fff;
+      box-shadow: 0 6px 60px 0 rgba(22,28,51,0.06);
+      height: 80px;
+      display: flex; align-items: center;
+      padding: 0 100px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .nav-logo-icon {
+      width: 32px; height: 32px;
+      background: var(--purple); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon svg { width: 18px; height: 18px; }
+    .nav-logo-text { font-size: 22px; font-weight: 500; color: var(--dark); }
+    .nav-menu { display: flex; gap: 40px; margin: 0 auto 0 60px; list-style: none; }
+    .nav-menu a { text-decoration: none; font-size: 15px; color: var(--dark); }
+    .nav-menu a.active { color: var(--purple); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn-outline {
+      padding: 10px 28px; border-radius: 47px;
+      border: 2px solid var(--purple-border);
+      background: var(--purple-light);
+      color: var(--purple); font-size: 15px; font-weight: 500;
+      cursor: pointer; text-decoration: none; display: inline-block;
+    }
+    .btn-primary {
+      padding: 10px 28px; border-radius: 47px;
+      background: var(--purple);
+      color: #fff; font-size: 15px; font-weight: 500;
+      cursor: pointer; text-decoration: none; display: inline-block;
+      border: none;
+    }
+    .btn-green {
+      padding: 10px 28px; border-radius: 47px;
+      background: var(--green);
+      color: #fff; font-size: 15px; font-weight: 500;
+      cursor: pointer; text-decoration: none; display: inline-block;
+      border: none;
+    }
+    .btn-second {
+      padding: 10px 28px; border-radius: 47px;
+      border: 2px solid var(--purple-border);
+      background: var(--purple-light);
+      color: var(--purple); font-size: 15px; font-weight: 500;
+      cursor: pointer; text-decoration: none; display: inline-block;
+    }
+
+    /* HERO */
+    .hero {
+      padding: 140px 100px 80px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+      align-items: center;
+      max-width: 1440px; margin: 0 auto;
+    }
+    .hero-label { font-size: 14px; font-weight: 600; color: var(--green); letter-spacing: 0.05em; margin-bottom: 16px; }
+    .hero-title { font-size: 52px; font-weight: 600; line-height: 1.15; margin-bottom: 20px; }
+    .hero-title span { color: var(--purple); }
+    .hero-desc { font-size: 15px; color: var(--gray); line-height: 1.8; margin-bottom: 32px; }
+    .hero-img-wrap { position: relative; }
+    .hero-img-wrap img { width: 100%; border-radius: 20px; object-fit: cover; }
+    .hero-card {
+      position: absolute; background: #fff; border-radius: 12px;
+      padding: 16px 20px; box-shadow: 0 8px 40px rgba(120,57,243,0.12);
+      font-size: 13px;
+    }
+    .hero-card-top { top: 20px; left: -30px; }
+    .hero-card-bottom { bottom: 20px; right: -20px; }
+    .hero-card-title { font-weight: 500; color: var(--dark); display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .hero-card-text { color: var(--gray); font-size: 12px; line-height: 1.5; }
+    .check-icon { width: 16px; height: 16px; background: var(--green); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .check-icon::after { content: '✓'; color: #fff; font-size: 9px; }
+
+    /* BRANDS */
+    .brands {
+      display: flex; align-items: center; justify-content: center; gap: 60px;
+      padding: 40px 100px;
+      border-top: 1px solid #f0eef8; border-bottom: 1px solid #f0eef8;
+      max-width: 1440px; margin: 0 auto;
+    }
+    .brands img { height: 28px; opacity: 0.6; filter: grayscale(1); }
+    .brands span { font-size: 20px; font-weight: 700; color: #aaa; letter-spacing: -1px; }
+
+    /* SECTION LABEL */
+    .section-label { font-size: 14px; font-weight: 600; color: var(--green); letter-spacing: 0.05em; text-align: center; margin-bottom: 8px; }
+    .section-title { font-size: 30px; font-weight: 600; color: var(--dark); text-align: center; margin-bottom: 60px; }
+
+    /* BENEFITS */
+    .benefits { padding: 80px 100px; max-width: 1440px; margin: 0 auto; }
+    .benefits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+    .benefit-item {}
+    .benefit-icon-wrap {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, #ede9fe 0%, #c4b5fd 100%);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+    }
+    .benefit-icon-wrap.alt { background: linear-gradient(135deg, #d1fae5 0%, #6ee7b7 100%); }
+    .benefit-icon-wrap svg { width: 24px; height: 24px; color: var(--purple); }
+    .benefit-title { font-size: 18px; font-weight: 500; color: var(--dark); margin-bottom: 8px; }
+    .benefit-desc { font-size: 14px; color: var(--gray); line-height: 1.7; }
+
+    /* JOURNEY */
+    .journey { padding: 80px 100px; max-width: 1440px; margin: 0 auto; }
+    .journey-step {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+      align-items: center; margin-bottom: 120px;
+    }
+    .journey-step.reverse { direction: rtl; }
+    .journey-step.reverse > * { direction: ltr; }
+    .step-number {
+      width: 56px; height: 56px; border-radius: 50%; background: var(--purple);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 600; color: #fff; margin-bottom: 24px;
+    }
+    .journey-step.step2 .step-number { background: #06b6d4; }
+    .journey-step.step3 .step-number { background: var(--green); }
+    .step-label { font-size: 13px; font-weight: 600; color: var(--green); letter-spacing: 0.06em; margin-bottom: 10px; }
+    .step-title { font-size: 30px; font-weight: 600; color: var(--dark); margin-bottom: 16px; }
+    .step-desc { font-size: 15px; color: var(--gray); line-height: 1.8; margin-bottom: 28px; }
+    .step-img { border-radius: 20px; width: 100%; object-fit: cover; height: 340px; background: #e9e5f5; position: relative; overflow: hidden; }
+    .step-card {
+      position: absolute; background: #fff; border-radius: 12px;
+      padding: 14px 18px; box-shadow: 0 8px 30px rgba(120,57,243,0.1);
+      font-size: 12px; bottom: 20px; right: -10px;
+    }
+
+    /* PRICING */
+    .pricing-section {
+      background: var(--purple-dark); padding: 80px 100px;
+    }
+    .pricing-inner { max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+    .pricing-left .section-label, .pricing-left .section-title { text-align: left; }
+    .pricing-left .section-title { color: #fff; }
+    .pricing-desc { font-size: 15px; color: #cbb0ff; line-height: 1.8; margin-bottom: 28px; }
+    .pricing-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .pricing-card {
+      background: #fff; border: 1px solid #eae8f5; border-radius: 40px;
+      padding: 36px 30px;
+    }
+    .plan-label { font-size: 14px; font-weight: 600; color: var(--green); text-align: center; margin-bottom: 8px; }
+    .plan-price { font-size: 44px; font-weight: 600; color: var(--dark); text-align: center; margin-bottom: 28px; }
+    .plan-items { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+    .plan-items li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--dark); font-weight: 500; }
+    .plan-items li::before { content: '✓'; width: 18px; height: 18px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 10px; flex-shrink: 0; }
+    .plan-divider { height: 1px; background: var(--gray-light); margin: 2px 0; }
+
+    /* BRANDS BOTTOM */
+    .brands-bottom {
+      display: flex; align-items: center; justify-content: center; gap: 60px;
+      padding: 40px 100px; background: var(--purple-dark);
+    }
+    .brands-bottom span { font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: -1px; }
+
+    /* TESTIMONIALS */
+    .testimonials { background: var(--bg-light); padding: 80px 100px; }
+    .testi-inner { max-width: 1440px; margin: 0 auto; }
+    .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .testi-card {
+      background: #fff; border-radius: 16px; padding: 28px 26px;
+    }
+    .stars { color: #f59e0b; font-size: 22px; margin-bottom: 16px; }
+    .testi-text { font-size: 14px; color: var(--gray); line-height: 1.9; margin-bottom: 24px; }
+    .testi-user { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar {
+      width: 48px; height: 48px; border-radius: 50%; background: #d8d0f8;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 600; color: var(--purple);
+    }
+    .testi-name { font-size: 15px; font-weight: 500; color: var(--dark); }
+    .testi-role { font-size: 13px; color: var(--gray); }
+
+    /* FOOTER */
+    .footer { text-align: center; padding: 24px; background: var(--bg-light); font-size: 13px; color: #6f6a86; }
+
+    /* HERO IMAGE PLACEHOLDER */
+    .hero-img-placeholder {
+      background: linear-gradient(135deg, #ede9fe 0%, #c4b5fd 100%);
+      border-radius: 20px; height: 360px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px;
+    }
+    .step-img-placeholder {
+      background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+      border-radius: 20px; height: 340px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 80px; position: relative;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="16 18 22 12 16 6"></polyline>
+        <polyline points="8 6 2 12 8 18"></polyline>
+      </svg>
+    </div>
+    <span class="nav-logo-text">laracamp</span>
+  </a>
+  <ul class="nav-menu">
+    <li><a href="#" class="active">Program</a></li>
+    <li><a href="#">Mentor</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Business</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="login.html" class="btn-outline">Sign In</a>
+    <a href="login.html" class="btn-primary">Sign Up</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-label">LEARN FROM EXPERTS</p>
+    <h1 class="hero-title">Start Your <span>Developer<br>Journey</span> Today</h1>
+    <p class="hero-desc">Our bootcamp is helping junior developers who<br>are really passionate in the programming.</p>
+    <a href="checkout.html" class="btn-primary">Get Started</a>
+  </div>
+  <div class="hero-img-wrap">
+    <div class="hero-img-placeholder">👨‍💻</div>
+    <div class="hero-card hero-card-top">
+      <div class="hero-card-title"><span class="check-icon"></span> Great & Solid</div>
+      <div class="hero-card-text">We help people how to<br>finish the project together</div>
+    </div>
+    <div class="hero-card hero-card-bottom">
+      <div class="hero-card-title"><span class="check-icon"></span> Up to Date</div>
+      <div class="hero-card-text">We encourage people to<br>use the latest techstack</div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<div class="brands">
+  <span>Typo</span>
+  <span style="font-family:serif;font-size:22px;">A</span>
+  <span style="letter-spacing:2px;font-size:14px;">slack</span>
+  <span style="font-size:14px;letter-spacing:3px;">spotify</span>
+  <span style="font-size:14px;letter-spacing:2px;">Google</span>
+</div>
+
+<!-- BENEFITS -->
+<section class="benefits">
+  <p class="section-label">OUR SUPER BENEFITS</p>
+  <h2 class="section-title">Learn Faster &amp; Better</h2>
+  <div class="benefits-grid">
+    <div class="benefit-item">
+      <div class="benefit-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7839f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </div>
+      <h3 class="benefit-title">Diversity</h3>
+      <p class="benefit-desc">Learn from anyone around the world and get a new skills</p>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon-wrap alt">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+        </svg>
+      </div>
+      <h3 class="benefit-title">A.I Guideline</h3>
+      <p class="benefit-desc">Lara will help you to choose which path that suitable for you</p>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7839f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+      </div>
+      <h3 class="benefit-title">1-1 Mentoring</h3>
+      <p class="benefit-desc">We will ensure that you will get what you really do need</p>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon-wrap alt">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+      </div>
+      <h3 class="benefit-title">Future Job</h3>
+      <p class="benefit-desc">Get your dream job in your dream company together with us</p>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section class="journey">
+  <!-- Step 1 -->
+  <div class="journey-step">
+    <div class="step-img-placeholder">
+      <img src="http://localhost:3845/assets/e48483c798130608621d4701840bbbc9e69029eb.png" alt="Prepare" style="width:100%;height:100%;object-fit:cover;border-radius:20px;position:absolute;inset:0;" onerror="this.style.display='none'">
+      📋
+    </div>
+    <div>
+      <div class="step-number">1.</div>
+      <p class="step-label">BETTER CAREER</p>
+      <h3 class="step-title">Prepare The Journey</h3>
+      <p class="step-desc">We do really care to our students' future career so it would be good if you are taking a quick interview</p>
+      <a href="#" class="btn-second">Learn More</a>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="journey-step step2 reverse">
+    <div class="step-img-placeholder">
+      <img src="http://localhost:3845/assets/454c40b641293d498a3c623f1edc2f70405a8d94.png" alt="Finish" style="width:100%;height:100%;object-fit:cover;border-radius:20px;position:absolute;inset:0;" onerror="this.style.display='none'">
+      💻
+    </div>
+    <div>
+      <div class="step-number" style="background:#06b6d4;">2.</div>
+      <p class="step-label">STUDY HARDER</p>
+      <h3 class="step-title">Finish The Project</h3>
+      <p class="step-desc">Each of you will be joining the private group and also working together with team members on project</p>
+      <a href="#" class="btn-second">View Demo</a>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="journey-step step3">
+    <div class="step-img-placeholder">
+      <img src="http://localhost:3845/assets/681d9198730a115da796fa34cba7a5e9d6688cec.png" alt="Demo Day" style="width:100%;height:100%;object-fit:cover;border-radius:20px;position:absolute;inset:0;" onerror="this.style.display='none'">
+      🎤
+    </div>
+    <div>
+      <div class="step-number" style="background:var(--green);">3.</div>
+      <p class="step-label">END GAME</p>
+      <h3 class="step-title">Big Demo Day</h3>
+      <p class="step-desc">Learn how to speaking in public to demonstrate your final project and receive the important feedbacks</p>
+      <a href="#" class="btn-second">Showcase</a>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section">
+  <div class="pricing-inner">
+    <div class="pricing-left">
+      <p class="section-label">GOOD INVESTMENT</p>
+      <h2 class="section-title" style="text-align:left;color:#fff;margin-bottom:16px;">Start Your Journey</h2>
+      <p class="pricing-desc">We do have a couple of plans that might fit for you.<br>Kindly download our full syllabus below.</p>
+      <a href="#" class="btn-green">View Syllabus</a>
+    </div>
+    <div class="pricing-cards">
+      <!-- Plan 1 -->
+      <div class="pricing-card">
+        <p class="plan-label">GILA BELAJAR</p>
+        <p class="plan-price">$280K</p>
+        <ul class="plan-items">
+          <li>Pro Techstack Kit</li>
+          <li class="plan-divider" style="list-style:none;padding:0;"></li>
+          <li>iMac Pro 2021 &amp; Display</li>
+          <li class="plan-divider" style="list-style:none;padding:0;"></li>
+          <li>1-1 Mentoring Program</li>
+          <li class="plan-divider" style="list-style:none;padding:0;"></li>
+          <li>Final Project Certificate</li>
+          <li class="plan-divider" style="list-style:none;padding:0;"></li>
+          <li>Offline Course Videos</li>
+          <li class="plan-divider" style="list-style:none;padding:0;"></li>
+          <li>Future Job Opportunity</li>
+          <li class="plan-divider" style="list-style:none;padding:0;"></li>
+          <li>Premium Design Kit</li>
+          <li class="plan-divider" style="list-style:none;padding:0;"></li>
+          <li>Website Builder</li>
+        </ul>
+        <a href="checkout.html" class="btn-primary" style="width:100%;text-align:center;">Take This Plan</a>
+      </div>
+      <!-- Plan 2 -->
+      <div class="pricing-card">
+        <p class="plan-label">BARU MULAI</p>
+        <p class="plan-price">$140K</p>
+        <ul class="plan-items">
+          <li>1-1 Mentoring Program</li>
+          <li class="plan-divider" style="list-style:none;padding:0;"></li>
+          <li>Final Project Certificate</li>
+          <li class="plan-divider" style="list-style:none;padding:0;"></li>
+          <li>Offline Course Videos</li>
+          <li class="plan-divider" style="list-style:none;padding:0;"></li>
+          <li>Offline Course Videos</li>
+        </ul>
+        <a href="checkout.html" class="btn-second" style="width:100%;text-align:center;">Start With This Plan</a>
+      </div>
+    </div>
+  </div>
+  <!-- Brands bottom -->
+  <div class="brands-bottom">
+    <span>Typo</span>
+    <span style="font-family:serif;font-size:20px;">A</span>
+    <span style="font-size:12px;letter-spacing:2px;">slack</span>
+    <span style="font-size:12px;letter-spacing:2px;">spotify</span>
+    <span style="font-size:12px;letter-spacing:1px;">Google</span>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="testi-inner">
+    <p class="section-label">SUCCESS STUDENTS</p>
+    <h2 class="section-title">We Really Love Laracamp</h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">I was not really into code but after they teach me how to train my logic then I was really fall in love with code</p>
+        <div class="testi-user">
+          <div class="testi-avatar">F</div>
+          <div>
+            <div class="testi-name">Fanny</div>
+            <div class="testi-role">Developer at Google</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">Code is really important if we want to build a company and strike to the win</p>
+        <div class="testi-user">
+          <div class="testi-avatar">A</div>
+          <div>
+            <div class="testi-name">Angga</div>
+            <div class="testi-role">CEO at BWA Corp</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">My background is design and art but I do really love how to make my design working in the development phase</p>
+        <div class="testi-user">
+          <div class="testi-avatar">J</div>
+          <div>
+            <div class="testi-name">Jully</div>
+            <div class="testi-role">QA at Facebook</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">All Rights Reserved. Copyright Laracamp BWA Indonesia.</footer>
+
+</body>
+</html>

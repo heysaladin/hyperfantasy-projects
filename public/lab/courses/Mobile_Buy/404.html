@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>404 Not Found — LuxSpace</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .not-found {
+      min-height: calc(100vh - 100px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px 80px;
+      text-align: center;
+    }
+
+    .not-found h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 14px;
+      letter-spacing: .02em;
+    }
+
+    .not-found p {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay" id="mobileMenu">
+  <button class="mobile-close" onclick="toggleMenu()">&#x2715;</button>
+  <a href="index.html#showcase" onclick="toggleMenu()">Showcase</a>
+  <a href="index.html#catalog" onclick="toggleMenu()">Catalog</a>
+  <a href="index.html#delivery" onclick="toggleMenu()">Delivery</a>
+  <a href="index.html#rewards" onclick="toggleMenu()">Rewards</a>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">LuxSpace</a>
+  <ul class="nav-links">
+    <li><a href="index.html#showcase">Showcase</a></li>
+    <li><a href="index.html#catalog">Catalog</a></li>
+    <li><a href="index.html#delivery">Delivery</a></li>
+    <li><a href="index.html#rewards">Rewards</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="cart.html" class="cart-btn">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    </a>
+    <button class="hamburger-btn" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="not-found">
+  <h1>404 NOT FOUND</h1>
+  <p>Looks like this page not found</p>
+  <a href="index.html" class="btn-pink">Back to Shop</a>
+</div>
+
+<script>
+  function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('active'); }
+</script>
+</body>
+</html>

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LuxSpace - Toko Furniture Nomor 1</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* ── HERO ── */
+    .hero {
+      padding: 20px 52px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      min-height: calc(100vh - 100px);
+    }
+
+    .hero-text {}
+
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(36px, 4.5vw, 64px);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--dark);
+      margin-bottom: 22px;
+    }
+
+    .hero h1 em { font-style: italic; }
+
+    .hero-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.85;
+      max-width: 400px;
+      margin-bottom: 36px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .btn-play {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      background: none;
+      border: none;
+    }
+
+    .play-ring {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      border: 1.5px solid #ccc;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .2s;
+    }
+
+    .play-ring svg { width: 12px; height: 12px; fill: var(--dark); margin-left: 2px; }
+    .btn-play:hover .play-ring { border-color: #888; }
+
+    /* ── HERO VISUAL ── */
+    .hero-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-img-box {
+      position: relative;
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .hero-img-shadow {
+      position: absolute;
+      inset: 16px -16px -16px 16px;
+      background: rgba(0,0,0,0.07);
+      border-radius: 24px;
+    }
+
+    .hero-img-scene {
+      position: relative;
+      background: linear-gradient(140deg, #D8CFB8 0%, #B8AD96 100%);
+      border-radius: 24px;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 32px;
+    }
+
+    /* Simple room scene */
+    .room-floor {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 38%;
+      background: linear-gradient(0deg, #A89878 0%, transparent 100%);
+    }
+
+    .room-wall-accent {
+      position: absolute;
+      top: 12%; right: 12%;
+      width: 60px; height: 80px;
+      background: rgba(255,255,255,.15);
+      border-radius: 4px 4px 0 0;
+    }
+
+    .hero-sofa {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-sofa svg { width: 220px; height: auto; }
+
+    .hero-plant {
+      position: absolute;
+      bottom: 28px;
+      right: 40px;
+      z-index: 3;
+    }
+
+    .hero-plant svg { width: 60px; height: auto; }
+
+    .hero-lamp {
+      position: absolute;
+      bottom: 34%;
+      left: 10%;
+      z-index: 3;
+    }
+
+    .hero-lamp svg { width: 44px; height: auto; }
+
+    /* ── SECTIONS ── */
+    .section { padding: 72px 52px; }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(24px, 2.8vw, 36px);
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1.2;
+    }
+
+    .view-all-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      border-bottom: 1px solid var(--muted);
+      padding-bottom: 1px;
+      transition: color .2s, border-color .2s;
+      white-space: nowrap;
+    }
+    .view-all-link:hover { color: var(--dark); border-color: var(--dark); }
+
+    /* ── CATEGORIES ── */
+    .categories { background: transparent; }
+
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .cat-card {
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      position: relative;
+      cursor: pointer;
+      transition: transform .3s;
+    }
+    .cat-card:hover { transform: translateY(-4px); }
+
+    .cat-bg {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .cat-bg-lr { background: linear-gradient(150deg, #C8BAA0, #8A7A60); }
+    .cat-bg-dc { background: linear-gradient(150deg, #B8C8A0, #78927A); }
+    .cat-bg-bd { background: linear-gradient(150deg, #A0B8C8, #607888); }
+    .cat-bg-ch { background: linear-gradient(150deg, #C8A0B8, #886078); }
+
+    .cat-bg svg { width: 55%; height: auto; opacity: .75; }
+
+    .cat-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(0,0,0,.55) 0%, transparent 52%);
+    }
+
+    .cat-info {
+      position: absolute;
+      bottom: 18px; left: 18px; right: 18px;
+      color: #fff;
+    }
+    .cat-info h3 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+    .cat-info p { font-size: 11px; opacity: .75; }
+
+    /* ── PRODUCTS ── */
+    .products { background: rgba(255,255,255,.55); }
+
+    .prod-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .prod-card {
+      background: rgba(255,255,255,.8);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .25s, box-shadow .25s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .prod-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,.1); }
+
+    .prod-img {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .prod-img-1 { background: linear-gradient(135deg, #D0C4B4, #A89080); }
+    .prod-img-2 { background: linear-gradient(135deg, #C4D0C8, #809080); }
+    .prod-img-3 { background: linear-gradient(135deg, #D0C4D0, #908090); }
+    .prod-img-4 { background: linear-gradient(135deg, #C4C8D0, #808898); }
+    .prod-img-5 { background: linear-gradient(135deg, #C4D0C4, #809080); }
+
+    .prod-img svg { width: 65%; height: 65%; }
+
+    .prod-info { padding: 14px 14px 16px; }
+    .prod-info h4 { font-size: 13px; font-weight: 500; color: var(--dark); margin-bottom: 5px; }
+    .prod-info .price { font-size: 13px; font-weight: 600; color: var(--dark); }
+
+    /* ── BRANDS ── */
+    .brands-bar {
+      background: rgba(255,255,255,.7);
+      padding: 44px 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 60px;
+    }
+
+    .brand-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(0,0,0,.25);
+      letter-spacing: .04em;
+      transition: color .2s;
+    }
+    .brand-name:hover { color: rgba(0,0,0,.6); }
+
+    .brand-adobe { font-family: 'Playfair Display', serif; }
+    .brand-ikea { font-family: Arial, sans-serif; font-size: 22px; }
+    .brand-hm { font-size: 14px; letter-spacing: .08em; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .prod-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; padding: 20px 24px 60px; min-height: auto; gap: 32px; }
+      .hero-visual { display: none; }
+      .section { padding: 48px 24px; }
+      .cat-grid { grid-template-columns: 1fr 1fr; }
+      .prod-grid { grid-template-columns: 1fr 1fr; }
+      .brands-bar { gap: 32px; padding: 32px 24px; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay" id="mobileMenu">
+  <button class="mobile-close" onclick="toggleMenu()">&#x2715;</button>
+  <a href="#showcase" onclick="toggleMenu()">Showcase</a>
+  <a href="#catalog" onclick="toggleMenu()">Catalog</a>
+  <a href="#delivery" onclick="toggleMenu()">Delivery</a>
+  <a href="#rewards" onclick="toggleMenu()">Rewards</a>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">LuxSpace</a>
+  <ul class="nav-links">
+    <li><a href="#showcase">Showcase</a></li>
+    <li><a href="#catalog">Catalog</a></li>
+    <li><a href="#delivery">Delivery</a></li>
+    <li><a href="#rewards">Rewards</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="cart.html" class="cart-btn" title="Shopping Cart">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    </a>
+    <button class="hamburger-btn" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="showcase">
+  <div class="hero-text">
+    <p class="hero-eyebrow">New Summer Collection 2024</p>
+    <h1>The Room You've <em>Dreaming</em></h1>
+    <p class="hero-desc">Kami menyediakan furniture berkualitas tinggi yang membuat ruangan terasa homey dan nyaman. Temukan koleksi terbaik untuk rumah impian Anda.</p>
+    <div class="hero-actions">
+      <a href="#catalog" class="btn-dark">Explore Now</a>
+      <button class="btn-play">
+        <div class="play-ring">
+          <svg viewBox="0 0 12 12"><polygon points="3,1 11,6 3,11"/></svg>
+        </div>
+        Watch Video
+      </button>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-img-box">
+      <div class="hero-img-shadow"></div>
+      <div class="hero-img-scene">
+        <div class="room-floor"></div>
+        <div class="room-wall-accent"></div>
+        <!-- Lamp -->
+        <div class="hero-lamp">
+          <svg viewBox="0 0 44 120" fill="none">
+            <path d="M8 0 L36 0 L28 40 L16 40 Z" fill="#E8D890"/>
+            <rect x="19" y="40" width="6" height="55" fill="#9A8860"/>
+            <ellipse cx="22" cy="98" rx="14" ry="5" fill="#7A6840"/>
+          </svg>
+        </div>
+        <!-- Sofa -->
+        <div class="hero-sofa">
+          <svg viewBox="0 0 240 110" fill="none">
+            <!-- sofa back -->
+            <rect x="18" y="8" width="204" height="68" rx="10" fill="#8B6B4A"/>
+            <!-- cushions -->
+            <rect x="24" y="14" width="90" height="55" rx="6" fill="#A07850"/>
+            <rect x="126" y="14" width="90" height="55" rx="6" fill="#A07850"/>
+            <!-- seat -->
+            <rect x="8" y="72" width="224" height="28" rx="8" fill="#9A7248"/>
+            <!-- legs -->
+            <rect x="22" y="98" width="12" height="14" rx="3" fill="#5A3A20"/>
+            <rect x="206" y="98" width="12" height="14" rx="3" fill="#5A3A20"/>
+            <!-- armrests -->
+            <rect x="4" y="40" width="16" height="60" rx="5" fill="#7A5838"/>
+            <rect x="220" y="40" width="16" height="60" rx="5" fill="#7A5838"/>
+          </svg>
+        </div>
+        <!-- Plant -->
+        <div class="hero-plant">
+          <svg viewBox="0 0 60 100" fill="none">
+            <rect x="18" y="70" width="24" height="28" rx="4" fill="#C08840"/>
+            <ellipse cx="30" cy="48" rx="22" ry="24" fill="#4A8830"/>
+            <ellipse cx="18" cy="40" rx="14" ry="18" fill="#3A7820"/>
+            <ellipse cx="42" cy="42" rx="14" ry="18" fill="#3A7820"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<div class="brands-bar">
+  <span class="brand-name brand-adobe">Adobe</span>
+  <span class="brand-name brand-ikea">IKEA</span>
+  <span class="brand-name brand-hm">Herman Miller</span>
+  <span class="brand-name">Miele</span>
+</div>
+
+<!-- CATEGORIES -->
+<section class="section categories" id="catalog">
+  <div class="section-header">
+    <div>
+      <p class="section-label">Browse Collection</p>
+      <h2 class="section-title">Shop by Room</h2>
+    </div>
+    <a href="#" class="view-all-link">View All</a>
+  </div>
+  <div class="cat-grid">
+    <!-- Living Room -->
+    <div class="cat-card">
+      <div class="cat-bg cat-bg-lr">
+        <svg viewBox="0 0 120 120" fill="none">
+          <rect x="10" y="60" width="100" height="40" rx="5" fill="rgba(255,255,255,.35)"/>
+          <rect x="10" y="50" width="100" height="14" rx="4" fill="rgba(255,255,255,.45)"/>
+          <rect x="20" y="36" width="80" height="18" rx="6" fill="rgba(255,255,255,.3)"/>
+          <rect x="24" y="38" width="32" height="14" rx="4" fill="rgba(255,255,255,.4)"/>
+          <rect x="64" y="38" width="32" height="14" rx="4" fill="rgba(255,255,255,.4)"/>
+          <rect x="52" y="20" width="16" height="18" fill="rgba(255,255,255,.2)"/>
+          <rect x="44" y="16" width="32" height="6" rx="3" fill="rgba(255,255,255,.25)"/>
+        </svg>
+      </div>
+      <div class="cat-overlay"></div>
+      <div class="cat-info"><h3>Living Room</h3><p>18,309 items</p></div>
+    </div>
+    <!-- Decoration -->
+    <div class="cat-card">
+      <div class="cat-bg cat-bg-dc">
+        <svg viewBox="0 0 120 120" fill="none">
+          <rect x="34" y="72" width="16" height="28" rx="3" fill="rgba(255,255,255,.3)"/>
+          <ellipse cx="42" cy="52" rx="16" ry="22" fill="rgba(255,255,255,.28)"/>
+          <rect x="68" y="80" width="14" height="20" rx="3" fill="rgba(255,255,255,.3)"/>
+          <ellipse cx="75" cy="62" rx="12" ry="18" fill="rgba(255,255,255,.28)"/>
+          <circle cx="82" cy="32" r="14" fill="rgba(255,255,255,.22)"/>
+          <rect x="80" y="45" width="4" height="8" fill="rgba(255,255,255,.2)"/>
+        </svg>
+      </div>
+      <div class="cat-overlay"></div>
+      <div class="cat-info"><h3>Decoration</h3><p>36,364 items</p></div>
+    </div>
+    <!-- Bedroom -->
+    <div class="cat-card">
+      <div class="cat-bg cat-bg-bd">
+        <svg viewBox="0 0 120 120" fill="none">
+          <rect x="8" y="62" width="104" height="38" rx="4" fill="rgba(255,255,255,.32)"/>
+          <rect x="8" y="50" width="104" height="16" rx="4" fill="rgba(255,255,255,.4)"/>
+          <rect x="14" y="36" width="92" height="18" rx="6" fill="rgba(255,255,255,.28)"/>
+          <rect x="18" y="38" width="36" height="14" rx="4" fill="rgba(255,255,255,.38)"/>
+          <rect x="66" y="38" width="36" height="14" rx="4" fill="rgba(255,255,255,.38)"/>
+        </svg>
+      </div>
+      <div class="cat-overlay"></div>
+      <div class="cat-info"><h3>Bed Room</h3><p>12,298 items</p></div>
+    </div>
+    <!-- Children -->
+    <div class="cat-card">
+      <div class="cat-bg cat-bg-ch">
+        <svg viewBox="0 0 120 120" fill="none">
+          <rect x="18" y="48" width="34" height="52" rx="4" fill="rgba(255,255,255,.3)"/>
+          <rect x="18" y="32" width="34" height="20" rx="4" fill="rgba(255,255,255,.25)"/>
+          <rect x="62" y="60" width="38" height="38" rx="4" fill="rgba(255,255,255,.3)"/>
+          <circle cx="35" cy="22" r="10" fill="rgba(255,255,255,.25)"/>
+          <rect x="74" y="44" width="14" height="18" rx="3" fill="rgba(255,255,255,.22)"/>
+        </svg>
+      </div>
+      <div class="cat-overlay"></div>
+      <div class="cat-info"><h3>Children Room</h3><p>2,829 items</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="section products" id="delivery">
+  <div class="section-header">
+    <div>
+      <p class="section-label">Just Arrived</p>
+      <h2 class="section-title">New Summer Arrivals</h2>
+    </div>
+    <a href="#" class="view-all-link">View All</a>
+  </div>
+  <div class="prod-grid">
+    <a href="detail.html?id=1" class="prod-card">
+      <div class="prod-img prod-img-1">
+        <svg viewBox="0 0 100 100" fill="none"><!-- Chair icon -->
+          <rect x="30" y="20" width="40" height="45" rx="5" fill="rgba(255,255,255,.5)"/>
+          <rect x="25" y="60" width="50" height="15" rx="4" fill="rgba(255,255,255,.6)"/>
+          <rect x="22" y="45" width="8" height="30" rx="3" fill="rgba(255,255,255,.4)"/>
+          <rect x="70" y="45" width="8" height="30" rx="3" fill="rgba(255,255,255,.4)"/>
+          <rect x="46" y="75" width="8" height="16" rx="2" fill="rgba(255,255,255,.4)"/>
+          <ellipse cx="50" cy="94" rx="22" ry="5" fill="rgba(255,255,255,.3)"/>
+        </svg>
+      </div>
+      <div class="prod-info"><h4>Chair Thatty</h4><p class="price">IDR 12,000,000.00</p></div>
+    </a>
+    <a href="detail.html?id=2" class="prod-card">
+      <div class="prod-img prod-img-2">
+        <svg viewBox="0 0 100 100" fill="none">
+          <rect x="28" y="18" width="44" height="48" rx="6" fill="rgba(255,255,255,.5)"/>
+          <rect x="24" y="62" width="52" height="14" rx="4" fill="rgba(255,255,255,.6)"/>
+          <rect x="20" y="46" width="9" height="32" rx="3" fill="rgba(255,255,255,.4)"/>
+          <rect x="71" y="46" width="9" height="32" rx="3" fill="rgba(255,255,255,.4)"/>
+          <rect x="45" y="76" width="10" height="14" rx="2" fill="rgba(255,255,255,.4)"/>
+          <ellipse cx="50" cy="92" rx="24" ry="5" fill="rgba(255,255,255,.3)"/>
+        </svg>
+      </div>
+      <div class="prod-info"><h4>Cangkir Mauttie</h4><p class="price">IDR 89,300,000.00</p></div>
+    </a>
+    <a href="detail.html?id=3" class="prod-card">
+      <div class="prod-img prod-img-3">
+        <svg viewBox="0 0 100 100" fill="none">
+          <rect x="32" y="16" width="36" height="52" rx="5" fill="rgba(255,255,255,.5)"/>
+          <rect x="26" y="64" width="48" height="13" rx="4" fill="rgba(255,255,255,.6)"/>
+          <rect x="22" y="48" width="8" height="30" rx="3" fill="rgba(255,255,255,.4)"/>
+          <rect x="70" y="48" width="8" height="30" rx="3" fill="rgba(255,255,255,.4)"/>
+          <rect x="44" y="77" width="12" height="15" rx="2" fill="rgba(255,255,255,.4)"/>
+          <ellipse cx="50" cy="94" rx="26" ry="5" fill="rgba(255,255,255,.3)"/>
+        </svg>
+      </div>
+      <div class="prod-info"><h4>Saman Kakka</h4><p class="price">IDR 14,500,399.00</p></div>
+    </a>
+    <a href="detail.html?id=4" class="prod-card">
+      <div class="prod-img prod-img-4">
+        <svg viewBox="0 0 100 100" fill="none">
+          <rect x="30" y="14" width="40" height="55" rx="5" fill="rgba(255,255,255,.5)"/>
+          <rect x="24" y="65" width="52" height="13" rx="4" fill="rgba(255,255,255,.6)"/>
+          <rect x="20" y="50" width="8" height="30" rx="3" fill="rgba(255,255,255,.4)"/>
+          <rect x="72" y="50" width="8" height="30" rx="3" fill="rgba(255,255,255,.4)"/>
+          <rect x="44" y="78" width="12" height="14" rx="2" fill="rgba(255,255,255,.4)"/>
+          <ellipse cx="50" cy="94" rx="24" ry="5" fill="rgba(255,255,255,.3)"/>
+        </svg>
+      </div>
+      <div class="prod-info"><h4>Lino Dino</h4><p class="price">IDR 22,000,000.00</p></div>
+    </a>
+    <a href="detail.html?id=5" class="prod-card">
+      <div class="prod-img prod-img-5">
+        <svg viewBox="0 0 100 100" fill="none">
+          <rect x="28" y="16" width="44" height="50" rx="6" fill="rgba(255,255,255,.5)"/>
+          <rect x="22" y="62" width="56" height="13" rx="4" fill="rgba(255,255,255,.6)"/>
+          <rect x="18" y="47" width="9" height="30" rx="3" fill="rgba(255,255,255,.4)"/>
+          <rect x="73" y="47" width="9" height="30" rx="3" fill="rgba(255,255,255,.4)"/>
+          <rect x="44" y="75" width="12" height="16" rx="2" fill="rgba(255,255,255,.4)"/>
+          <ellipse cx="50" cy="93" rx="26" ry="5" fill="rgba(255,255,255,.3)"/>
+        </svg>
+      </div>
+      <div class="prod-info"><h4>Syail Ammeno</h4><p class="price">IDR 6,399,999.00</p></div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER DESKTOP -->
+<footer class="site-footer" id="rewards">
+  <a href="index.html" class="footer-logo">LuxSpace</a>
+  <div class="footer-cols">
+    <div class="footer-col">
+      <h5>Overview</h5>
+      <ul>
+        <li><a href="#">Shipping</a></li>
+        <li><a href="#">Refund</a></li>
+        <li><a href="#">Promotion</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Career</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Explore</h5>
+      <ul>
+        <li><a href="#">Terms &amp; Conds</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">For Developer</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Special Letter</h5>
+      <form class="newsletter-form" onsubmit="return false">
+        <input type="email" placeholder="Your email adress"/>
+        <button type="submit">
+          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</footer>
+
+<!-- FOOTER MOBILE -->
+<div class="site-footer-mobile">
+  <a href="index.html" class="footer-mobile-logo">LuxSpace</a>
+
+  <div class="accordion-item open">
+    <button class="accordion-header" onclick="toggleAccordion(this)">
+      Overview <span class="accordion-chevron">&#8963;</span>
+    </button>
+    <div class="accordion-body">
+      <a href="#">Shipping</a>
+      <a href="#">Refund</a>
+      <a href="#">Promotion</a>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-header" onclick="toggleAccordion(this)">
+      Company <span class="accordion-chevron">&#8964;</span>
+    </button>
+    <div class="accordion-body">
+      <a href="#">About</a>
+      <a href="#">Career</a>
+      <a href="#">Contact Us</a>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-header" onclick="toggleAccordion(this)">
+      Explore <span class="accordion-chevron">&#8964;</span>
+    </button>
+    <div class="accordion-body">
+      <a href="#">Terms &amp; Conds</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">For Developer</a>
+    </div>
+  </div>
+
+  <div class="mobile-newsletter">
+    <h5>Special Letter</h5>
+    <form class="newsletter-form" onsubmit="return false" style="margin-top:14px">
+      <input type="email" placeholder="Your email adress"/>
+      <button type="submit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('active');
+  }
+  function toggleAccordion(btn) {
+    const item = btn.parentElement;
+    const chevron = btn.querySelector('.accordion-chevron');
+    item.classList.toggle('open');
+    chevron.innerHTML = item.classList.contains('open') ? '&#8963;' : '&#8964;';
+  }
+</script>
+</body>
+</html>

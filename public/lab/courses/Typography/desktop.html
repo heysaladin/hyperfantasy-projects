@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typography Masters — Desktop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #131313;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      display: flex;
+      align-items: center;
+      padding: 42px 80px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 36px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -4.14px;
+      flex: 1;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-menu a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      letter-spacing: -0.48px;
+    }
+
+    .nav-menu a:hover { opacity: 0.7; }
+
+    .nav-buttons {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .btn-outline {
+      border: 1px solid #fff;
+      color: #fff;
+      background: transparent;
+      padding: 14px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -0.48px;
+      cursor: pointer;
+    }
+
+    .btn-outline:hover { background: rgba(255,255,255,0.08); }
+
+    .btn-solid {
+      background: #fff;
+      color: #1e1a15;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -0.48px;
+      cursor: pointer;
+    }
+
+    .btn-solid:hover { background: #e8e8e8; }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      padding: 0 80px 100px;
+      min-height: 627px;
+    }
+
+    .hero-image {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 836px;
+      height: 627px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+      width: 660px;
+      padding-top: 85px;
+    }
+
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .heading-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .eyebrow {
+      font-size: 14px;
+      font-weight: 400;
+      color: #ccc;
+      letter-spacing: 2.1px;
+      line-height: 20px;
+    }
+
+    h1 {
+      font-size: 72px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -3.6px;
+      line-height: 88px;
+    }
+
+    .description {
+      font-size: 20px;
+      color: #ddd;
+      letter-spacing: -0.6px;
+      line-height: 34px;
+    }
+
+    /* ── Email bar ── */
+    .email-bar {
+      display: flex;
+      background: #303030;
+      border-radius: 6px;
+      overflow: hidden;
+      width: 660px;
+    }
+
+    .email-bar input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 20px 24px;
+      font-size: 18px;
+      font-family: 'Inter', sans-serif;
+      color: #9b9b9b;
+      letter-spacing: -0.45px;
+    }
+
+    .email-bar input::placeholder { color: #9b9b9b; }
+
+    .email-bar button {
+      background: #fff;
+      border: none;
+      padding: 20px 24px;
+      font-size: 18px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      color: #141414;
+      letter-spacing: -0.45px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .email-bar button:hover { background: #e8e8e8; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">TM</div>
+    <div class="nav-right">
+      <ul class="nav-menu">
+        <li><a href="#">Testimonials</a></li>
+        <li><a href="#">Modules</a></li>
+        <li><a href="#">Community</a></li>
+        <li><a href="#">Articles</a></li>
+      </ul>
+      <div class="nav-buttons">
+        <button class="btn-outline">Free demo</button>
+        <button class="btn-solid">Join bootcamp</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-image">
+      <img src="http://localhost:3845/assets/1e7ceebf9bf5b0eeca3c73bf2996044412fdd071.png" alt="Typography pattern">
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="heading-group">
+          <p class="eyebrow">TYPOGRAPHY MASTERS</p>
+          <h1>Typography course for UX/UI Designers</h1>
+        </div>
+        <p class="description">Learn everything you need to know about Typography for web design, mobile apps and any digital products to land a job, get clients and become confident in your design and typography skills.</p>
+      </div>
+
+      <div class="email-bar">
+        <input type="email" placeholder="Enter email address">
+        <button type="button">Start learning</button>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laracamp — Checkout Bootcamp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple: #7839f3;
+      --purple-light: #f5efff;
+      --purple-border: #ece3fe;
+      --green: #31b380;
+      --dark: #211b3d;
+      --gray: #5b5575;
+      --gray-light: #e7e5f4;
+    }
+    body { font-family: 'Poppins', sans-serif; color: var(--dark); background: #fff; }
+
+    /* NAV */
+    nav {
+      background: #fff;
+      box-shadow: 0 6px 60px 0 rgba(22,28,51,0.06);
+      height: 80px;
+      display: flex; align-items: center;
+      padding: 0 100px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .nav-logo-icon {
+      width: 32px; height: 32px;
+      background: var(--purple); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon svg { width: 18px; height: 18px; }
+    .nav-logo-text { font-size: 22px; font-weight: 500; color: var(--dark); }
+    .nav-menu { display: flex; gap: 40px; margin: 0 auto 0 60px; list-style: none; }
+    .nav-menu a { text-decoration: none; font-size: 15px; color: var(--dark); }
+    .nav-menu a.active { color: var(--purple); }
+    .nav-user { display: flex; align-items: center; gap: 10px; }
+    .nav-user-name { font-size: 14px; color: var(--dark); }
+    .nav-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--purple-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 600; color: var(--purple);
+    }
+
+    /* MAIN */
+    .checkout-page { max-width: 1440px; margin: 0 auto; padding: 60px 100px; }
+    .checkout-header { text-align: center; margin-bottom: 60px; }
+    .checkout-header .label { font-size: 14px; font-weight: 600; color: var(--green); letter-spacing: 0.05em; margin-bottom: 8px; }
+    .checkout-header h1 { font-size: 32px; font-weight: 600; color: var(--dark); }
+
+    .checkout-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+    }
+
+    /* LEFT - Product */
+    .product-img {
+      background: linear-gradient(135deg, #ede9fe 0%, #c4b5fd 100%);
+      border-radius: 20px; height: 320px; margin-bottom: 28px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 80px; overflow: hidden; position: relative;
+    }
+    .product-img img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+    .play-btn {
+      position: absolute; width: 52px; height: 52px; border-radius: 50%;
+      background: var(--purple); display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .play-btn::after { content: '▶'; color: #fff; font-size: 16px; margin-left: 3px; }
+    .product-badge { display: inline-block; font-size: 13px; font-weight: 600; color: var(--green); margin-bottom: 8px; }
+    .product-title { font-size: 24px; font-weight: 600; color: var(--dark); margin-bottom: 12px; }
+    .product-desc { font-size: 14px; color: var(--gray); line-height: 1.8; }
+
+    /* RIGHT - Form */
+    .form-title { font-size: 20px; font-weight: 600; color: var(--dark); margin-bottom: 24px; }
+    .form-group { margin-bottom: 22px; }
+    .form-label { font-size: 14px; color: var(--dark); margin-bottom: 8px; display: block; }
+    .form-input {
+      width: 100%; padding: 12px 22px; border-radius: 47px;
+      border: 1px solid var(--gray-light); font-size: 15px;
+      font-family: 'Poppins', sans-serif; color: var(--dark);
+      outline: none; transition: border-color 0.2s;
+      font-weight: 500;
+    }
+    .form-input:focus { border-color: var(--purple); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .btn-pay {
+      width: 100%; padding: 14px; border-radius: 47px;
+      background: var(--purple); color: #fff;
+      font-size: 16px; font-weight: 500; cursor: pointer;
+      border: none; font-family: 'Poppins', sans-serif;
+      margin-top: 8px; margin-bottom: 14px;
+    }
+    .btn-pay:hover { background: #6520e0; }
+    .secure-note {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; font-size: 13px; color: var(--gray);
+    }
+    .secure-icon {
+      width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="16 18 22 12 16 6"></polyline>
+        <polyline points="8 6 2 12 8 18"></polyline>
+      </svg>
+    </div>
+    <span class="nav-logo-text">laracamp</span>
+  </a>
+  <ul class="nav-menu">
+    <li><a href="#" class="active">Program</a></li>
+    <li><a href="#">Mentor</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Business</a></li>
+  </ul>
+  <div class="nav-user">
+    <span class="nav-user-name">Halo, Beatrice!</span>
+    <div class="nav-avatar">B</div>
+  </div>
+</nav>
+
+<!-- CHECKOUT -->
+<div class="checkout-page">
+  <div class="checkout-header">
+    <p class="label">YOUR FUTURE CAREER</p>
+    <h1>Checkout Bootcamp</h1>
+  </div>
+
+  <div class="checkout-grid">
+    <!-- Product -->
+    <div>
+      <div class="product-img">
+        <img src="http://localhost:3845/assets/e3c1bfe75eb4e0004d10efd78918720ff9960def.png" alt="Bootcamp" onerror="this.style.display='none'">
+        🎓
+        <div class="play-btn"></div>
+      </div>
+      <span class="product-badge">GILA BELAJAR</span>
+      <h2 class="product-title">Bootcamp ini akan mengajak Anda untuk</h2>
+      <p class="product-desc">Bootcamp ini akan mengajak Anda untuk belajar penuh mulai dari pengenalan dasar sampai membangun sebuah projek asli</p>
+    </div>
+
+    <!-- Form -->
+    <div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-input" value="angga@buildwithangga.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-input" value="Angga Riky">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Occupation</label>
+        <input type="text" class="form-input" value="Product Manager">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Card Number</label>
+        <input type="text" class="form-input" value="8840 9309 3940 9991" maxlength="19">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Expired</label>
+          <input type="text" class="form-input" placeholder="MM/YYYY" value="01/2024">
+        </div>
+        <div class="form-group">
+          <label class="form-label">CVC</label>
+          <input type="text" class="form-input" placeholder="CVC" value="220" maxlength="3">
+        </div>
+      </div>
+      <button class="btn-pay" onclick="window.location.href='checkout-success.html'">Pay Now</button>
+      <div class="secure-note">
+        <span class="secure-icon">🔒</span>
+        Your payment is secure and encrypted.
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

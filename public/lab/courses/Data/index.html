@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DataShayna — Connect to Our APIs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --bg-card: #ffffff;
+      --green: #3dce6e;
+      --green-dark: #2db85c;
+      --orange: #f5a623;
+      --white: #ffffff;
+      --gray: #9ca3af;
+      --nav-bg: #111111;
+      --section-bg: #141414;
+      --purple: #6c63ff;
+      --blue: #3b82f6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+    }
+
+    /* ─── NAVBAR ─── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 64px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--white);
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .nav-logo-icon svg { width: 18px; height: 18px; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--gray);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    .btn-primary {
+      background: var(--green);
+      color: #000;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 10px 22px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+    }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .nav-hamburger span {
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: calc(100vh - 64px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      padding: 80px 24px 0;
+      background: var(--bg);
+    }
+
+    /* subtle radial glow */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 600px;
+      background: radial-gradient(ellipse at center, rgba(61,206,110,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      color: var(--orange);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 18px;
+    }
+
+    .hero-title {
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      color: var(--white);
+      max-width: 680px;
+      margin-bottom: 20px;
+    }
+
+    .hero-sub {
+      color: var(--gray);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 360px;
+      margin-bottom: 48px;
+    }
+
+    /* ─── HERO IMAGE AREA ─── */
+    .hero-image-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .hero-image {
+      width: 100%;
+      border-radius: 20px 20px 0 0;
+      display: block;
+      object-fit: cover;
+      height: 400px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+      /* placeholder gradient until real image is used */
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* placeholder person silhouette */
+    .hero-image-placeholder {
+      width: 100%;
+      height: 400px;
+      background: linear-gradient(160deg, #1c1c2e 0%, #0f1f3d 60%, #162033 100%);
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-image-placeholder::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      height: 340px;
+      background: radial-gradient(ellipse at bottom, rgba(61,206,110,0.05) 0%, transparent 70%);
+    }
+
+    /* ─── FLOATING STAT CARDS ─── */
+    .stat-card {
+      position: absolute;
+      background: var(--white);
+      border-radius: 14px;
+      padding: 14px 18px;
+      color: #111;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-card-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #f0f9ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-icon svg { width: 20px; height: 20px; }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: #111;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    /* left card — APIs Hit */
+    .card-apis {
+      left: -20px;
+      bottom: 80px;
+      width: 170px;
+    }
+
+    /* right card — Bandwidth */
+    .card-bandwidth {
+      right: -20px;
+      bottom: 60px;
+      width: 190px;
+    }
+
+    .bandwidth-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 8px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 5px;
+      background: #e5e7eb;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 99px;
+    }
+
+    /* ─── FEATURES / SERVICES ─── */
+    .section {
+      padding: 100px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--white);
+      max-width: 520px;
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+
+    .section-sub {
+      color: var(--gray);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 60px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: #161616;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(61,206,110,0.3);
+      transform: translateY(-3px);
+    }
+
+    .feature-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .feature-icon svg { width: 24px; height: 24px; }
+
+    .feature-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.65;
+    }
+
+    /* ─── STATS ROW ─── */
+    .stats-row {
+      background: #111;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 48px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--green);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-desc {
+      font-size: 13px;
+      color: var(--gray);
+      font-weight: 500;
+    }
+
+    /* ─── PRICING ─── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .pricing-card {
+      background: #161616;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 36px 28px;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+
+    .pricing-card.featured {
+      border-color: var(--green);
+      background: #0f1f17;
+    }
+
+    .pricing-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--green);
+      color: #000;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    .pricing-plan {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 12px;
+    }
+
+    .pricing-price {
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .pricing-price span { font-size: 20px; letter-spacing: 0; }
+
+    .pricing-period {
+      font-size: 13px;
+      color: var(--gray);
+      margin-bottom: 28px;
+    }
+
+    .pricing-divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 24px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #d1d5db;
+    }
+
+    .check-icon {
+      width: 18px;
+      height: 18px;
+      background: rgba(61,206,110,0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .check-icon svg { width: 10px; height: 10px; }
+
+    .btn-outline {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--green);
+      background: rgba(61,206,110,0.06);
+    }
+
+    .btn-green {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: var(--green);
+      color: #000;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-green:hover { background: var(--green-dark); }
+
+    /* ─── CTA BANNER ─── */
+    .cta-section {
+      padding: 0 48px 100px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .cta-banner {
+      background: linear-gradient(135deg, #0f2017 0%, #0d1f10 100%);
+      border: 1px solid rgba(61,206,110,0.2);
+      border-radius: 24px;
+      padding: 64px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .cta-left { max-width: 560px; }
+
+    .cta-title {
+      font-size: clamp(24px, 3vw, 38px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--white);
+      margin-bottom: 12px;
+      line-height: 1.15;
+    }
+
+    .cta-sub {
+      color: var(--gray);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .btn-white {
+      padding: 12px 28px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      background: transparent;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-white:hover { border-color: rgba(255,255,255,0.5); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #0a0a0a;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 60px 48px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 60px;
+    }
+
+    .footer-brand p {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.7;
+      margin-top: 14px;
+      max-width: 260px;
+    }
+
+    .footer-col h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 16px;
+      letter-spacing: 0.3px;
+    }
+
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+    .footer-col ul a {
+      text-decoration: none;
+      color: var(--gray);
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul a:hover { color: var(--white); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--gray);
+    }
+
+    .footer-bottom a { color: var(--gray); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--white); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      .nav-links, nav > a.btn-primary { display: none; }
+      .nav-hamburger { display: flex; }
+
+      .hero { padding: 60px 20px 0; }
+      .card-apis { left: 0; bottom: 60px; }
+      .card-bandwidth { right: 0; bottom: 40px; }
+
+      .section { padding: 70px 24px; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .stats-inner { grid-template-columns: 1fr 1fr; padding: 48px 24px; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
+
+      .cta-banner { flex-direction: column; text-align: center; padding: 40px 28px; }
+      .cta-actions { flex-direction: column; width: 100%; }
+      .btn-white, .btn-primary { width: 100%; text-align: center; }
+
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+      footer { padding: 48px 24px 28px; }
+      .cta-section { padding: 0 24px 70px; }
+    }
+
+    @media (max-width: 560px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: 1fr 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════ NAVBAR ═══════════════ -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">
+        <!-- layered lines icon -->
+        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="4" width="14" height="2" rx="1" fill="#000"/>
+          <rect x="2" y="8" width="10" height="2" rx="1" fill="#000"/>
+          <rect x="2" y="12" width="12" height="2" rx="1" fill="#000"/>
+        </svg>
+      </div>
+      DataShayna
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#guideline">Guideline</a></li>
+      <li><a href="#developer">Developer</a></li>
+      <li><a href="#jobs">Jobs</a></li>
+    </ul>
+
+    <a href="#" class="btn-primary">Get Started</a>
+
+    <button class="nav-hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <section class="hero">
+    <span class="hero-tag">Better Than Gold</span>
+    <h1 class="hero-title">Connect to Our APIs<br/>and Receive More Money</h1>
+    <p class="hero-sub">Mining what you already have and sending to different IPs to make more efficient</p>
+
+    <div class="hero-image-wrapper">
+
+      <!-- Floating card: APIs Hit -->
+      <div class="stat-card card-apis">
+        <div class="stat-card-row">
+          <div class="stat-icon">
+            <svg viewBox="0 0 20 20" fill="none">
+              <circle cx="10" cy="10" r="8" stroke="#3dce6e" stroke-width="1.5"/>
+              <path d="M2 10h16M10 2c-2.5 2.5-4 5-4 8s1.5 5.5 4 8M10 2c2.5 2.5 4 5 4 8s-1.5 5.5-4 8" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="stat-value">350K</div>
+            <div class="stat-label">Today's APIs Hit</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero image placeholder (replace src with real image) -->
+      <div class="hero-image-placeholder">
+        <svg width="140" height="200" viewBox="0 0 140 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.18">
+          <ellipse cx="70" cy="60" rx="30" ry="30" fill="#fff"/>
+          <path d="M10 200c0-33.137 26.863-60 60-60s60 26.863 60 60" fill="#fff"/>
+        </svg>
+      </div>
+
+      <!-- Floating card: Bandwidth -->
+      <div class="stat-card card-bandwidth">
+        <div class="stat-value" style="font-size:17px;">150GB</div>
+        <div class="stat-label">Free Bandwidth</div>
+        <div class="bandwidth-bars">
+          <div class="bar-row">
+            <div class="bar-track">
+              <div class="bar-fill" style="width:75%; background:#6c63ff;"></div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-track">
+              <div class="bar-fill" style="width:50%; background:#3dce6e;"></div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-track">
+              <div class="bar-fill" style="width:88%; background:#3b82f6;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ STATS ROW ═══════════════ -->
+  <div class="stats-row">
+    <div class="stats-inner">
+      <div>
+        <div class="stat-num">350K+</div>
+        <div class="stat-desc">Daily API Requests</div>
+      </div>
+      <div>
+        <div class="stat-num">99.9%</div>
+        <div class="stat-desc">Uptime Guarantee</div>
+      </div>
+      <div>
+        <div class="stat-num">12K+</div>
+        <div class="stat-desc">Active Developers</div>
+      </div>
+      <div>
+        <div class="stat-num">80+</div>
+        <div class="stat-desc">Countries Served</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SERVICES ═══════════════ -->
+  <div id="services" class="section">
+    <p class="section-tag">What We Offer</p>
+    <h2 class="section-title">Powerful APIs for Every Need</h2>
+    <p class="section-sub">From data mining to bandwidth optimization, DataShayna gives you the infrastructure to scale without limits.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(61,206,110,0.12);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#3dce6e" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Global API Network</h3>
+        <p class="feature-desc">Route requests through our worldwide network of nodes for low-latency, high-throughput data delivery.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(108,99,255,0.12);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#6c63ff" stroke-width="2" stroke-linecap="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <path d="M8 21h8M12 17v4"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">IP Distribution</h3>
+        <p class="feature-desc">Send data across different IPs simultaneously to maximize throughput and avoid rate limiting.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(59,130,246,0.12);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">High Speed Transfers</h3>
+        <p class="feature-desc">Blazing-fast data pipelines with 150GB of free bandwidth to get you started immediately.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(245,166,35,0.12);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="2" stroke-linecap="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Secure by Default</h3>
+        <p class="feature-desc">End-to-end encryption and token-based auth ensure your data stays private at every hop.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(61,206,110,0.12);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#3dce6e" stroke-width="2" stroke-linecap="round">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Real-Time Analytics</h3>
+        <p class="feature-desc">Monitor every API call live — usage dashboards, error rates, and latency histograms included.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(239,68,68,0.12);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round">
+            <polyline points="16 18 22 12 16 6"/>
+            <polyline points="8 6 2 12 8 18"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Developer-First SDK</h3>
+        <p class="feature-desc">REST & WebSocket APIs with SDKs for Node.js, Python, Go, and more. Get running in minutes.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PRICING ═══════════════ -->
+  <div id="pricing" class="section" style="padding-top:0;">
+    <p class="section-tag">Pricing</p>
+    <h2 class="section-title">Simple, Transparent Plans</h2>
+    <p class="section-sub">No hidden fees. Scale up or down any time. All plans include our core API infrastructure.</p>
+
+    <div class="pricing-grid">
+      <!-- Starter -->
+      <div class="pricing-card">
+        <p class="pricing-plan">Starter</p>
+        <div class="pricing-price"><span>$</span>0</div>
+        <p class="pricing-period">/ month, free forever</p>
+        <hr class="pricing-divider" />
+        <ul class="pricing-features">
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>10K API requests / day</li>
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>5GB bandwidth</li>
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>Community support</li>
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>Basic analytics</li>
+        </ul>
+        <button class="btn-outline">Get Started Free</button>
+      </div>
+
+      <!-- Pro (featured) -->
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Most Popular</div>
+        <p class="pricing-plan">Pro</p>
+        <div class="pricing-price"><span>$</span>49</div>
+        <p class="pricing-period">/ month, billed monthly</p>
+        <hr class="pricing-divider" />
+        <ul class="pricing-features">
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>500K API requests / day</li>
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>150GB bandwidth</li>
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>Priority support</li>
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>Advanced analytics</li>
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>IP distribution</li>
+        </ul>
+        <button class="btn-green">Start Pro Plan</button>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="pricing-card">
+        <p class="pricing-plan">Enterprise</p>
+        <div class="pricing-price" style="font-size:36px;">Custom</div>
+        <p class="pricing-period">contact us for pricing</p>
+        <hr class="pricing-divider" />
+        <ul class="pricing-features">
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>Unlimited API requests</li>
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>Unlimited bandwidth</li>
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>Dedicated SLA</li>
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>Custom integrations</li>
+          <li><span class="check-icon"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#3dce6e" stroke-width="1.5" stroke-linecap="round"/></svg></span>On-premise option</li>
+        </ul>
+        <button class="btn-outline">Contact Sales</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ CTA BANNER ═══════════════ -->
+  <div class="cta-section">
+    <div class="cta-banner">
+      <div class="cta-left">
+        <h2 class="cta-title">Ready to connect and start earning?</h2>
+        <p class="cta-sub">Join thousands of developers already monetizing their infrastructure through DataShayna's API network.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="#" class="btn-primary" style="padding:14px 32px; font-size:15px;">Get Started Free</a>
+        <a href="#" class="btn-white">View Docs</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer id="jobs">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#" class="nav-logo" style="text-decoration:none;">
+            <div class="nav-logo-icon">
+              <svg viewBox="0 0 18 18" fill="none">
+                <rect x="2" y="4" width="14" height="2" rx="1" fill="#000"/>
+                <rect x="2" y="8" width="10" height="2" rx="1" fill="#000"/>
+                <rect x="2" y="12" width="12" height="2" rx="1" fill="#000"/>
+              </svg>
+            </div>
+            DataShayna
+          </a>
+          <p>The fastest way to connect your infrastructure to a global API network and start generating revenue from your bandwidth.</p>
+        </div>
+
+        <div class="footer-col" id="guideline">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Changelog</a></li>
+            <li><a href="#">Roadmap</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col" id="developer">
+          <h4>Developer</h4>
+          <ul>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">API Reference</a></li>
+            <li><a href="#">SDKs</a></li>
+            <li><a href="#">Status Page</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#jobs">Jobs</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 DataShayna. All rights reserved.</span>
+        <span>
+          <a href="#">Privacy Policy</a>&ensp;&middot;&ensp;
+          <a href="#">Terms of Service</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

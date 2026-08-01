@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order Success — LuxSpace</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .success-page {
+      min-height: calc(100vh - 100px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px 80px;
+      text-align: center;
+    }
+
+    .success-illustration {
+      width: 280px;
+      max-width: 90%;
+      margin-bottom: 48px;
+    }
+
+    .success-page h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 16px;
+    }
+
+    .success-page p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 380px;
+      margin-bottom: 36px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay" id="mobileMenu">
+  <button class="mobile-close" onclick="toggleMenu()">&#x2715;</button>
+  <a href="index.html#showcase" onclick="toggleMenu()">Showcase</a>
+  <a href="index.html#catalog" onclick="toggleMenu()">Catalog</a>
+  <a href="index.html#delivery" onclick="toggleMenu()">Delivery</a>
+  <a href="index.html#rewards" onclick="toggleMenu()">Rewards</a>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">LuxSpace</a>
+  <ul class="nav-links">
+    <li><a href="index.html#showcase">Showcase</a></li>
+    <li><a href="index.html#catalog">Catalog</a></li>
+    <li><a href="index.html#delivery">Delivery</a></li>
+    <li><a href="index.html#rewards">Rewards</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="cart.html" class="cart-btn">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    </a>
+    <button class="hamburger-btn" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- SUCCESS CONTENT -->
+<div class="success-page">
+  <!-- Delivery Illustration -->
+  <svg class="success-illustration" viewBox="0 0 320 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Polka dot pattern (background decoration) -->
+    <g opacity=".35">
+      <circle cx="80" cy="90" r="4" fill="#555"/>
+      <circle cx="96" cy="90" r="4" fill="#555"/>
+      <circle cx="112" cy="90" r="4" fill="#555"/>
+      <circle cx="80" cy="106" r="4" fill="#555"/>
+      <circle cx="96" cy="106" r="4" fill="#555"/>
+      <circle cx="112" cy="106" r="4" fill="#555"/>
+      <circle cx="80" cy="122" r="4" fill="#555"/>
+      <circle cx="96" cy="122" r="4" fill="#555"/>
+      <circle cx="112" cy="122" r="4" fill="#555"/>
+      <circle cx="80" cy="138" r="4" fill="#555"/>
+      <circle cx="96" cy="138" r="4" fill="#555"/>
+      <circle cx="112" cy="138" r="4" fill="#555"/>
+      <circle cx="80" cy="154" r="4" fill="#555"/>
+      <circle cx="96" cy="154" r="4" fill="#555"/>
+      <circle cx="112" cy="154" r="4" fill="#555"/>
+    </g>
+
+    <!-- Gift box body -->
+    <rect x="148" y="120" width="108" height="96" rx="3" fill="#D4507A"/>
+    <!-- Gift box stripe vertical -->
+    <rect x="196" y="120" width="16" height="96" fill="#B8D8A0"/>
+    <!-- Gift box lid -->
+    <rect x="142" y="108" width="120" height="18" rx="3" fill="#C03868"/>
+    <!-- Lid stripe -->
+    <rect x="196" y="108" width="16" height="18" fill="#A0C878"/>
+    <!-- Ribbon bow left loop -->
+    <path d="M196 108 Q170 80 160 88 Q152 96 180 108 Z" fill="#4A3A2A"/>
+    <!-- Ribbon bow right loop -->
+    <path d="M212 108 Q238 80 248 88 Q256 96 228 108 Z" fill="#4A3A2A"/>
+    <!-- Bow knot center -->
+    <ellipse cx="204" cy="108" rx="10" ry="8" fill="#3A2A1A"/>
+
+    <!-- Car body -->
+    <rect x="60" y="196" width="200" height="60" rx="14" fill="#EEE8D5"/>
+    <!-- Car roof -->
+    <path d="M108 196 Q120 158 160 152 Q200 148 212 196 Z" fill="#D4CCBC"/>
+    <!-- Car windows -->
+    <path d="M116 196 Q124 166 158 162 Q192 158 200 196 Z" fill="#A8C8D8" opacity=".85"/>
+    <!-- Window divider -->
+    <rect x="158" y="162" width="3" height="34" fill="#EEE8D5"/>
+    <!-- Car color accent (teal/mint) -->
+    <rect x="60" y="220" width="200" height="10" rx="0" fill="#78C8A8" opacity=".5"/>
+    <!-- Car front grille -->
+    <rect x="240" y="214" width="22" height="22" rx="4" fill="#C8C0A8"/>
+    <rect x="244" y="218" width="14" height="4" rx="2" fill="#A8A090"/>
+    <rect x="244" y="226" width="14" height="4" rx="2" fill="#A8A090"/>
+    <!-- Headlight -->
+    <rect x="248" y="210" width="14" height="8" rx="3" fill="#F8F0D0"/>
+    <!-- Car rear -->
+    <rect x="58" y="214" width="10" height="12" rx="3" fill="#C8C0A8"/>
+    <!-- Car door lines -->
+    <line x1="150" y1="200" x2="150" y2="250" stroke="#D8D0C0" stroke-width="1.5"/>
+    <!-- Wheel wells -->
+    <circle cx="108" cy="258" r="22" fill="#EEE8D5"/>
+    <circle cx="212" cy="258" r="22" fill="#EEE8D5"/>
+    <!-- Tyres -->
+    <circle cx="108" cy="258" r="20" fill="#2A2A2A"/>
+    <circle cx="212" cy="258" r="20" fill="#2A2A2A"/>
+    <!-- Hubcaps -->
+    <circle cx="108" cy="258" r="10" fill="#555"/>
+    <circle cx="212" cy="258" r="10" fill="#555"/>
+    <circle cx="108" cy="258" r="4" fill="#888"/>
+    <circle cx="212" cy="258" r="4" fill="#888"/>
+    <!-- Road line -->
+    <rect x="0" y="276" width="320" height="2" rx="1" fill="rgba(0,0,0,.08)"/>
+  </svg>
+
+  <h1>Ah yes it's success!</h1>
+  <p>Furniture yang anda beli akan kami kirimkan saat ini juga so now please sit tight and be ready for it</p>
+  <a href="index.html" class="btn-pink">Back to Shop</a>
+</div>
+
+<script>
+  function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('active'); }
+</script>
+</body>
+</html>

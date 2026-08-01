@@ -197,6 +197,28 @@
       line-height: 32px;
       max-width: 380px;
     }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      body { overflow: auto; }
+
+      .split-layout { flex-direction: column; }
+
+      .left-panel {
+        width: 100%;
+        min-height: 100vh;
+        padding: 40px 24px 60px;
+      }
+
+      .right-panel { display: none; }
+
+      .signin-heading { font-size: 28px; margin-top: 40px; }
+      .signin-subtitle { font-size: 16px; }
+      .form-label { font-size: 16px; }
+      .form-input { font-size: 15px; }
+      .btn-primary-full { font-size: 16px; padding: 14px 30px; }
+      .signup-link a { font-size: 16px; }
+    }
   </style>
 </head>
 <body>
@@ -255,7 +277,7 @@
 
       <!-- Sign Up Link -->
       <div class="signup-link">
-        <a href="#">Sign Up</a>
+        <a href="signup.html">Sign Up</a>
       </div>
     </div>
 

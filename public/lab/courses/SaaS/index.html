@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Telepatia — Always Connected. No Lagging.</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #4B35E8;
+      --purple-dark: #3A28C5;
+      --teal: #00D4AA;
+      --bg: #EEEDF7;
+      --white: #FFFFFF;
+      --text: #1A1A2E;
+      --muted: #6B6B8A;
+      --radius: 16px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 80px;
+      background: var(--bg);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--purple);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg { width: 20px; height: 20px; }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 500;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover { color: var(--purple); }
+    .nav-links a.active { color: var(--purple); }
+
+    /* ── HERO ── */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      padding: 40px 80px 60px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    /* left collage */
+    .hero-visual {
+      flex: 0 0 480px;
+      position: relative;
+      height: 380px;
+    }
+
+    .dashed-box {
+      position: absolute;
+      border: 2px dashed #B8B3F0;
+      border-radius: 20px;
+    }
+
+    .dashed-box-outer {
+      inset: 0 30px 0 0;
+    }
+
+    .photo {
+      position: absolute;
+      border-radius: 20px;
+      object-fit: cover;
+      box-shadow: 0 12px 40px rgba(0,0,0,.14);
+    }
+
+    .photo-man {
+      width: 200px;
+      height: 240px;
+      right: 30px;
+      top: 0;
+    }
+
+    .photo-woman {
+      width: 200px;
+      height: 220px;
+      left: 10px;
+      bottom: 0;
+    }
+
+    .flag {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    }
+
+    .flag-uk  { top: 50px; left: 60px; }
+    .flag-es  { top: -10px; right: 20px; }
+
+    .badge {
+      position: absolute;
+      background: var(--white);
+      border-radius: 14px;
+      padding: 10px 16px;
+      box-shadow: 0 6px 24px rgba(0,0,0,.10);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .badge-speed {
+      bottom: 60px;
+      left: 30px;
+    }
+
+    .badge-call {
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .badge-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--purple);
+    }
+
+    .badge-wifi svg { width: 16px; height: 16px; color: var(--purple); }
+
+    /* right copy */
+    .hero-copy {
+      flex: 1;
+    }
+
+    .hero-copy h1 {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 20px;
+      letter-spacing: -1px;
+    }
+
+    .hero-copy p {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 380px;
+      margin-bottom: 36px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: var(--purple);
+      color: var(--white);
+      border: none;
+      padding: 14px 30px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+
+    .btn-primary:hover { background: var(--purple-dark); transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid #D0CDED;
+      padding: 13px 28px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color .2s, transform .15s;
+    }
+
+    .btn-outline:hover { border-color: var(--purple); color: var(--purple); transform: translateY(-1px); }
+
+    /* ── BRAND LOGOS ── */
+    .brands {
+      padding: 40px 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 64px;
+      background: var(--bg);
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #9B9BA8;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+      opacity: .7;
+    }
+
+    .brand-logo svg { width: 22px; height: 22px; }
+
+    /* ── PRICING ── */
+    .pricing {
+      padding: 80px 80px 100px;
+      text-align: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .pricing h2 {
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .pricing .subtitle {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 400px;
+      margin: 0 auto 52px;
+      line-height: 1.6;
+    }
+
+    .pricing-cards {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 36px 32px;
+      flex: 1;
+      max-width: 340px;
+      text-align: left;
+      box-shadow: 0 8px 40px rgba(75,53,232,.06);
+    }
+
+    .card.popular {
+      background: var(--purple);
+      color: var(--white);
+      padding-top: 28px;
+    }
+
+    .card-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+
+    .card-tier {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .card.popular .card-tier { color: rgba(255,255,255,.7); }
+
+    .card-price {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    .card.popular .card-desc { color: rgba(255,255,255,.7); }
+
+    .card-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .card-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .check {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: #EAE8FF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .card.popular .check { background: rgba(255,255,255,.2); }
+
+    .check svg { width: 11px; height: 11px; color: var(--purple); }
+    .card.popular .check svg { color: var(--white); }
+
+    .btn-plan {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: transform .15s, opacity .2s;
+    }
+
+    .btn-plan:hover { transform: translateY(-1px); opacity: .9; }
+
+    .btn-plan-outline {
+      background: transparent;
+      border: 2px solid #D0CDED;
+      color: var(--text);
+    }
+
+    .btn-plan-teal {
+      background: var(--teal);
+      color: #0A2A23;
+    }
+
+    .card-third {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 36px 32px;
+      flex: 1;
+      max-width: 340px;
+      text-align: left;
+      box-shadow: 0 8px 40px rgba(75,53,232,.06);
+    }
+
+    /* ── PLACEHOLDER PHOTOS (gradient stand-ins when images not available) ── */
+    .photo-placeholder {
+      position: absolute;
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.14);
+    }
+
+    .photo-placeholder-man {
+      width: 200px;
+      height: 240px;
+      right: 30px;
+      top: 0;
+      background: linear-gradient(135deg, #c8c6f0 0%, #9b96e8 100%);
+      overflow: hidden;
+    }
+
+    .photo-placeholder-woman {
+      width: 200px;
+      height: 220px;
+      left: 10px;
+      bottom: 0;
+      background: linear-gradient(135deg, #f0ede8 0%, #d4cfc8 100%);
+      overflow: hidden;
+    }
+
+    /* ── FOOTER SPACING ── */
+    .spacer { height: 60px; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="logo" href="#">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+          <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+          <circle cx="12" cy="20" r="1" fill="white" stroke="none"/>
+        </svg>
+      </div>
+      telepatia
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#" class="active">Features</a></li>
+      <li><a href="#">Pricing</a></li>
+      <li><a href="#">Stories</a></li>
+      <li><a href="#">Premium</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <!-- visual collage -->
+    <div class="hero-visual">
+      <!-- dashed decorative border -->
+      <div class="dashed-box dashed-box-outer"></div>
+
+      <!-- man photo -->
+      <img
+        class="photo photo-man"
+        src="http://localhost:3845/assets/058e9595146fab42ef623ebdc129e670b590fab2.png"
+        alt="Man using laptop outdoors"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+      />
+      <div class="photo-placeholder photo-placeholder-man" style="display:none;">
+        <svg viewBox="0 0 200 240" width="200" height="240" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="240" fill="#b8b3f0"/>
+          <circle cx="100" cy="85" r="42" fill="#8880d8"/>
+          <ellipse cx="100" cy="210" rx="72" ry="52" fill="#8880d8"/>
+        </svg>
+      </div>
+
+      <!-- woman photo -->
+      <div class="photo-placeholder photo-placeholder-woman">
+        <svg viewBox="0 0 200 220" width="200" height="220" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="220" fill="#d4cfc8"/>
+          <circle cx="100" cy="78" r="40" fill="#b8b2a8"/>
+          <ellipse cx="100" cy="196" rx="72" ry="52" fill="#b8b2a8"/>
+        </svg>
+      </div>
+
+      <!-- flags -->
+      <div class="flag flag-uk" style="background:#012169; display:flex; align-items:center; justify-content:center;">
+        <svg viewBox="0 0 60 40" width="30" height="20" xmlns="http://www.w3.org/2000/svg">
+          <rect width="60" height="40" fill="#012169"/>
+          <path d="M0,0 L60,40 M60,0 L0,40" stroke="white" stroke-width="8"/>
+          <path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="4"/>
+          <path d="M30,0 V40 M0,20 H60" stroke="white" stroke-width="12"/>
+          <path d="M30,0 V40 M0,20 H60" stroke="#C8102E" stroke-width="7"/>
+        </svg>
+      </div>
+
+      <div class="flag flag-es" style="background:#AA151B; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+        <svg viewBox="0 0 60 40" width="30" height="20" xmlns="http://www.w3.org/2000/svg">
+          <rect width="60" height="40" fill="#AA151B"/>
+          <rect y="10" width="60" height="20" fill="#F1BF00"/>
+        </svg>
+      </div>
+
+      <!-- badges -->
+      <div class="badge badge-speed">
+        <div class="badge-wifi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4B35E8" stroke-width="2.5" stroke-linecap="round">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+            <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+            <circle cx="12" cy="17" r="1" fill="#4B35E8" stroke="none"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:11px; color:#9B9BB8; font-weight:500;">Speed Up to</div>
+          <div style="font-size:15px; font-weight:800; color:#1A1A2E;">20Gbps</div>
+        </div>
+      </div>
+
+      <div class="badge badge-call">
+        <div class="badge-dot"></div>
+        <div>
+          <div style="font-size:11px; color:#9B9BB8; font-weight:500;">In a Call</div>
+          <div style="font-size:15px; font-weight:800; color:#1A1A2E;">1:30:00</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- copy -->
+    <div class="hero-copy">
+      <h1>Always Connected.<br>No Lagging.</h1>
+      <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form</p>
+      <div class="hero-actions">
+        <button class="btn-primary">See Pricing</button>
+        <button class="btn-outline">Testimonials</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- BRAND LOGOS -->
+  <div class="brands">
+    <!-- Apple -->
+    <div class="brand-logo">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+      </svg>
+      Apple
+    </div>
+
+    <!-- Adobe -->
+    <div class="brand-logo">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13.966 22.624l-1.69-4.281H8.122l3.892-9.144 5.662 13.425zM8.884 1.376H0v21.248zm15.116 0h-8.884l8.884 21.248z"/>
+      </svg>
+      Adobe
+    </div>
+
+    <!-- Slack -->
+    <div class="brand-logo">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/>
+      </svg>
+      slack
+    </div>
+
+    <!-- Spotify -->
+    <div class="brand-logo">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+      </svg>
+      Spotify
+    </div>
+
+    <!-- Google -->
+    <div class="brand-logo">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/>
+      </svg>
+      Google
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <section class="pricing">
+    <h2>Easy Budget.</h2>
+    <p class="subtitle">There are many variations of passages of Lorem Ipsum available, but the majo.</p>
+
+    <div class="pricing-cards">
+
+      <!-- Basic -->
+      <div class="card">
+        <div class="card-tier">Basic</div>
+        <div class="card-price">$50,000</div>
+        <div class="card-desc">Disarankan untuk baru yang memulai bisnis tahun ini</div>
+        <ul class="card-features">
+          <li>
+            <div class="check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="#4B35E8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="2,6 5,9 10,3"/>
+              </svg>
+            </div>
+            Live Support
+          </li>
+          <li>
+            <div class="check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="#4B35E8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="2,6 5,9 10,3"/>
+              </svg>
+            </div>
+            10GB Storage
+          </li>
+          <li>
+            <div class="check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="#4B35E8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="2,6 5,9 10,3"/>
+              </svg>
+            </div>
+            Basic Themes
+          </li>
+        </ul>
+        <button class="btn-plan btn-plan-outline">Choose This Plan</button>
+      </div>
+
+      <!-- Most Popular -->
+      <div class="card popular">
+        <div class="card-label">Most Popular</div>
+        <div class="card-tier">Business</div>
+        <div class="card-price">$288,800</div>
+        <div class="card-desc">Cocok sekali untuk anda yang sedang membangun bisnis</div>
+        <ul class="card-features">
+          <li>
+            <div class="check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="2,6 5,9 10,3"/>
+              </svg>
+            </div>
+            Live Support
+          </li>
+          <li>
+            <div class="check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="2,6 5,9 10,3"/>
+              </svg>
+            </div>
+            Unlimited Storage
+          </li>
+          <li>
+            <div class="check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="2,6 5,9 10,3"/>
+              </svg>
+            </div>
+            Unlock 1K Themes
+          </li>
+          <li>
+            <div class="check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="2,6 5,9 10,3"/>
+              </svg>
+            </div>
+            SEO Optimized
+          </li>
+          <li>
+            <div class="check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="2,6 5,9 10,3"/>
+              </svg>
+            </div>
+            Premium Features
+          </li>
+        </ul>
+        <button class="btn-plan btn-plan-teal">Choose This Plan</button>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="card">
+        <div class="card-tier">Enterprise</div>
+        <div class="card-price">$599,000</div>
+        <div class="card-desc">Solusi terbaik untuk perusahaan besar dengan kebutuhan tinggi</div>
+        <ul class="card-features">
+          <li>
+            <div class="check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="#4B35E8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="2,6 5,9 10,3"/>
+              </svg>
+            </div>
+            Live Support
+          </li>
+          <li>
+            <div class="check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="#4B35E8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="2,6 5,9 10,3"/>
+              </svg>
+            </div>
+            Unlimited Storage
+          </li>
+          <li>
+            <div class="check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="#4B35E8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="2,6 5,9 10,3"/>
+              </svg>
+            </div>
+            Unlock 1K Themes
+          </li>
+          <li>
+            <div class="check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="#4B35E8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="2,6 5,9 10,3"/>
+              </svg>
+            </div>
+            Dedicated Account Manager
+          </li>
+        </ul>
+        <button class="btn-plan btn-plan-outline">Choose This Plan</button>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="spacer"></div>
+
+</body>
+</html>

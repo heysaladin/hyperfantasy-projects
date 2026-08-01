@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StoreGG - Oops! Not Found</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #ffffff;
+      color: #0c145a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .card {
+      width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .illustration {
+      width: 483px;
+      height: 300px;
+      margin-bottom: 40px;
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #0c145a;
+      margin-bottom: 16px;
+    }
+
+    .page-desc {
+      font-size: 18px;
+      font-weight: 400;
+      color: #0c145a;
+      line-height: 32px;
+      width: 344px;
+      margin-bottom: 40px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: #4d17e2;
+      color: #ffffff;
+      border-radius: 100px;
+      padding: 12px 40px;
+      font-weight: 500;
+      font-size: 18px;
+      font-family: 'Poppins', sans-serif;
+      border: none;
+      cursor: pointer;
+      height: 50px;
+      line-height: 26px;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover { background: #3b10c4; }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      body { align-items: flex-start; }
+      .card {
+        width: 100%;
+        padding: 60px 24px;
+      }
+      .illustration {
+        width: 100%;
+        max-width: 280px;
+        height: auto;
+      }
+      .page-title { font-size: 26px; }
+      .page-desc { width: 100%; font-size: 16px; line-height: 28px; }
+      .btn-primary {
+        width: 100%;
+        display: block;
+        text-align: center;
+        padding: 12px 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <img class="illustration" src="http://localhost:3845/assets/c16b0ffd949861f7c0f835ce6aaee937add53f62.svg" alt="404 Illustration">
+
+    <h1 class="page-title">Oops! Not Found</h1>
+    <p class="page-desc">Halaman yang anda kunjungi sudah tidak tersedia pada sistem kami</p>
+
+    <a href="landing.html" class="btn-primary">Home Page</a>
+  </div>
+
+</body>
+</html>

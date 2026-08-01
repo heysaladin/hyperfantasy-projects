@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apple Article — Mobile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #fff;
+      font-family: -apple-system, 'SF Pro Text', sans-serif;
+      max-width: 390px;
+      margin: 0 auto;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Status Bar ── */
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px 0;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      pointer-events: none;
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── Article Hero ── */
+    .article-hero {
+      width: 100%;
+      height: 450px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .article-hero img.hero-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.72) 57%);
+    }
+
+    /* Back / More pill buttons */
+    .nav-pill {
+      position: absolute;
+      top: 62px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(255,255,255,0.7);
+      border-radius: 38px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .nav-pill.left  { left: 20px; }
+    .nav-pill.right { right: 20px; }
+
+    /* Article header over hero image */
+    .article-header {
+      position: absolute;
+      bottom: 32px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      z-index: 10;
+    }
+
+    .article-meta { display: flex; flex-direction: column; gap: 10px; }
+    .article-meta-inner { display: flex; flex-direction: column; gap: 8px; }
+
+    .article-date {
+      font-size: 13px;
+      font-weight: 500;
+      color: #b8b8b8;
+      letter-spacing: 1.56px;
+      text-transform: uppercase;
+      line-height: 16px;
+    }
+
+    .article-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.84px;
+      line-height: 36px;
+    }
+
+    .article-excerpt {
+      font-size: 16px;
+      color: #dedede;
+      letter-spacing: -0.32px;
+      line-height: 24px;
+    }
+
+    .article-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .article-author img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .author-label {
+      font-size: 16px;
+      color: #b8b8b8;
+      letter-spacing: -0.48px;
+      line-height: 1;
+    }
+
+    .author-label a {
+      color: #fff;
+      text-decoration: underline;
+      text-underline-position: from-font;
+    }
+
+    /* ── Article Body ── */
+    .article-body {
+      padding: 24px 20px 16px;
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      color: #090909;
+      line-height: 26px;
+    }
+
+    .article-body p + p { margin-top: 16px; }
+
+    /* ── Bottom Bar ── */
+    .bottom-bar {
+      position: sticky;
+      bottom: 0;
+      background: #fff;
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .action-count {
+      font-size: 14px;
+      font-weight: 500;
+      color: #2d2d2d;
+      letter-spacing: -0.28px;
+      line-height: 16.8px;
+    }
+
+    /* ── Home Indicator ── */
+    .home-indicator {
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      padding: 8px 0 10px;
+    }
+
+    .home-bar {
+      width: 134px;
+      height: 5px;
+      background: #808080;
+      border-radius: 100px;
+    }
+  </style>
+</head>
+<body>
+
+  <article>
+    <!-- Hero image section -->
+    <div class="article-hero">
+      <img class="hero-photo" src="http://localhost:3845/assets/8a9606daff1676b66c56ba8cfb3cc8af6869d477.png" alt="Article hero">
+      <div class="hero-overlay"></div>
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <!-- Signal bars -->
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="white">
+            <rect x="0" y="7" width="3" height="5" rx="1"/>
+            <rect x="4.5" y="5" width="3" height="7" rx="1"/>
+            <rect x="9" y="3" width="3" height="9" rx="1"/>
+            <rect x="13.5" y="0" width="3" height="12" rx="1" opacity="0.3"/>
+          </svg>
+          <!-- WiFi -->
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="white">
+            <path d="M8 9.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/>
+            <path d="M8 6c1.6 0 3 .6 4.1 1.6l1.4-1.4A8 8 0 0 0 8 4a8 8 0 0 0-5.5 2.2l1.4 1.4C4.9 6.6 6.4 6 8 6z" opacity="0.6"/>
+            <path d="M8 2.5c2.5 0 4.8 1 6.4 2.6l1.4-1.4A11 11 0 0 0 8 .5 11 11 0 0 0 .2 3.7l1.4 1.4A8.5 8.5 0 0 1 8 2.5z" opacity="0.35"/>
+          </svg>
+          <!-- Battery -->
+          <svg width="25" height="12" viewBox="0 0 25 12" fill="white">
+            <rect x="0.5" y="0.5" width="21" height="11" rx="2.5" stroke="white" stroke-opacity="0.35" fill="none"/>
+            <rect x="1.5" y="1.5" width="17" height="9" rx="1.5" fill="white"/>
+            <path d="M22.5 4v4a2 2 0 0 0 0-4z" fill="white" fill-opacity="0.4"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Back button -->
+      <div class="nav-pill left">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </div>
+
+      <!-- More button -->
+      <div class="nav-pill right">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#333">
+          <circle cx="12" cy="5" r="1.5"/>
+          <circle cx="12" cy="12" r="1.5"/>
+          <circle cx="12" cy="19" r="1.5"/>
+        </svg>
+      </div>
+
+      <!-- Article header overlay -->
+      <div class="article-header">
+        <div class="article-meta">
+          <div class="article-meta-inner">
+            <span class="article-date">March 2, 2022</span>
+            <h1 class="article-title">Apple Will Stop Selling Products in Russia</h1>
+          </div>
+          <p class="article-excerpt">The tech giant will, for now, stop selling its iPhones in Russia because of the war in Ukraine</p>
+        </div>
+        <div class="article-author">
+          <img src="http://localhost:3845/assets/9a9c99efbb351ad457d50ec1d7b025e366a56efd.png" alt="Edward Louis">
+          <p class="author-label">By <a href="#">Edward Louis</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body text -->
+    <div class="article-body">
+      <p>Apple has said it will stop doing business in Russia as a response to the country's war in Ukraine today.</p>
+      <p>"We are deeply concerned about the Russian invasion of Ukraine and stand with all of the people who are suffering as a result of the violence," Apple said in a statement provided to Motherboard. "We are supporting humanitarian efforts, providing aid for the unfolding refugee crisis, and doing all we can to support our teams in the region."</p>
+      <p>"We have taken a number of actions in response to the invasion. We have paused all product sales in Russia. Last week, we stopped all exports into our sales channel in the country," Apple said. "Apple Pay and other services have been limited. RT News and Sputnik News are no longer available for download from the App Store outside Russia. And we have disabled both traffic and live incidents in Apple Maps in Ukraine as a safety and precautionary measure for Ukrainian citizens."</p>
+      <p>The actions taken by Apple come a day after Ukrainian Vice Prime Minister Mykhailo Fedorov sent a public letter to Apple CEO Tim Cook asking him to take action. "Do everything possible to protect Ukraine, Europe, and Finally, the entire democratic world from bloody authoritarian aggression—stop supplying Apple services and products to the Russian federation, including blocking access to the App Store," Fedorov said in his letter.</p>
+    </div>
+  </article>
+
+  <!-- Bottom action bar -->
+  <div class="bottom-bar">
+    <button class="action-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      <span class="action-count">456</span>
+    </button>
+    <button class="action-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    </button>
+    <button class="action-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+    </button>
+    <button class="action-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Home indicator -->
+  <div class="home-indicator">
+    <div class="home-bar"></div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StoreGG - Well Done!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #ffffff;
+      color: #0c145a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .card {
+      width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .illustration {
+      width: 316px;
+      height: 300px;
+      margin-bottom: 40px;
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #0c145a;
+      margin-bottom: 16px;
+    }
+
+    .page-desc {
+      font-size: 18px;
+      font-weight: 400;
+      color: #0c145a;
+      line-height: 32px;
+      width: 344px;
+      margin-bottom: 40px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: #4d17e2;
+      color: #ffffff;
+      border-radius: 100px;
+      padding: 12px 40px;
+      font-weight: 500;
+      font-size: 18px;
+      font-family: 'Poppins', sans-serif;
+      border: none;
+      cursor: pointer;
+      height: 50px;
+      line-height: 26px;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover { background: #3b10c4; }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      body { align-items: flex-start; }
+      .card {
+        width: 100%;
+        padding: 60px 24px;
+      }
+      .illustration {
+        width: 100%;
+        max-width: 250px;
+        height: auto;
+      }
+      .page-title { font-size: 26px; }
+      .page-desc { width: 100%; font-size: 16px; line-height: 28px; }
+      .btn-primary {
+        width: 100%;
+        display: block;
+        padding: 12px 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <img class="illustration" src="http://localhost:3845/assets/b4e579bc74c8d8e5a5d05c51adf8e8e370ef7abc.svg" alt="Well Done Illustration">
+
+    <h1 class="page-title">Well Done!</h1>
+    <p class="page-desc">Kamu sudah bisa melakukan top up dan menjadi pemenang!</p>
+
+    <a href="details.html" class="btn-primary">Top Up</a>
+  </div>
+
+</body>
+</html>

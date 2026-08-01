@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StoreGG - Top Up &amp; Get a New Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #ffffff;
+      color: #0c145a;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: #ffffff;
+      padding: 0 120px;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+    }
+
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a { font-size: 16px; font-weight: 400; color: #7e8cac; text-decoration: none; transition: color 0.2s; }
+    .nav-links a.active { color: #0c145a; font-weight: 500; }
+    .nav-links a:hover { color: #4d17e2; }
+
+    .btn-secondary {
+      display: inline-block;
+      background: #e7eaf5;
+      color: #0c145a;
+      border-radius: 100px;
+      padding: 12px 30px;
+      font-weight: 400;
+      font-size: 16px;
+      font-family: 'Poppins', sans-serif;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: #4d17e2;
+      color: #ffffff;
+      border-radius: 100px;
+      padding: 12px 30px;
+      font-weight: 500;
+      font-size: 16px;
+      font-family: 'Poppins', sans-serif;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding: 80px 120px;
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      max-width: 1440px;
+      margin: 0 auto;
+      min-height: 640px;
+    }
+
+    .hero-left { width: 50%; flex-shrink: 0; }
+
+    .hero-greeting { font-size: 18px; color: #7e8cac; margin-bottom: 16px; }
+
+    .hero-title {
+      font-size: 42px;
+      font-weight: 700;
+      color: #0c145a;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero-vectors { display: flex; gap: 16px; align-items: center; margin-bottom: 24px; }
+
+    .hero-desc { font-size: 18px; color: #0c145a; line-height: 32px; margin-bottom: 40px; max-width: 480px; }
+
+    .hero-actions { display: flex; align-items: center; gap: 40px; }
+
+    .hero-learn-more {
+      font-size: 16px;
+      font-weight: 500;
+      color: #0c145a;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .hero-right {
+      width: 50%;
+      flex-shrink: 0;
+      position: relative;
+      height: 520px;
+    }
+
+    .hero-images {
+      position: relative;
+      width: 600px;
+      height: 520px;
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .how-it-works {
+      padding: 80px 120px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .section-title-center {
+      font-size: 32px;
+      font-weight: 700;
+      color: #0c145a;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .cards-row { display: flex; gap: 30px; justify-content: center; }
+
+    .how-card {
+      background: #f9faff;
+      border-radius: 26px;
+      padding: 30px;
+      width: 360px;
+      flex-shrink: 0;
+    }
+
+    .how-card img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 20px; }
+    .how-card h3 { font-size: 22px; font-weight: 600; color: #0c145a; margin-bottom: 12px; }
+    .how-card p { font-size: 18px; font-weight: 400; color: #0c145a; line-height: 32px; }
+
+    /* ===== FEATURED GAMES ===== */
+    .featured-games {
+      padding: 80px 120px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .section-title-left { font-size: 32px; font-weight: 700; color: #0c145a; margin-bottom: 40px; }
+
+    .games-row { display: flex; gap: 20px; align-items: stretch; }
+
+    .game-card {
+      width: 205px;
+      height: 270px;
+      border-radius: 26px;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+      cursor: pointer;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .game-card:hover {
+      box-shadow: 0 0 0 4px #2b2467;
+    }
+
+    .game-card img.game-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* ===== HOVER OVERLAY ===== */
+    .card-hover {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .game-card:hover .card-hover {
+      opacity: 1;
+    }
+
+    .card-hover-icon {
+      width: 54px;
+      height: 54px;
+    }
+
+    .game-card-highlight {
+      width: 205px;
+      height: 270px;
+      border-radius: 26px;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+      border: 4px solid #2b2467;
+      cursor: pointer;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .game-card-highlight:hover {
+      box-shadow: 0 0 0 3px #4d17e2;
+    }
+
+    .game-card-highlight img.game-bg { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .game-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .game-overlay img { width: 53px; height: 35px; }
+    .game-overlay-title { font-size: 20px; font-weight: 600; color: #ffffff; text-align: center; line-height: 1.3; }
+    .game-overlay-subtitle { font-size: 16px; font-weight: 300; color: #ffffff; }
+
+    /* ===== STATS ===== */
+    .stats { padding: 80px 120px; max-width: 1440px; margin: 0 auto; }
+
+    .stats-row { display: flex; align-items: center; justify-content: center; }
+
+    .stat-item { text-align: center; padding: 0 60px; }
+    .stat-number { font-size: 32px; font-weight: 700; color: #0c145a; margin-bottom: 8px; }
+    .stat-label { font-size: 18px; font-weight: 400; color: #7e8cac; }
+
+    .stat-divider-img { height: 94px; width: 1px; flex-shrink: 0; display: block; }
+
+    /* ===== STORY ===== */
+    .story {
+      padding: 80px 120px;
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 80px;
+    }
+
+    .story-right { flex: 1; }
+    .story-right h2 { font-size: 32px; font-weight: 700; color: #0c145a; line-height: 1.3; margin-bottom: 24px; }
+    .story-right p { font-size: 18px; color: #0c145a; line-height: 32px; width: 344px; margin-bottom: 32px; }
+
+    /* ===== FOOTER ===== */
+    .footer { background: #f9faff; padding: 80px 120px; }
+
+    .footer-top { display: flex; gap: 80px; margin-bottom: 60px; }
+    .footer-brand-desc { font-size: 18px; font-weight: 400; color: #0c145a; line-height: 32px; width: 344px; margin-top: 20px; }
+    .footer-menus { display: flex; gap: 80px; flex: 1; justify-content: flex-end; }
+    .footer-menu h4 { font-size: 16px; font-weight: 600; color: #0c145a; margin-bottom: 20px; }
+    .footer-menu ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-menu ul li a { font-size: 16px; font-weight: 400; color: #7e8cac; }
+    .footer-menu ul li a.underline-link { text-decoration: underline; color: #4d17e2; }
+    .footer-bottom { border-top: 1px solid rgba(12,20,90,0.1); padding-top: 32px; text-align: center; }
+    .footer-bottom p { font-size: 18px; color: #0c145a; }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      /* Navbar */
+      .navbar {
+        padding: 0 16px;
+        height: 90px;
+      }
+      .nav-links { display: none; }
+      .navbar > .btn-secondary { display: none; }
+
+      /* Hero */
+      .hero {
+        flex-direction: column;
+        padding: 32px 16px 40px;
+        gap: 0;
+        min-height: auto;
+      }
+      .hero-left { width: 100%; }
+      .hero-right { display: none; }
+      .hero-title { font-size: 28px; }
+      .hero-greeting { font-size: 16px; }
+      .hero-desc { font-size: 16px; line-height: 28px; margin-bottom: 32px; }
+      .hero-vectors img { max-width: 160px; }
+
+      /* How it works */
+      .how-it-works { padding: 40px 16px; }
+      .section-title-center { font-size: 22px; margin-bottom: 32px; }
+      .cards-row { flex-direction: column; gap: 16px; }
+      .how-card { width: 100%; }
+
+      /* Featured Games */
+      .featured-games { padding: 40px 16px; }
+      .section-title-left { font-size: 22px; margin-bottom: 24px; }
+      .games-row {
+        overflow-x: auto;
+        padding-bottom: 12px;
+        gap: 12px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .games-row::-webkit-scrollbar { display: none; }
+      .game-card, .game-card-highlight {
+        width: 160px;
+        height: 210px;
+        flex-shrink: 0;
+      }
+
+      /* Stats */
+      .stats { padding: 32px 16px; }
+      .stats-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        justify-items: center;
+      }
+      .stat-divider-img { display: none; }
+      .stat-item { padding: 0; }
+      .stat-number { font-size: 24px; }
+      .stat-label { font-size: 14px; }
+
+      /* Story */
+      .story {
+        flex-direction: column;
+        padding: 40px 16px;
+        gap: 24px;
+      }
+      .story > div:first-child { display: none; }
+      .story-right { flex: none; width: 100%; }
+      .story-right h2 { font-size: 24px; }
+      .story-right p { font-size: 16px; line-height: 28px; width: 100%; }
+
+      /* Footer */
+      .footer { padding: 40px 16px; }
+      .footer-top {
+        flex-direction: column;
+        gap: 24px;
+        align-items: center;
+        text-align: center;
+      }
+      .footer-brand-desc { width: 100%; text-align: center; font-size: 16px; }
+      .footer-menus {
+        flex-wrap: wrap;
+        gap: 24px;
+        justify-content: flex-start;
+        width: 100%;
+      }
+      .footer-menu { flex: 0 0 calc(50% - 12px); }
+      .footer-menu:nth-child(3) { flex: 0 0 100%; }
+      .footer-menu h4 { font-size: 14px; }
+      .footer-menu ul li a { font-size: 14px; }
+      .footer-bottom { padding-top: 24px; }
+      .footer-bottom p { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <!-- Logo -->
+    <div style="position:relative;width:60px;height:60px;flex-shrink:0;">
+      <div style="position:absolute;inset:0;
+        -webkit-mask-image:url('http://localhost:3845/assets/b4840231574fd40a333e77cb046cd9952312cace.svg');
+        mask-image:url('http://localhost:3845/assets/b4840231574fd40a333e77cb046cd9952312cace.svg');
+        -webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;">
+        <img src="http://localhost:3845/assets/73cfab58968b620aebefe6e7d3bf4e8078a3aca2.svg" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>
+      <div style="position:absolute;inset:0;
+        -webkit-mask-image:url('http://localhost:3845/assets/b4840231574fd40a333e77cb046cd9952312cace.svg');
+        mask-image:url('http://localhost:3845/assets/b4840231574fd40a333e77cb046cd9952312cace.svg');
+        -webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;">
+        <img src="http://localhost:3845/assets/17ba6e5bb4f4b685d69742326c488c241dc828a6.svg" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>
+    </div>
+
+    <!-- Nav Links -->
+    <ul class="nav-links">
+      <li><a href="landing.html" class="active">Home</a></li>
+      <li><a href="#">Games</a></li>
+      <li><a href="#">Rewards</a></li>
+      <li><a href="#">Discover</a></li>
+      <li><a href="#">Global Rank</a></li>
+    </ul>
+
+    <a href="signin.html" class="btn-secondary">Sign In</a>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <!-- Left -->
+    <div class="hero-left">
+      <p class="hero-greeting">Halo gamers,</p>
+      <h1 class="hero-title">Topup &amp; Get a New<br>Experience in Gaming</h1>
+      <div class="hero-vectors">
+        <img src="http://localhost:3845/assets/930f8fc266d688c248a970f959c7ceddfef3c6b9.svg" style="width:238px;height:auto;">
+        <img src="http://localhost:3845/assets/af40b820ebd63466f27b46a76759c9e6ffba451d.svg" style="width:96px;height:auto;">
+      </div>
+      <p class="hero-desc">Kami menyediakan jutaan cara untuk membantu players menjadi pemenang sejati</p>
+      <div class="hero-actions">
+        <a href="signin.html" class="btn-primary">Get Started</a>
+        <span class="hero-learn-more">Learn More</span>
+      </div>
+    </div>
+
+    <!-- Right: Game images collage + floating cards -->
+    <div class="hero-right">
+
+      <!-- Floating card 1 — Shayna Anne -->
+      <div style="position:absolute;left:-20px;top:100px;background:white;width:207px;height:112px;border-radius:16px;box-shadow:-8px 8px 58px 0 rgba(0,0,0,0.1);padding:14px;z-index:10;">
+        <div style="display:flex;gap:8px;align-items:flex-start;">
+          <div style="width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;">
+            <img src="http://localhost:3845/assets/ddce8a2a6757879f7701df14e3b6a6725fcb34e5.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+          </div>
+          <div>
+            <p style="font-weight:500;color:#0c145a;font-size:14px;line-height:1.3;">Shayna Anne</p>
+            <p style="color:#7e8cac;font-size:12px;font-weight:300;line-height:1.4;">Professional Gamer</p>
+          </div>
+        </div>
+        <img src="http://localhost:3845/assets/53925ffc08e31880edbdd1ca163a0eaeb92af1db.svg" style="width:156px;height:28px;margin-top:8px;display:block;">
+      </div>
+
+      <!-- 4 hero game images -->
+      <div class="hero-images">
+        <!-- Top-left image -->
+        <div style="position:absolute;left:43px;top:0;width:267px;height:267px;
+          -webkit-mask-image:url('http://localhost:3845/assets/f89a86be2d0ed95d6d565dc28e5df3fb6402ef92.svg');
+          mask-image:url('http://localhost:3845/assets/f89a86be2d0ed95d6d565dc28e5df3fb6402ef92.svg');
+          -webkit-mask-size:239px 168px;mask-size:239px 168px;
+          -webkit-mask-position:16px 7px;mask-position:16px 7px;
+          -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;">
+          <img src="http://localhost:3845/assets/1df6d85c2582267c7c245eb12466bb06ca48038d.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+
+        <!-- Top-right image -->
+        <div style="position:absolute;left:310px;top:0;width:267px;height:327px;
+          -webkit-mask-image:url('http://localhost:3845/assets/3aa8dc4d2ee069d467d4bd174dced0f6a5825a51.svg');
+          mask-image:url('http://localhost:3845/assets/3aa8dc4d2ee069d467d4bd174dced0f6a5825a51.svg');
+          -webkit-mask-size:239px 304px;mask-size:239px 304px;
+          -webkit-mask-position:0px 0px;mask-position:0px 0px;
+          -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;">
+          <img src="http://localhost:3845/assets/f359c5bbf98e3368171c832b0639abcbe69e2291.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+
+        <!-- Bottom-left image -->
+        <div style="position:absolute;left:0;top:180px;width:330px;height:331px;
+          -webkit-mask-image:url('http://localhost:3845/assets/03cb939458d23effef4fe66245e8e05fb097332f.svg');
+          mask-image:url('http://localhost:3845/assets/03cb939458d23effef4fe66245e8e05fb097332f.svg');
+          -webkit-mask-size:239px 304px;mask-size:239px 304px;
+          -webkit-mask-position:62px 0px;mask-position:62px 0px;
+          -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;">
+          <img src="http://localhost:3845/assets/ceb686284b9f112aebaacf4b025aa95b7f550cef.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+
+        <!-- Bottom-right image -->
+        <div style="position:absolute;left:298px;top:270px;width:263px;height:264px;
+          -webkit-mask-image:url('http://localhost:3845/assets/99988ef5b85373531b00e6c9302def240f2672bd.svg');
+          mask-image:url('http://localhost:3845/assets/99988ef5b85373531b00e6c9302def240f2672bd.svg');
+          -webkit-mask-size:239px 168px;mask-size:239px 168px;
+          -webkit-mask-position:12px 47px;mask-position:12px 47px;
+          -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;">
+          <img src="http://localhost:3845/assets/72b7cdd4a6a580740472a8f19c5892e42b490582.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+      </div>
+
+      <!-- Floating card 2 — Lann Knight -->
+      <div style="position:absolute;right:-20px;top:200px;background:white;width:130px;height:177px;border-radius:16px;box-shadow:-8px 8px 58px 0 rgba(0,0,0,0.1);padding:14px;text-align:center;z-index:10;">
+        <div style="width:80px;height:80px;border-radius:50%;overflow:hidden;margin:0 auto;">
+          <img src="http://localhost:3845/assets/bc0830810d223aef0912bdc88fc9063fdfd9063e.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+        <div style="display:inline-block;background:#00baff;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:500;color:white;margin-top:4px;">New</div>
+        <p style="font-weight:500;color:#0c145a;font-size:14px;margin-top:4px;line-height:1.3;">Lann Knight</p>
+        <p style="color:#7e8cac;font-size:12px;font-weight:300;line-height:1.4;">Dota 2</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section class="how-it-works">
+    <h2 class="section-title-center">It's Really That Easy to Win the Game</h2>
+    <div class="cards-row">
+      <div class="how-card">
+        <img src="http://localhost:3845/assets/b8ec9ba1add6c11d220fbe2ff7f284bd12b9a4fd.svg" alt="Start">
+        <h3>1. Start</h3>
+        <p>Pilih salah satu game yang ingin kamu top up</p>
+      </div>
+      <div class="how-card">
+        <img src="http://localhost:3845/assets/c7a828b7cedff868584a53e29584adfd8baaf3fe.svg" alt="Fill Up">
+        <h3>2. Fill Up</h3>
+        <p>Top up sesuai dengan nominal yang sudah tersedia</p>
+      </div>
+      <div class="how-card">
+        <img src="http://localhost:3845/assets/a226cd1540ce4ae0cf90b3252a748d5b6230d2a2.svg" alt="Be a Winner">
+        <h3>3. Be a Winner</h3>
+        <p>Siap digunakan untuk improve permainan kamu</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURED GAMES ===== -->
+  <section class="featured-games">
+    <h2 class="section-title-left">Our Featured Games This Year</h2>
+    <div class="games-row">
+      <!-- Game 1 -->
+      <a href="details.html" class="game-card">
+        <img src="http://localhost:3845/assets/e551845b8856b23f6029609d657421cddb5eb99d.png" alt="Game 1" class="game-img">
+        <div class="card-hover">
+          <img src="http://localhost:3845/assets/a1bbc9d1f3515a84e35a7e5ea28453bb3a765bb9.svg" alt="" class="card-hover-icon">
+        </div>
+      </a>
+
+      <!-- Game 3 — Highlighted (Call of Duty) -->
+      <a href="details.html" class="game-card-highlight">
+        <img src="http://localhost:3845/assets/6a923b7044723db05bb6444613a578a8cbd500fa.png" alt="Call of Duty" class="game-bg">
+        <div class="game-overlay">
+          <img src="http://localhost:3845/assets/032c8b7802082a0d6212ca9ed90f6af8c6253428.svg" alt="Play">
+          <p class="game-overlay-title">Call of Duty:<br>Modern</p>
+          <p class="game-overlay-subtitle">Mobile</p>
+        </div>
+      </a>
+
+      <!-- Game 4 -->
+      <a href="details.html" class="game-card">
+        <img src="http://localhost:3845/assets/aba2cf6c1f89386b9eeb7b1f7f7a6c1ab0366e7d.png" alt="Game 4" class="game-img">
+        <div class="card-hover">
+          <img src="http://localhost:3845/assets/a1bbc9d1f3515a84e35a7e5ea28453bb3a765bb9.svg" alt="" class="card-hover-icon">
+        </div>
+      </a>
+
+      <!-- Game 5 -->
+      <a href="details.html" class="game-card">
+        <img src="http://localhost:3845/assets/6f060944cb114345a79dae34ff1a468356b30c75.png" alt="Game 5" class="game-img">
+        <div class="card-hover">
+          <img src="http://localhost:3845/assets/a1bbc9d1f3515a84e35a7e5ea28453bb3a765bb9.svg" alt="" class="card-hover-icon">
+        </div>
+      </a>
+
+      <!-- Game 2 -->
+      <a href="details.html" class="game-card">
+        <img src="http://localhost:3845/assets/9284aa28ad1587e04bd88017701fd2481ac9d8e4.png" alt="Game 2" class="game-img">
+        <div class="card-hover">
+          <img src="http://localhost:3845/assets/a1bbc9d1f3515a84e35a7e5ea28453bb3a765bb9.svg" alt="" class="card-hover-icon">
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== STATS ===== -->
+  <section class="stats">
+    <div class="stats-row">
+      <div class="stat-item">
+        <p class="stat-number">290M+</p>
+        <p class="stat-label">Players Top Up</p>
+      </div>
+      <img src="http://localhost:3845/assets/9bca03af5026c571542ec321dc5af1bda3568ecc.svg" class="stat-divider-img" alt="">
+      <div class="stat-item">
+        <p class="stat-number">12.500</p>
+        <p class="stat-label">Games Available</p>
+      </div>
+      <img src="http://localhost:3845/assets/9bca03af5026c571542ec321dc5af1bda3568ecc.svg" class="stat-divider-img" alt="">
+      <div class="stat-item">
+        <p class="stat-number">99,9%</p>
+        <p class="stat-label">Happy Players</p>
+      </div>
+      <img src="http://localhost:3845/assets/9bca03af5026c571542ec321dc5af1bda3568ecc.svg" class="stat-divider-img" alt="">
+      <div class="stat-item">
+        <p class="stat-number">4.7</p>
+        <p class="stat-label">Rating Worldwide</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STORY ===== -->
+  <section class="story">
+    <!-- Left: stacked photos -->
+    <div style="position:relative;width:580px;height:430px;flex-shrink:0;">
+      <!-- Back photo -->
+      <div style="position:absolute;left:22px;top:16px;width:560px;height:400px;border-radius:26px;overflow:hidden;opacity:0.6;">
+        <img src="http://localhost:3845/assets/ba06b597e186f3425f4e521ade6b9482c593accd.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>
+      <!-- Middle photo -->
+      <div style="position:absolute;left:10px;top:8px;width:570px;height:412px;border-radius:26px;overflow:hidden;opacity:0.8;">
+        <img src="http://localhost:3845/assets/5193cd0d889b74e3cb5dbda3796b9e002d458729.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>
+      <!-- Front photo with glassmorphism -->
+      <div style="position:absolute;inset:0;border-radius:26px;overflow:hidden;">
+        <img src="http://localhost:3845/assets/e257d95a79e06551b85acbd27e0c5c0b24b88e9a.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,0.4),rgba(255,255,255,0.1));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);"></div>
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div class="story-right">
+      <h2>Win the battle.<br>Be the Champion.</h2>
+      <p>Kami menyediakan jutaan cara untuk membantu players menjadi pemenang sejati</p>
+      <a href="#" class="btn-secondary">Read Story</a>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-top">
+      <!-- Brand -->
+      <div>
+        <div style="position:relative;width:60px;height:60px;flex-shrink:0;">
+          <div style="position:absolute;inset:0;
+            -webkit-mask-image:url('http://localhost:3845/assets/b4840231574fd40a333e77cb046cd9952312cace.svg');
+            mask-image:url('http://localhost:3845/assets/b4840231574fd40a333e77cb046cd9952312cace.svg');
+            -webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;">
+            <img src="http://localhost:3845/assets/73cfab58968b620aebefe6e7d3bf4e8078a3aca2.svg" style="width:100%;height:100%;object-fit:cover;display:block;">
+          </div>
+          <div style="position:absolute;inset:0;
+            -webkit-mask-image:url('http://localhost:3845/assets/b4840231574fd40a333e77cb046cd9952312cace.svg');
+            mask-image:url('http://localhost:3845/assets/b4840231574fd40a333e77cb046cd9952312cace.svg');
+            -webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;">
+            <img src="http://localhost:3845/assets/17ba6e5bb4f4b685d69742326c488c241dc828a6.svg" style="width:100%;height:100%;object-fit:cover;display:block;">
+          </div>
+        </div>
+        <p class="footer-brand-desc">StoreGG membantu gamers untuk menjadi pemenang sejati</p>
+      </div>
+
+      <!-- Menus -->
+      <div class="footer-menus">
+        <div class="footer-menu">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#" class="underline-link">Press Release</a></li>
+            <li><a href="#">Terms of Use</a></li>
+            <li><a href="#">Privacy &amp; Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-menu">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Refund Policy</a></li>
+            <li><a href="#">Unlock Rewards</a></li>
+            <li><a href="#">Live Chatting</a></li>
+          </ul>
+        </div>
+        <div class="footer-menu">
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="#">hi@store.gg</a></li>
+            <li><a href="#">team@store.gg</a></li>
+            <li><a href="#">Pasific 12, Jakarta Selatan</a></li>
+            <li><a href="#">021 - 1122 - 9090</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>Copyright 2021. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NMADS - Explore The Beautiful World</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0d1b2e;
+      --navy2:  #0f2240;
+      --orange: #f59c0a;
+      --orange-dark: #d4870a;
+      --white:  #ffffff;
+      --gray:   #a0aab4;
+      --card-dark: rgba(13, 27, 46, 0.82);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ─────────────────────────────────── */
+    nav {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 80px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--orange);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg { width: 20px; height: 20px; }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--orange); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .btn-about {
+      color: var(--white);
+      background: transparent;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-login {
+      background: var(--orange);
+      color: var(--white);
+      border: none;
+      padding: 10px 28px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+
+    .btn-login:hover { background: var(--orange-dark); }
+
+    /* ── HERO ───────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 680px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('http://localhost:3845/assets/d8b72d0ae344a9a76c2fe738648261d69a2e9f5d.png');
+      background-size: cover;
+      background-position: center top;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        100deg,
+        rgba(10, 20, 40, 0.92) 0%,
+        rgba(10, 20, 40, 0.65) 55%,
+        rgba(10, 20, 40, 0.15) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 80px;
+      max-width: 600px;
+      margin-top: 60px;
+    }
+
+    .hero-content h1 {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.12;
+      margin-bottom: 20px;
+      color: var(--white);
+    }
+
+    .hero-content h1 span { color: var(--orange); }
+
+    .hero-content p {
+      font-size: 16px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 420px;
+    }
+
+    .btn-started {
+      background: var(--orange);
+      color: var(--white);
+      border: none;
+      padding: 16px 40px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-started:hover {
+      background: var(--orange-dark);
+      transform: translateY(-1px);
+    }
+
+    /* ── STATS BAR ──────────────────────────────── */
+    .stats-bar {
+      background: var(--white);
+      padding: 40px 80px;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .stat-item {
+      flex: 1;
+      max-width: 220px;
+      text-align: center;
+      border-right: 1px solid #e8ecf0;
+      padding: 0 40px;
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-item .number {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .stat-item .number span { color: var(--orange); }
+
+    .stat-item .label {
+      font-size: 13px;
+      color: var(--gray);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── POPULAR SECTION ────────────────────────── */
+    .popular {
+      position: relative;
+      padding: 80px 80px 100px;
+      background-image: url('http://localhost:3845/assets/f73ee2c189bfef45c13e77a2ac6e7e13920edc92.png');
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+    }
+
+    .popular::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 18, 36, 0.88);
+    }
+
+    .popular-inner { position: relative; z-index: 1; }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-header h2 {
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+
+    .section-header p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.6);
+      max-width: 420px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .dest-card {
+      border-radius: 14px;
+      overflow: hidden;
+      background: #162038;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.25s;
+    }
+
+    .dest-card:hover { transform: translateY(-6px); }
+
+    .dest-card-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .dest-card-img-placeholder {
+      width: 100%;
+      height: 220px;
+      display: block;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dest-card:nth-child(1) .dest-card-img-placeholder {
+      background: url('https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80') center/cover;
+    }
+
+    .dest-card:nth-child(2) .dest-card-img-placeholder {
+      background: url('https://images.unsplash.com/photo-1620137548891-c4a39e8c3bfb?w=400&q=80') center/cover;
+    }
+
+    .dest-card:nth-child(3) .dest-card-img-placeholder {
+      background: url('https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=400&q=80') center/cover;
+    }
+
+    .dest-card:nth-child(4) .dest-card-img-placeholder {
+      background: url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&q=80') center/cover;
+    }
+
+    .badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: var(--orange);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .dest-card-body {
+      padding: 18px 18px 20px;
+    }
+
+    .dest-card-body h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .dest-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dest-card-location {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .dest-card-location svg { width: 12px; height: 12px; opacity: 0.7; }
+
+    .dest-card-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--orange);
+      font-weight: 600;
+    }
+
+    .btn-explore {
+      display: block;
+      margin: 50px auto 0;
+      background: transparent;
+      border: 2px solid var(--orange);
+      color: var(--orange);
+      padding: 14px 48px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-explore:hover {
+      background: var(--orange);
+      color: var(--white);
+    }
+
+    /* ── NETWORKS ───────────────────────────────── */
+    .networks {
+      background: var(--white);
+      padding: 60px 80px;
+      text-align: center;
+    }
+
+    .networks h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 40px;
+    }
+
+    .logos-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 64px;
+    }
+
+    .logo-brand {
+      font-size: 26px;
+      font-weight: 800;
+      color: #9aa5b4;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+      user-select: none;
+    }
+
+    .logo-brand:hover { color: var(--navy); }
+
+    .logo-brand.ana { font-style: italic; }
+
+    .logo-brand.disney {
+      font-family: Georgia, serif;
+      font-style: italic;
+    }
+
+    .logo-brand.visa {
+      font-style: italic;
+      letter-spacing: 2px;
+    }
+
+    /* ── TESTIMONIALS ───────────────────────────── */
+    .testimonials {
+      position: relative;
+      padding: 90px 80px 100px;
+      background-image: url('http://localhost:3845/assets/d2bd9a0993794fe7ab7fab6a8d1546c160e76220.png');
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+    }
+
+    .testimonials::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 16, 34, 0.90);
+    }
+
+    .testimonials-inner { position: relative; z-index: 1; }
+
+    .testi-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 60px;
+    }
+
+    .testi-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 16px;
+      padding: 32px 28px;
+      backdrop-filter: blur(8px);
+      transition: background 0.2s;
+    }
+
+    .testi-card:hover {
+      background: rgba(255,255,255,0.10);
+    }
+
+    .testi-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .testi-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #2a3a5a;
+      flex-shrink: 0;
+    }
+
+    .testi-avatar-1 {
+      background: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80') center/cover;
+    }
+
+    .testi-avatar-2 {
+      background: url('https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100&q=80') center/cover;
+    }
+
+    .testi-avatar-3 {
+      background: url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80') center/cover;
+    }
+
+    .testi-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 3px;
+    }
+
+    .testi-role {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .stars {
+      display: flex;
+      gap: 3px;
+      margin-left: auto;
+    }
+
+    .star { color: var(--orange); font-size: 14px; }
+
+    .testi-text {
+      font-size: 14px;
+      color: rgba(255,255,255,0.70);
+      line-height: 1.75;
+    }
+
+    /* ── FOOTER ─────────────────────────────────── */
+    footer {
+      background: #060e1c;
+      padding: 60px 80px 40px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 50px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .footer-brand .logo {
+      margin-bottom: 18px;
+      display: inline-flex;
+    }
+
+    .footer-brand p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.75;
+      max-width: 260px;
+    }
+
+    .footer-col h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-col ul li a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul li a:hover { color: var(--orange); }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 30px;
+    }
+
+    .footer-bottom p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-bottom-links a {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-bottom-links a:hover { color: var(--white); }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="#" class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M16.2 7.8l-2 6.3-6.4 2.1 2-6.3z"/>
+        </svg>
+      </div>
+      NMADS
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#" class="active">Home</a></li>
+      <li><a href="#">Near Travel</a></li>
+      <li><a href="#">Services</a></li>
+      <li><a href="#">Destination</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <button class="btn-about">About</button>
+      <button class="btn-login">Login</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Explore The <span>Beautiful World</span><br />As Easy One Click</h1>
+      <p>You will see beautiful moment you never seen before. Travel more, live more — discover places that take your breath away.</p>
+      <button class="btn-started">Get Started</button>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="number">20<span>K</span></div>
+      <div class="label">Members</div>
+    </div>
+    <div class="stat-item">
+      <div class="number">12</div>
+      <div class="label">Awards</div>
+    </div>
+    <div class="stat-item">
+      <div class="number">3<span>K</span></div>
+      <div class="label">Visitors</div>
+    </div>
+    <div class="stat-item">
+      <div class="number">72</div>
+      <div class="label">Trip to Goal</div>
+    </div>
+  </div>
+
+  <!-- POPULAR DESTINATIONS -->
+  <section class="popular">
+    <div class="popular-inner">
+      <div class="section-header">
+        <h2>Wisata Popular</h2>
+        <p>Something that you dream to be in the world. Discover handpicked destinations loved by thousands of travelers.</p>
+      </div>
+
+      <div class="cards-grid">
+
+        <!-- Card 1 -->
+        <div class="dest-card">
+          <div class="dest-card-img-placeholder">
+            <div class="badge">Recommended</div>
+          </div>
+          <div class="dest-card-body">
+            <h3>Deretan Bali</h3>
+            <div class="dest-card-meta">
+              <div class="dest-card-location">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                Bali, Indonesia
+              </div>
+              <div class="dest-card-rating">
+                &#9733; 4.9
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="dest-card">
+          <div class="dest-card-img-placeholder">
+            <div class="badge">Recommended</div>
+          </div>
+          <div class="dest-card-body">
+            <h3>Bromo Malang</h3>
+            <div class="dest-card-meta">
+              <div class="dest-card-location">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                East Java, Indonesia
+              </div>
+              <div class="dest-card-rating">
+                &#9733; 4.8
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="dest-card">
+          <div class="dest-card-img-placeholder">
+            <div class="badge">Recommended</div>
+          </div>
+          <div class="dest-card-body">
+            <h3>Nusa Penda</h3>
+            <div class="dest-card-meta">
+              <div class="dest-card-location">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                Lombok, Indonesia
+              </div>
+              <div class="dest-card-rating">
+                &#9733; 4.7
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="dest-card">
+          <div class="dest-card-img-placeholder">
+            <div class="badge">Bridal Night</div>
+          </div>
+          <div class="dest-card-body">
+            <h3>Dubai</h3>
+            <div class="dest-card-meta">
+              <div class="dest-card-location">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                United Arab Emirates
+              </div>
+              <div class="dest-card-rating">
+                &#9733; 4.9
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <button class="btn-explore">Explore More</button>
+    </div>
+  </section>
+
+  <!-- OUR NETWORKS -->
+  <section class="networks">
+    <h3>Our Networks</h3>
+    <div class="logos-row">
+      <span class="logo-brand ana">ANA</span>
+      <span class="logo-brand disney">Disney</span>
+      <span class="logo-brand">&#10022;</span>
+      <span class="logo-brand visa">VISA</span>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="testimonials-inner">
+      <div class="section-header">
+        <h2>They Are Loving Us</h2>
+        <p>What our travelers say about their unforgettable experiences with NMADS.</p>
+      </div>
+
+      <div class="testi-cards">
+
+        <div class="testi-card">
+          <div class="testi-header">
+            <div class="testi-avatar testi-avatar-1"></div>
+            <div>
+              <div class="testi-name">Angga Putu</div>
+              <div class="testi-role">Trip to Bali</div>
+            </div>
+            <div class="stars">
+              <span class="star">&#9733;</span>
+              <span class="star">&#9733;</span>
+              <span class="star">&#9733;</span>
+              <span class="star">&#9733;</span>
+              <span class="star">&#9733;</span>
+            </div>
+          </div>
+          <p class="testi-text">This was absolutely amazing! The entire experience was smooth and the destinations were breathtaking. I would definitely recommend NMADS to anyone who loves travel.</p>
+        </div>
+
+        <div class="testi-card">
+          <div class="testi-header">
+            <div class="testi-avatar testi-avatar-2"></div>
+            <div>
+              <div class="testi-name">Diyana</div>
+              <div class="testi-role">Trip to Bromo Malang</div>
+            </div>
+            <div class="stars">
+              <span class="star">&#9733;</span>
+              <span class="star">&#9733;</span>
+              <span class="star">&#9733;</span>
+              <span class="star">&#9733;</span>
+              <span class="star">&#9733;</span>
+            </div>
+          </div>
+          <p class="testi-text">The best travel app I have ever used. Planning the trip was easy and everything went perfectly. I felt the local experience in the most unique way possible.</p>
+        </div>
+
+        <div class="testi-card">
+          <div class="testi-header">
+            <div class="testi-avatar testi-avatar-3"></div>
+            <div>
+              <div class="testi-name">Shafina</div>
+              <div class="testi-role">Trip to Lombok Java</div>
+            </div>
+            <div class="stars">
+              <span class="star">&#9733;</span>
+              <span class="star">&#9733;</span>
+              <span class="star">&#9733;</span>
+              <span class="star">&#9733;</span>
+              <span class="star">&#9733;</span>
+            </div>
+          </div>
+          <p class="testi-text">I never thought I could visit so many beautiful places at once. NMADS made it all possible with great support and the most beautiful curated routes I have ever seen.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M16.2 7.8l-2 6.3-6.4 2.1 2-6.3z"/>
+            </svg>
+          </div>
+          NMADS
+        </a>
+        <p>Explore the world with ease. Your perfect travel companion for unforgettable journeys around the globe.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Account</h4>
+        <ul>
+          <li><a href="#">Profile</a></li>
+          <li><a href="#">My Bookings</a></li>
+          <li><a href="#">Wishlist</a></li>
+          <li><a href="#">Settings</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Partners</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Get Connected</h4>
+        <ul>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">Twitter</a></li>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2024 NMADS. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
