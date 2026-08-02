@@ -11,10 +11,11 @@ import { createClient } from '@/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
 
 const NAV_LINKS = [
-  { label: 'Projects', href: '/projects' },
-  { label: 'Articles', href: '/articles' },
-  { label: 'About',    href: '/about'    },
-  { label: 'Contact',  href: '/enquiry'  },
+  { label: 'Projects',   href: '/projects'   },
+  { label: 'Hyperstory', href: '/hyperstory' },
+  { label: 'Articles',   href: '/articles'   },
+  { label: 'About',      href: '/about'      },
+  { label: 'Contact',    href: '/enquiry'    },
 ]
 
 const MOBILE_SOCIAL = [
