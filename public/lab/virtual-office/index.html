@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hyperfantasy Virtual Office</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; background: #dfe3e8; font-family: 'Segoe UI', system-ui, sans-serif; }
+    #app { width: 100%; height: 100%; }
+
+    #overlay {
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 18px;
+      background: rgba(240, 243, 247, .8); backdrop-filter: blur(10px);
+      color: #1e293b; z-index: 10; cursor: pointer; text-align: center;
+    }
+    #overlay h1 { font-size: 40px; letter-spacing: 1px; background: linear-gradient(90deg,#7c3aed,#2563eb); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    #overlay p { color: #475569; max-width: 420px; line-height: 1.6; }
+    #overlay .btn {
+      padding: 14px 44px; border-radius: 999px; font-size: 16px; font-weight: 700;
+      background: linear-gradient(90deg,#7c3aed,#2563eb); color: #fff; border: none; cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease;
+      box-shadow: 0 8px 24px rgba(124,58,237,.35);
+    }
+    #overlay .btn:hover { transform: scale(1.05); box-shadow: 0 10px 32px rgba(124,58,237,.5); }
+    #overlay .keys { display: flex; gap: 10px; margin-top: 8px; }
+    #overlay kbd {
+      background: #fff; border: 1px solid #cbd5e1; border-bottom-width: 3px;
+      border-radius: 6px; padding: 6px 10px; font-size: 13px; color: #334155;
+    }
+
+    #member-card {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
+      width: min(520px, 90vw); z-index: 6; pointer-events: none;
+      background: rgba(255,255,255,.92); backdrop-filter: blur(14px);
+      border: 1px solid rgba(100,116,139,.18); border-radius: 18px;
+      box-shadow: 0 12px 40px rgba(30,41,59,.15);
+      padding: 18px 22px; display: flex; gap: 16px; align-items: center;
+      opacity: 0; transition: opacity .25s ease, transform .25s ease;
+    }
+    #member-card.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #member-card img, #member-card .ph {
+      width: 64px; height: 64px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+      border: 2px solid rgba(124,58,237,.5); background: #ede9fe;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; color: #7c3aed; font-weight: 700;
+    }
+    #member-card .info h2 { color: #0f172a; font-size: 18px; }
+    #member-card .info h3 { color: #7c3aed; font-size: 13px; font-weight: 600; margin: 2px 0 6px; text-transform: uppercase; letter-spacing: .5px; }
+    #member-card .info p { color: #475569; font-size: 12.5px; line-height: 1.5; }
+
+    #mask-toggle {
+      position: fixed; top: 16px; right: 20px; z-index: 7;
+      display: none; align-items: center; gap: 10px;
+      background: rgba(255,255,255,.85); padding: 8px 14px; border-radius: 999px;
+      backdrop-filter: blur(8px); box-shadow: 0 4px 14px rgba(30,41,59,.12);
+      font-size: 13px; font-weight: 600; color: #334155; cursor: pointer; user-select: none;
+    }
+    #mask-toggle input { display: none; }
+    #mask-toggle .track {
+      width: 40px; height: 22px; border-radius: 999px; background: #cbd5e1;
+      position: relative; transition: background .2s ease;
+    }
+    #mask-toggle .track::after {
+      content: ""; position: absolute; top: 2px; left: 2px;
+      width: 18px; height: 18px; border-radius: 50%; background: #fff;
+      transition: transform .2s ease; box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    }
+    #mask-toggle input:checked + .track { background: #7c3aed; }
+    #mask-toggle input:checked + .track::after { transform: translateX(18px); }
+
+    #hint {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      color: #475569; font-size: 13px; z-index: 5; display: none;
+      background: rgba(255,255,255,.75); padding: 8px 18px; border-radius: 999px;
+      backdrop-filter: blur(8px); box-shadow: 0 4px 14px rgba(30,41,59,.1);
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="hint">WASD — move &nbsp;·&nbsp; Drag mouse — rotate camera &nbsp;·&nbsp; Scroll — zoom &nbsp;·&nbsp; E — sit on the sofa</div>
+
+  <label id="mask-toggle">
+    Mask
+    <input type="checkbox" id="mask-checkbox" />
+    <span class="track"></span>
+  </label>
+
+  <div id="member-card">
+    <div class="avatar-slot"></div>
+    <div class="info">
+      <h2></h2>
+      <h3></h3>
+      <p></p>
+    </div>
+  </div>
+
+  <div id="overlay">
+    <h1>HYPERFANTASY OFFICE</h1>
+    <p>A 3D virtual office. Walk your character around the office and approach each team member's desk to meet them.</p>
+    <button class="btn">Start Exploring</button>
+    <div class="keys">
+      <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><kbd>Drag = Rotate</kbd><kbd>Scroll = Zoom</kbd>
+    </div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
