@@ -28,35 +28,34 @@ const IMAGES = [
 
 export function HeroSlideshow() {
   const [idx, setIdx] = useState(0)
-  const ready = useRef(false)
-  const paused = useRef(false)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  // Start cycling; preload only the next image ahead of time
+  const preloadNext = (current: number) => {
+    const next = (current + 1) % IMAGES.length
+    const img = new window.Image()
+    img.src = IMAGES[next]
+  }
+
+  const advance = () => {
+    setIdx(i => {
+      const next = (i + 1) % IMAGES.length
+      preloadNext(next)
+      return next
+    })
+  }
+
+  const startInterval = (delay: number) => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    intervalRef.current = setInterval(advance, delay)
+  }
+
   useEffect(() => {
-    if (ready.current) return
-    ready.current = true
-
-    const preloadNext = (current: number) => {
-      const next = (current + 1) % IMAGES.length
-      const img = new window.Image()
-      img.src = IMAGES[next]
-    }
-
     preloadNext(0)
-    const id = setInterval(() => {
-      if (!paused.current) {
-        setIdx(i => {
-          const next = (i + 1) % IMAGES.length
-          preloadNext(next)
-          return next
-        })
-      }
-    }, 500)
-    ;(window as any).__heroSlideshowId = id
-
+    startInterval(30000)
     return () => {
-      clearInterval((window as any).__heroSlideshowId)
+      if (intervalRef.current) clearInterval(intervalRef.current)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -68,8 +67,8 @@ export function HeroSlideshow() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       fetchPriority="high"
       decoding="async"
-      onMouseEnter={() => { paused.current = true }}
-      onMouseLeave={() => { paused.current = false }}
+      onMouseEnter={() => startInterval(500)}
+      onMouseLeave={() => startInterval(30000)}
       style={{
         position: 'absolute', inset: 0,
         width: '100%', height: '100%',
