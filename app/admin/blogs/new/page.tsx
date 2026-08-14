@@ -81,16 +81,16 @@ export default function NewBlogPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <Link 
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <Link
         href="/admin/blogs"
-        className="inline-flex items-center text-white/60 hover:text-white transition mb-6"
+        className="inline-flex items-center text-slate-500 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition mb-5"
       >
-        <ArrowLeft size={20} className="mr-2" />
+        <ArrowLeft size={18} className="mr-1.5" />
         Back to Blogs
       </Link>
 
-      <h1 className="text-3xl font-bold mb-8">Add New Blog</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Add New Blog</h1>
 
       <form onSubmit={handleSubmit} className="admin-form space-y-6">
         
@@ -174,7 +174,7 @@ export default function NewBlogPage() {
             type="number"
             value={formData.index}
             onChange={(e) => setFormData({...formData, index: parseInt(e.target.value) || 0})}
-            className="bg-slate-50 dark:bg-white/5 w-32"
+            className="bg-slate-50 dark:bg-white/5 w-full sm:w-32"
           />
           <p className="text-xs text-slate-400 dark:text-white/30">≥1 pins to top · 0 normal · ≤−1 sinks to last page</p>
         </div>
