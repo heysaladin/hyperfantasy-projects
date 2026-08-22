@@ -2,6 +2,21 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { NextRequest } from 'next/server'
 
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params
+
+  try {
+    const blog = await prisma.blog.findUnique({ where: { id } })
+    if (!blog) return Response.json({ error: 'Not found' }, { status: 404 })
+    return Response.json(blog)
+  } catch (error: any) {
+    return Response.json({ error: 'Failed to fetch blog', details: error.message }, { status: 500 })
+  }
+}
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }  // ← Promise

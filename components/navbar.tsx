@@ -124,6 +124,8 @@ export function Navbar() {
 
   if (pathname.startsWith('/admin') || pathname.startsWith('/login')) return null
 
+  const visibleLinks = NAV_LINKS.filter(l => l.href !== '/hyperstory' || !!user)
+
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' :
     href.startsWith('/#') ? false :
@@ -168,7 +170,7 @@ export function Navbar() {
 
               {/* Desktop links */}
               <nav className="hidden md:flex items-center gap-0.5" aria-label="Main navigation">
-                {NAV_LINKS.map(({ label, href }) => (
+                {visibleLinks.map(({ label, href }) => (
                   <Link
                     key={href}
                     href={href}
@@ -248,7 +250,7 @@ export function Navbar() {
           <span className="w-px h-4 bg-slate-200 dark:bg-white/10 mx-1" />
 
           {/* Nav links */}
-          {NAV_LINKS.map(({ label, href }) => (
+          {visibleLinks.map(({ label, href }) => (
             <Link
               key={href}
               href={href}
@@ -335,7 +337,7 @@ export function Navbar() {
 
           {/* Nav links */}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: '24px 32px', overflowY: 'auto' }}>
-            {NAV_LINKS.map(({ label, href }) => (
+            {visibleLinks.map(({ label, href }) => (
               <Link
                 key={href}
                 href={href}

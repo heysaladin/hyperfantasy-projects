@@ -1,9 +1,10 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { Source_Serif_4 } from 'next/font/google'
 import { HYPERSTORIES, getHyperstory } from '@/data/hyperstories'
+import { createClient } from '@/lib/supabase/server'
 
 const sourceSerif4 = Source_Serif_4({
   variable: '--font-source-serif',
@@ -42,6 +43,10 @@ export default async function HyperstoryDetailPage({
 }: {
   params: Promise<{ slug: string }>
 }) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
   const { slug } = await params
   const story = getHyperstory(slug)
 

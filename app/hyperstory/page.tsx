@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { HYPERSTORIES } from '@/data/hyperstories'
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'Hyperstory — Hyperfantasy',
@@ -9,7 +11,10 @@ export const metadata: Metadata = {
     'Long-form case studies exploring the story, strategy, and craft behind our design work.',
 }
 
-export default function HyperstoryPage() {
+export default async function HyperstoryPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
   return (
     <div className="min-h-screen bg-white dark:bg-black transition-colors pt-16">
 
