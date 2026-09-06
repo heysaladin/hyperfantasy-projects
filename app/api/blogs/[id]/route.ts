@@ -21,11 +21,14 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }  // ← Promise
 ) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  if (!user) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  const adminSecret = process.env.SUPABASE_SERVICE_ROLE_KEY
+  const authHeader = request.headers.get('authorization')
+  const isAdminCall = adminSecret && authHeader === `Bearer ${adminSecret}`
+
+  if (!isAdminCall) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const { id } = await params  // ← await params

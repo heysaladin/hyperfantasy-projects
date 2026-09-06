@@ -39,6 +39,12 @@ const ENTRIES = [
     href: '/lab/colab/index.html',
   },
   {
+    type: 'file' as const,
+    label: 'interestory lite',
+    description: 'index.html',
+    href: '/lab/interestory-lite/index.html',
+  },
+  {
     type: 'external' as const,
     label: 'ikhbar',
     description: 'Newsletter Creator',

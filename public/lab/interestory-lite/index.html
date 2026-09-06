@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Interestory</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    :root {
+      --bg: #ffffff; --border: #e5e5e5; --text: #0a0a0a;
+      --muted: #737373; --accent: #f5f5f5;
+      --green: #16a34a; --red: #ef4444;
+      --radius: 14px; --nav-h: 76px;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+      background: #e8e8e8; min-height: 100vh;
+      display: flex; justify-content: center; align-items: center;
+    }
+    /* Phone frame */
+    #phone {
+      width: 393px; height: 852px; background: var(--bg);
+      border-radius: 52px; overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(0,0,0,.12), 0 0 0 11px #1a1a1a, 0 0 0 13px #2a2a2a, 0 50px 120px rgba(0,0,0,.4);
+      position: relative; display: flex; flex-direction: column;
+    }
+    #phone::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 126px; height: 36px; background: #1a1a1a; border-radius: 0 0 22px 22px; z-index: 200;
+    }
+    @media (max-width: 430px) {
+      body { background: var(--bg); align-items: flex-start; }
+      #phone { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
+      #phone::before { display: none; }
+    }
+    /* Status bar */
+    .status-bar {
+      height: 54px; padding: 16px 28px 0;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0; background: var(--bg); z-index: 10;
+    }
+    .status-time { font-size: 15px; font-weight: 700; }
+    .status-icons { font-size: 13px; }
+    /* App shell */
+    #app { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+    /* Header */
+    .header {
+      padding: 10px 20px 12px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0; background: var(--bg);
+    }
+    .header-title { font-size: 18px; font-weight: 700; letter-spacing: -.4px; }
+    .header-back {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 16px; font-weight: 500; cursor: pointer;
+      border: none; background: none; padding: 4px 0; min-width: 60px;
+    }
+    .header-spacer { min-width: 60px; }
+    /* Screens */
+    .screen { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+    .screen.active { display: flex; }
+    /* Scroll */
+    .scroll {
+      flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      padding: 14px 16px calc(var(--nav-h) + 16px);
+    }
+    /* Section label */
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: .6px;
+      text-transform: uppercase; color: var(--muted); padding: 10px 2px 6px;
+    }
+    .section-label:first-child { padding-top: 4px; }
+    /* Card */
+    .card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; }
+    /* Hobby row */
+    .hobby-row { padding: 13px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .hobby-row:active { background: var(--accent); }
+    .hobby-icon-wrap {
+      width: 46px; height: 46px; border-radius: 13px; background: var(--accent);
+      display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+    }
+    .hobby-name { font-size: 15px; font-weight: 600; }
+    .hobby-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .chevron { font-size: 18px; color: #c0c0c0; }
+    /* Item row */
+    .item-row { padding: 11px 14px; display: flex; align-items: center; gap: 12px; }
+    .item-thumb {
+      width: 48px; height: 48px; border-radius: 12px; background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0; overflow: hidden;
+    }
+    .item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .item-thumb.wardrobe { background: linear-gradient(135deg,#f5f0ff,#ede9fe); }
+    .item-info { flex: 1; min-width: 0; }
+    .item-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-meta { display: flex; align-items: center; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+    .chip { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 99px; }
+    .chip-use { background: #fff7ed; color: #c2410c; }
+    .chip-price { background: var(--accent); color: var(--muted); }
+    .chip-hobby { background: #e0f2fe; color: #0369a1; }
+    .chip-wardrobe { background: #fdf4ff; color: #7e22ce; }
+    /* Add button */
+    .add-btn {
+      width: 34px; height: 34px; border-radius: 99px;
+      border: none; background: var(--text); color: #fff;
+      font-size: 20px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0; transition: transform .1s, background .15s;
+    }
+    .add-btn:active { transform: scale(.9); }
+    .add-btn.active { background: var(--green); }
+    /* Cart row */
+    .cart-row { padding: 11px 14px; display: flex; align-items: center; gap: 12px; }
+    .cart-thumb {
+      width: 44px; height: 44px; border-radius: 11px; background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0; overflow: hidden;
+    }
+    .cart-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .cart-info { flex: 1; min-width: 0; }
+    .cart-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cart-meta { display: flex; gap: 5px; align-items: center; margin-top: 4px; flex-wrap: wrap; }
+    .use-arrow { font-size: 11px; font-weight: 700; color: var(--green); background: #f0fdf4; padding: 2px 7px; border-radius: 99px; }
+    .remove-btn {
+      width: 28px; height: 28px; border-radius: 99px;
+      border: none; background: #fee2e2; color: var(--red);
+      font-size: 13px; display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    /* Slide to use */
+    .slide-area {
+      padding: 12px 16px calc(var(--nav-h) + 16px);
+      flex-shrink: 0; border-top: 1px solid var(--border);
+    }
+    .slide-track {
+      position: relative; height: 58px; border-radius: 99px;
+      background: #1a1a1a; overflow: hidden; user-select: none;
+      touch-action: none;
+    }
+    .slide-track.disabled { background: #c8c8c8; }
+    .slide-fill {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+      background: var(--green); border-radius: 99px; z-index: 0;
+      pointer-events: none;
+    }
+    .slide-thumb {
+      position: absolute; left: 5px; top: 5px;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: #ffffff; display: flex; align-items: center;
+      justify-content: center; z-index: 2;
+      cursor: grab; box-shadow: 0 2px 10px rgba(0,0,0,.2);
+    }
+    .slide-track.disabled .slide-thumb { background: #e5e5e5; cursor: not-allowed; }
+    .slide-label {
+      position: absolute; inset: 0; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 600; letter-spacing: -.2px;
+      color: rgba(255,255,255,.6); pointer-events: none; z-index: 1;
+      padding: 0 64px;
+    }
+    .slide-track.disabled .slide-label { color: rgba(0,0,0,.3); }
+    .slide-arrows {
+      position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+      pointer-events: none; z-index: 1; display: flex; align-items: center;
+    }
+    .slide-track.disabled .slide-arrows { opacity: .25; }
+    /* Empty */
+    .empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; text-align: center; gap: 8px; }
+    .empty-icon { font-size: 44px; }
+    .empty-title { font-size: 16px; font-weight: 700; }
+    .empty-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    /* Bottom nav */
+    .bottom-nav {
+      position: absolute; bottom: 0; left: 0; right: 0; height: var(--nav-h);
+      background: rgba(255,255,255,.92); backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      display: grid; grid-template-columns: repeat(3,1fr); z-index: 50;
+    }
+    .nav-btn {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 4px; border: none; background: none; cursor: pointer; padding-bottom: 10px; position: relative;
+    }
+    .nav-btn:active { opacity: .6; }
+    .nav-icon { font-size: 24px; line-height: 1; }
+    .nav-label { font-size: 10px; font-weight: 600; color: var(--muted); }
+    .nav-btn.active .nav-label { color: var(--text); }
+    .nav-badge {
+      position: absolute; top: 8px; right: calc(50% - 18px);
+      background: var(--red); color: #fff;
+      font-size: 10px; font-weight: 800; min-width: 18px; height: 18px;
+      border-radius: 99px; display: flex; align-items: center; justify-content: center;
+      padding: 0 4px; border: 2px solid var(--bg);
+    }
+    /* Toast */
+    .toast {
+      position: absolute; top: 64px; left: 16px; right: 16px;
+      background: rgba(10,10,10,.92); backdrop-filter: blur(10px);
+      color: #fff; padding: 11px 15px; border-radius: 10px;
+      font-size: 13px; font-weight: 600; z-index: 300;
+      pointer-events: none; opacity: 0; transform: translateY(-6px);
+      transition: opacity .2s, transform .2s;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    /* Search box */
+    .search-wrap {
+      padding: 8px 14px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .search-input {
+      width: 100%; padding: 8px 12px 8px 34px; border: 1px solid var(--border);
+      border-radius: 10px; background: var(--accent); font-size: 14px;
+      color: var(--text); outline: none; appearance: none;
+      font-family: inherit; position: relative;
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus { border-color: #c0c0c0; background: var(--bg); }
+    .search-box { position: relative; }
+    .search-icon {
+      position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); font-size: 14px; pointer-events: none; z-index: 1;
+    }
+    /* Loading */
+    .loading {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; padding: 40px 16px; color: var(--muted); font-size: 13px; font-weight: 500;
+    }
+    .spinner {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid rgba(0,0,0,.1); border-top-color: var(--text);
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    /* Success overlay */
+    .success-overlay {
+      position: absolute; inset: 0; background: rgba(255,255,255,.96);
+      backdrop-filter: blur(12px); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 10px; z-index: 400;
+      opacity: 0; pointer-events: none; transition: opacity .25s;
+    }
+    .success-overlay.show { opacity: 1; pointer-events: all; }
+    .success-big { font-size: 64px; }
+    .success-title { font-size: 22px; font-weight: 800; letter-spacing: -.5px; }
+    .success-sub { font-size: 14px; color: var(--muted); }
+  </style>
+</head>
+<body>
+<div id="phone">
+  <div class="status-bar">
+    <span class="status-time" id="clock">9:41</span>
+    <span class="status-icons">📶 🔋</span>
+  </div>
+
+  <div id="app">
+    <div class="toast" id="toast"></div>
+
+    <div class="success-overlay" id="success-overlay">
+      <div class="success-big">🎉</div>
+      <div class="success-title" id="success-title">Items digunakan!</div>
+      <div class="success-sub" id="success-sub">+1 use tersimpan</div>
+    </div>
+
+    <!-- Hobbies -->
+    <div class="screen active" id="screen-hobbies">
+      <div class="header"><span class="header-title">Hobbies</span></div>
+      <div class="search-wrap">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" id="hobby-search" type="search" placeholder="Search hobbies..." oninput="filterHobbies(this.value)">
+        </div>
+      </div>
+      <div class="scroll" id="hobby-list"></div>
+    </div>
+
+    <!-- Hobby Items -->
+    <div class="screen" id="screen-hobby-items">
+      <div class="header">
+        <button class="header-back" onclick="goBack()">‹ Back</button>
+        <span class="header-title" id="hobby-screen-title"></span>
+        <div class="header-spacer"></div>
+      </div>
+      <div class="scroll" id="hobby-items-list"></div>
+    </div>
+
+    <!-- Wardrobe -->
+    <div class="screen" id="screen-wardrobe">
+      <div class="header"><span class="header-title">Wardrobe</span></div>
+      <div class="search-wrap">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" id="wardrobe-search" type="search" placeholder="Search items..." oninput="filterWardrobe(this.value)">
+        </div>
+      </div>
+      <div class="scroll" id="wardrobe-list"></div>
+    </div>
+
+    <!-- Cart -->
+    <div class="screen" id="screen-cart">
+      <div class="header"><span class="header-title">Using Cart</span></div>
+      <div class="scroll" id="cart-list" style="padding-bottom:0"></div>
+      <div class="slide-area">
+        <div class="slide-track disabled" id="slide-track">
+          <div class="slide-fill" id="slide-fill"></div>
+          <div class="slide-thumb" id="slide-thumb">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6.667 3.333L13.334 10 6.667 16.667" stroke="#000" stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="slide-label" id="slide-label">Cart kosong</div>
+          <div class="slide-arrows">
+            <svg width="48" height="16" viewBox="0 0 48 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5.33301 2.6665L10.6663 7.99984L5.33301 13.3332" stroke="#4B5565" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15.333 2.6665L20.6663 7.99984L15.333 13.3332" stroke="#697586" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M25.333 2.6665L30.6663 7.99984L25.333 13.3332" stroke="#9AA4B2" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" id="nav-hobbies" onclick="switchTab('hobbies')">
+        <span class="nav-icon">🎯</span><span class="nav-label">Hobbies</span>
+      </button>
+      <button class="nav-btn" id="nav-wardrobe" onclick="switchTab('wardrobe')">
+        <span class="nav-icon">👕</span><span class="nav-label">Wardrobe</span>
+      </button>
+      <button class="nav-btn" id="nav-cart" onclick="switchTab('cart')">
+        <span class="nav-icon">🛒</span><span class="nav-label">Cart</span>
+        <span class="nav-badge" id="cart-badge" style="display:none">0</span>
+      </button>
+    </nav>
+  </div>
+</div>
+
+<script>
+const API = 'https://interestory.vercel.app/api/mobile'
+
+const HOBBIES = [
+  { id:'motorcycle',   label:'Motorcycle',   icon:'🏍️' },
+  { id:'automotive',   label:'Automotive',   icon:'🚗'  },
+  { id:'workout',      label:'Workout',      icon:'🏋️' },
+  { id:'plant_care',   label:'Plant Care',   icon:'🪴'  },
+  { id:'electronics',  label:'Electronics',  icon:'📱'  },
+  { id:'watches',      label:'Watches',      icon:'⌚'  },
+  { id:'photography',  label:'Photography',  icon:'📷'  },
+  { id:'videography',  label:'Videography',  icon:'🎥'  },
+  { id:'workspace',    label:'Workspace',    icon:'🖥️' },
+  { id:'outdoor',      label:'Outdoor',      icon:'🏕️' },
+  { id:'cooking',      label:'Cooking',      icon:'🍳'  },
+  { id:'fish_keeping', label:'Fish Keeping', icon:'🐠'  },
+  { id:'drawing',      label:'Drawing',      icon:'✏️'  },
+  { id:'3d_modelling', label:'3D Modelling', icon:'🧊'  },
+  { id:'reading',      label:'Reading',      icon:'📚'  },
+  { id:'grooming',     label:'Grooming',     icon:'💈'  },
+  { id:'coding',       label:'Coding',       icon:'💻'  },
+  { id:'designing',    label:'Designing',    icon:'🎨'  },
+  { id:'architecture', label:'Architecture', icon:'🏛️' },
+  { id:'music',        label:'Music',        icon:'🎵'  },
+  { id:'social',       label:'Life',         icon:'👥'  },
+]
+
+// ── State ──
+let currentTab    = 'hobbies'
+let currentHobby  = null
+let hobbyItemCounts = {}
+let cart = JSON.parse(localStorage.getItem('interestory_cart') || '[]')
+
+function saveCart() { localStorage.setItem('interestory_cart', JSON.stringify(cart)) }
+function inCart(id) { return cart.some(c => c.id === id) }
+
+// ── API ──
+async function get(path) {
+  const r = await fetch(API + path)
+  if (!r.ok) throw new Error(`HTTP ${r.status}`)
+  return r.json()
+}
+
+// ── Navigation ──
+function switchTab(tab) {
+  currentTab = tab
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'))
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'))
+  document.getElementById('screen-' + tab).classList.add('active')
+  document.getElementById('nav-' + tab).classList.add('active')
+  if (tab === 'hobbies')  loadHobbies()
+  if (tab === 'wardrobe') loadWardrobe()
+  if (tab === 'cart')     renderCart()
+}
+
+function openHobby(id) {
+  currentHobby = id
+  document.getElementById('hobby-screen-title').textContent = HOBBIES.find(h => h.id === id)?.label ?? id
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'))
+  document.getElementById('screen-hobby-items').classList.add('active')
+  loadHobbyItems(id)
+}
+
+function goBack() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'))
+  document.getElementById('screen-hobbies').classList.add('active')
+}
+
+// ── Load ──
+let allHobbyItems = []
+
+async function loadHobbies() {
+  const el = document.getElementById('hobby-list')
+  el.innerHTML = loadingHTML()
+  try {
+    const { items } = await get('/hobby-items')
+    allHobbyItems = items
+    hobbyItemCounts = {}
+    items.forEach(i => { hobbyItemCounts[i.category] = (hobbyItemCounts[i.category] || 0) + 1 })
+    renderHobbies()
+  } catch(e) { el.innerHTML = errorHTML(e.message) }
+}
+
+function renderHobbies(q = '') {
+  const el = document.getElementById('hobby-list')
+  if (q) {
+    const matched = allHobbyItems.filter(i => i.name.toLowerCase().includes(q.toLowerCase()))
+    el.innerHTML = matched.length
+      ? matched.map(i => itemRowHTML(i, 'hobby')).join('')
+      : emptyHTML('🔍', 'Tidak ditemukan', `Tidak ada item "${q}"`)
+    return
+  }
+  el.innerHTML = HOBBIES.map(h => {
+    const n = hobbyItemCounts[h.id] || 0
+    return `<div class="card">
+      <div class="hobby-row" onclick="openHobby('${h.id}')">
+        <div class="hobby-icon-wrap">${h.icon}</div>
+        <div style="flex:1">
+          <div class="hobby-name">${h.label}</div>
+          <div class="hobby-sub">${n} item${n !== 1 ? 's' : ''}</div>
+        </div>
+        <span class="chevron">›</span>
+      </div>
+    </div>`
+  }).join('')
+}
+
+function filterHobbies(q) { renderHobbies(q) }
+
+async function loadHobbyItems(hobbyId) {
+  const el = document.getElementById('hobby-items-list')
+  el.innerHTML = loadingHTML()
+  try {
+    const { items } = await get(`/hobby-items?hobby=${hobbyId}`)
+    if (!items.length) { el.innerHTML = emptyHTML('📦', 'Belum ada item', 'Tambah item di Interestory'); return }
+    el.innerHTML = items.map(item => itemRowHTML(item, 'hobby')).join('')
+  } catch(e) { el.innerHTML = errorHTML(e.message) }
+}
+
+let allWardrobeItems = []
+
+async function loadWardrobe() {
+  const el = document.getElementById('wardrobe-list')
+  el.innerHTML = loadingHTML()
+  try {
+    const { items } = await get('/wardrobe-items')
+    allWardrobeItems = items
+    renderWardrobe()
+  } catch(e) { el.innerHTML = errorHTML(e.message) }
+}
+
+function renderWardrobe(q = '') {
+  const el = document.getElementById('wardrobe-list')
+  let items = allWardrobeItems
+  if (!items.length) { el.innerHTML = emptyHTML('👕', 'Wardrobe kosong', 'Tambah item di Interestory'); return }
+  if (q) items = items.filter(i => i.name.toLowerCase().includes(q.toLowerCase()) || i.category.toLowerCase().includes(q.toLowerCase()))
+  if (!items.length) { el.innerHTML = emptyHTML('🔍', 'Tidak ditemukan', `Tidak ada item "${q}"`); return }
+  const cats = [...new Set(items.map(i => i.category))]
+  el.innerHTML = cats.map(cat => {
+    const catItems = items.filter(i => i.category === cat)
+    return `<div class="section-label">${cat}</div>` + catItems.map(i => itemRowHTML(i, 'wardrobe')).join('')
+  }).join('')
+}
+
+function filterWardrobe(q) { renderWardrobe(q) }
+
+function renderCart() {
+  const el = document.getElementById('cart-list')
+  if (!cart.length) {
+    el.innerHTML = emptyHTML('🛒', 'Cart kosong', 'Pilih item dari Hobbies\natau Wardrobe')
+    setSlider(false, 'Cart kosong'); return
+  }
+  setSlider(true, `Slide to use all (${cart.length})`)
+  const hobbyItems    = cart.filter(c => c.type === 'hobby')
+  const wardrobeItems = cart.filter(c => c.type === 'wardrobe')
+  let html = ''
+  if (hobbyItems.length) {
+    html += `<div class="section-label">Hobby Items — ${hobbyItems.length}</div>` + hobbyItems.map(cartRowHTML).join('')
+  }
+  if (wardrobeItems.length) {
+    html += `<div class="section-label" style="margin-top:4px">Wardrobe — ${wardrobeItems.length}</div>` + wardrobeItems.map(cartRowHTML).join('')
+  }
+  el.innerHTML = html
+}
+
+// ── HTML builders ──
+function itemRowHTML(item, type) {
+  const isHobby  = type === 'hobby'
+  const useLbl   = isHobby ? `${item.use_count}x used` : `${item.wear_count}x worn`
+  const active   = inCart(item.id) ? 'active' : ''
+  const price    = isHobby ? item.purchase_price : item.price
+  const thumbCls = isHobby ? '' : 'wardrobe'
+  const thumb    = item.image_url
+    ? `<img src="${item.image_url}" alt="">`
+    : (isHobby ? (HOBBIES.find(h=>h.id===item.category)?.icon ?? '📦') : '👕')
+  const pfx = isHobby ? 'h' : 'w'
+  const itemJson = JSON.stringify(item).replace(/'/g, '&#39;')
+  return `<div class="card" id="${pfx}card-${item.id}">
+    <div class="item-row">
+      <div class="item-thumb ${thumbCls}">${thumb}</div>
+      <div class="item-info">
+        <div class="item-name">${esc(item.name)}</div>
+        <div class="item-meta">
+          <span class="chip chip-use">🔥 ${useLbl}</span>
+          ${price ? `<span class="chip chip-price">Rp ${fmt(price)}</span>` : ''}
+        </div>
+      </div>
+      <button class="add-btn ${active}" id="${pfx}btn-${item.id}"
+        onclick='toggleCart(${itemJson},"${type}")'>${active ? '✓' : '+'}</button>
+    </div>
+  </div>`
+}
+
+function cartRowHTML(c) {
+  const isHobby = c.type === 'hobby'
+  const curUse  = isHobby ? c.use_count : c.wear_count
+  const badge   = isHobby
+    ? `<span class="chip chip-hobby">🎯 ${c.category}</span>`
+    : `<span class="chip chip-wardrobe">👕 ${c.wardCat}</span>`
+  const thumb   = c.image_url
+    ? `<img src="${c.image_url}" alt="">`
+    : (isHobby ? (HOBBIES.find(h=>h.id===c.category)?.icon ?? '📦') : '👕')
+  const thumbBg = isHobby ? '' : 'background:linear-gradient(135deg,#f5f0ff,#ede9fe)'
+  return `<div class="card">
+    <div class="cart-row">
+      <div class="cart-thumb" style="${thumbBg}">${thumb}</div>
+      <div class="cart-info">
+        <div class="cart-name">${esc(c.name)}</div>
+        <div class="cart-meta">${badge}<span class="use-arrow">${curUse} → ${curUse+1}</span></div>
+      </div>
+      <button class="remove-btn" onclick="removeFromCart('${c.id}')">✕</button>
+    </div>
+  </div>`
+}
+
+function loadingHTML() { return `<div class="loading"><div class="spinner"></div> Memuat...</div>` }
+function emptyHTML(icon, title, desc) {
+  return `<div class="empty"><div class="empty-icon">${icon}</div><div class="empty-title">${title}</div><div class="empty-desc">${desc.replace(/\n/g,'<br>')}</div></div>`
+}
+function errorHTML(msg) {
+  return `<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">Gagal memuat</div><div class="empty-desc">${esc(msg)}</div></div>`
+}
+
+// ── Cart actions ──
+function toggleCart(item, type) {
+  if (inCart(item.id)) { removeFromCart(item.id); return }
+  const entry = type === 'hobby'
+    ? { id:item.id, type, name:item.name, image_url:item.image_url, category:item.category, use_count:item.use_count }
+    : { id:item.id, type, name:item.name, image_url:item.image_url, wardCat:item.category, wear_count:item.wear_count }
+  cart.push(entry)
+  saveCart()
+  syncBtn(item.id, type, true)
+  updateBadge()
+  showToast(`${item.name} masuk cart`)
+}
+
+function removeFromCart(id) {
+  const entry = cart.find(c => c.id === id)
+  cart = cart.filter(c => c.id !== id)
+  saveCart()
+  if (entry) syncBtn(id, entry.type, false)
+  updateBadge()
+  if (currentTab === 'cart') renderCart()
+}
+
+async function quickUse(item, type) {
+  const pfx = type === 'hobby' ? 'h' : 'w'
+  const btn = document.getElementById(`${pfx}use-${item.id}`)
+  if (btn) { btn.classList.add('loading'); btn.textContent = '...' }
+  try {
+    const res = await fetch(API + '/use', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: [{ id: item.id, type }] })
+    })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const curUse = type === 'hobby' ? item.use_count : item.wear_count
+    if (btn) { btn.classList.remove('loading'); btn.textContent = 'Use' }
+    showToast(`✓ ${item.name} — ${curUse + 1}x`)
+    // Update count in local data
+    if (type === 'hobby') {
+      const found = allHobbyItems.find(i => i.id === item.id)
+      if (found) found.use_count++
+    } else {
+      const found = allWardrobeItems.find(i => i.id === item.id)
+      if (found) found.wear_count++
+    }
+  } catch(e) {
+    if (btn) { btn.classList.remove('loading'); btn.textContent = 'Use' }
+    showToast('Gagal: ' + e.message)
+  }
+}
+
+async function useAll() {
+  if (!cart.length) return
+  try {
+    const payload = cart.map(c => ({ id: c.id, type: c.type }))
+    const res = await fetch(API + '/use', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: payload })
+    })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const { updated } = await res.json()
+    cart = []; saveCart(); updateBadge()
+    document.getElementById('success-title').textContent = `${updated} item digunakan!`
+    document.getElementById('success-sub').textContent = '+1 use tersimpan ke server'
+    const ov = document.getElementById('success-overlay')
+    ov.classList.add('show')
+    setTimeout(() => { ov.classList.remove('show'); renderCart() }, 2000)
+  } catch(e) {
+    showToast('Gagal: ' + e.message)
+    setSlider(true, `Slide to use all (${cart.length})`)
+  }
+}
+
+// ── Helpers ──
+function syncBtn(id, type, active) {
+  const btn = document.getElementById(`${type==='hobby'?'h':'w'}btn-${id}`)
+  if (!btn) return
+  btn.classList.toggle('active', active)
+  btn.textContent = active ? '✓' : '+'
+}
+function updateBadge() {
+  const b = document.getElementById('cart-badge')
+  cart.length ? (b.style.display='flex', b.textContent=cart.length) : (b.style.display='none')
+}
+let _tt
+function showToast(msg) {
+  const el = document.getElementById('toast')
+  el.textContent = msg; el.classList.add('show')
+  clearTimeout(_tt); _tt = setTimeout(() => el.classList.remove('show'), 2200)
+}
+function fmt(n) { return n?.toLocaleString('id-ID') ?? '' }
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;') }
+function updateClock() {
+  const d = new Date()
+  document.getElementById('clock').textContent = d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')
+}
+
+// ── Slider ──
+let sliderEnabled = false
+let isDragging = false
+let dragStartX = 0
+let thumbX = 0
+
+function setSlider(enabled, label) {
+  sliderEnabled = enabled
+  const track = document.getElementById('slide-track')
+  const lbl   = document.getElementById('slide-label')
+  track.classList.toggle('disabled', !enabled)
+  lbl.textContent = label
+  resetSlider()
+}
+
+function resetSlider() {
+  thumbX = 0
+  const thumb = document.getElementById('slide-thumb')
+  const fill  = document.getElementById('slide-fill')
+  thumb.style.transition = 'left .3s'
+  fill.style.transition  = 'width .3s'
+  thumb.style.left = '5px'
+  fill.style.width = '0'
+  setTimeout(() => {
+    thumb.style.transition = ''
+    fill.style.transition  = ''
+  }, 300)
+}
+
+function initSlider() {
+  const track = document.getElementById('slide-track')
+  const thumb = document.getElementById('slide-thumb')
+  const fill  = document.getElementById('slide-fill')
+
+  function getMax() { return track.offsetWidth - thumb.offsetWidth - 10 }
+
+  function moveTo(x) {
+    x = Math.max(0, Math.min(x, getMax()))
+    thumbX = x
+    thumb.style.left = (5 + x) + 'px'
+    fill.style.width = (5 + x + 52) + 'px'
+  }
+
+  function onStart(e) {
+    if (!sliderEnabled) return
+    isDragging = true
+    dragStartX = (e.touches ? e.touches[0].clientX : e.clientX) - thumbX
+    e.preventDefault()
+  }
+
+  function onMove(e) {
+    if (!isDragging) return
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - dragStartX
+    moveTo(x)
+  }
+
+  function onEnd() {
+    if (!isDragging) return
+    isDragging = false
+    if (thumbX >= getMax() * 0.82) {
+      // Snap to max, disable dragging, show loading state
+      const max = getMax()
+      thumb.style.transition = 'left .15s'
+      fill.style.transition  = 'width .15s'
+      thumb.style.left = (5 + max) + 'px'
+      fill.style.width = (5 + max + 52) + 'px'
+      document.getElementById('slide-label').textContent = 'Menyimpan...'
+      sliderEnabled = false
+      setTimeout(useAll, 150)
+    } else {
+      resetSlider()
+    }
+  }
+
+  thumb.addEventListener('mousedown',  onStart)
+  thumb.addEventListener('touchstart', onStart, { passive: false })
+  document.addEventListener('mousemove',  onMove)
+  document.addEventListener('touchmove',  onMove, { passive: true })
+  document.addEventListener('mouseup',  onEnd)
+  document.addEventListener('touchend', onEnd)
+}
+
+// ── Init ──
+updateClock()
+setInterval(updateClock, 15000)
+updateBadge()
+initSlider()
+loadHobbies()
+</script>
+</body>
+</html>
