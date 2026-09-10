@@ -193,11 +193,11 @@
     }
     /* Toast */
     .toast {
-      position: absolute; top: 64px; left: 16px; right: 16px;
+      position: absolute; bottom: calc(var(--nav-h) + 12px); left: 16px; right: 16px;
       background: rgba(10,10,10,.92); backdrop-filter: blur(10px);
       color: #fff; padding: 11px 15px; border-radius: 10px;
       font-size: 13px; font-weight: 600; z-index: 300;
-      pointer-events: none; opacity: 0; transform: translateY(-6px);
+      pointer-events: none; opacity: 0; transform: translateY(10px);
       transition: opacity .2s, transform .2s;
     }
     .toast.show { opacity: 1; transform: translateY(0); }
