@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, ExternalLink, Github } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import type { Metadata } from 'next'
 
 async function getPortfolio(id: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/portfolios`, {
@@ -11,6 +12,20 @@ async function getPortfolio(id: string) {
   if (!res.ok) return null
   const portfolios = await res.json()
   return portfolios.find((p: any) => p.id === id && p.isVisible)
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  const portfolio = await getPortfolio(id)
+  if (!portfolio) return {}
+  return {
+    title: `${portfolio.title} — Hyperfantasy`,
+    description: portfolio.description?.slice(0, 160) ?? undefined,
+  }
 }
 
 export default async function PortfolioDetailPage({
@@ -30,9 +45,9 @@ export default async function PortfolioDetailPage({
       {/* Header */}
       <div className="border-b border-slate-200 dark:border-white/10">
         <div className="max-w-5xl mx-auto px-6 lg:px-8 py-8">
-          <Link href="/projects" className="inline-flex items-center text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition mb-8">
+          <Link href="/works" className="inline-flex items-center text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition mb-8">
             <ArrowLeft size={20} className="mr-2" />
-            Back to Projects
+            Back to Works
           </Link>
         </div>
       </div>
@@ -100,19 +115,19 @@ export default async function PortfolioDetailPage({
         </div>
 
         {/* Meta Info */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-12 border-t border-white/10">
-          
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-12 border-t border-slate-200 dark:border-white/10">
+
           {/* Tech Stack */}
           {portfolio.stack && portfolio.stack.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-white/40 mb-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 dark:text-white/40 mb-4">
                 Tech Stack
               </h3>
               <div className="flex flex-wrap gap-2">
                 {portfolio.stack.map((tech: string) => (
-                  <span 
+                  <span
                     key={tech}
-                    className="px-3 py-1 bg-white/10 rounded text-sm"
+                    className="px-3 py-1 bg-slate-100 dark:bg-white/10 rounded text-sm text-slate-700 dark:text-white/80"
                   >
                     {tech}
                   </span>
@@ -124,14 +139,14 @@ export default async function PortfolioDetailPage({
           {/* Tags */}
           {portfolio.tags && portfolio.tags.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-white/40 mb-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 dark:text-white/40 mb-4">
                 Tags
               </h3>
               <div className="flex flex-wrap gap-2">
                 {portfolio.tags.map((tag: string) => (
-                  <span 
+                  <span
                     key={tag}
-                    className="px-3 py-1 bg-white/10 rounded text-sm"
+                    className="px-3 py-1 bg-slate-100 dark:bg-white/10 rounded text-sm text-slate-700 dark:text-white/80"
                   >
                     {tag}
                   </span>
@@ -143,10 +158,10 @@ export default async function PortfolioDetailPage({
           {/* Project Date */}
           {portfolio.projectDate && (
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-white/40 mb-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 dark:text-white/40 mb-4">
                 Completed
               </h3>
-              <p className="text-white/80">
+              <p className="text-slate-700 dark:text-white/80">
                 {new Date(portfolio.projectDate).toLocaleDateString('en-US', {
                   month: 'long',
                   year: 'numeric'
@@ -158,10 +173,10 @@ export default async function PortfolioDetailPage({
           {/* Complexity */}
           {portfolio.complexity && (
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-white/40 mb-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 dark:text-white/40 mb-4">
                 Project Scale
               </h3>
-              <p className="text-white/80 capitalize">
+              <p className="text-slate-700 dark:text-white/80 capitalize">
                 {portfolio.complexity} Project
               </p>
             </div>

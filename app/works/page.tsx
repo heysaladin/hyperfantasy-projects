@@ -1,6 +1,27 @@
 import Link from 'next/link'
 import Image from 'next/image'
 
+function extractPlainText(value: string): string {
+  if (!value) return ''
+  try {
+    const doc = JSON.parse(value)
+    if (doc?.type === 'doc' && Array.isArray(doc.content)) {
+      const parts: string[] = []
+      const walk = (nodes: any[]) => {
+        for (const node of nodes) {
+          if (node.type === 'text' && node.text) parts.push(node.text)
+          if (Array.isArray(node.content)) walk(node.content)
+        }
+      }
+      walk(doc.content)
+      return parts.join(' ')
+    }
+  } catch {
+    // not JSON — return as-is
+  }
+  return value
+}
+
 async function getPortfolios() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/portfolios`, {
     cache: 'no-store'
@@ -8,6 +29,11 @@ async function getPortfolios() {
   if (!res.ok) return []
   const portfolios = await res.json()
   return portfolios.filter((p: any) => p.isVisible)
+}
+
+export const metadata = {
+  title: 'Works — Hyperfantasy',
+  description: 'Selected projects showcasing our expertise in design and development.',
 }
 
 export default async function WorksPage() {
@@ -29,15 +55,16 @@ export default async function WorksPage() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {portfolios.map((portfolio: any) => (
-            <Link 
-              key={portfolio.id} 
+            <Link
+              key={portfolio.id}
               href={`/projects/${portfolio.id}`}
               className="group block"
+              aria-label={portfolio.title}
             >
               <div className="overflow-hidden rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 transition hover:border-slate-300 dark:hover:border-white/20">
                 {/* Image */}
-                {portfolio.imageUrl && (
-                  <div className="aspect-[16/10] overflow-hidden bg-slate-200 dark:bg-white/5">
+                <div className="aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-white/5">
+                  {portfolio.imageUrl ? (
                     <Image
                       src={portfolio.imageUrl}
                       alt={portfolio.title}
@@ -45,8 +72,12 @@ export default async function WorksPage() {
                       height={400}
                       className="object-cover w-full h-full transition group-hover:scale-105"
                     />
-                  </div>
-                )}
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="text-slate-300 dark:text-white/20 text-sm">No image</span>
+                    </div>
+                  )}
+                </div>
                 
                 {/* Content */}
                 <div className="p-6">
@@ -64,13 +95,13 @@ export default async function WorksPage() {
                   
                   {/* Description */}
                   <p className="mt-2 text-sm text-slate-600 dark:text-white/60 line-clamp-2">
-                    {portfolio.description}
+                    {extractPlainText(portfolio.description)}
                   </p>
                   
                   {/* Tags */}
                   {portfolio.tags && portfolio.tags.length > 0 && (
                     <div className="mt-4 flex flex-wrap gap-2">
-                      {portfolio.tags.slice(0, 3).map((tag: string) => (
+                      {portfolio.tags.map((tag: string) => (
                         <span 
                           key={tag}
                           className="text-xs px-2 py-1 bg-slate-200 dark:bg-white/10 rounded"

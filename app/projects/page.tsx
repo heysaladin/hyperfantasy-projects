@@ -2,6 +2,7 @@
 
 import { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
+import NextImage from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Dialog as RadixDialog } from 'radix-ui'
 import { ArrowDownAZ, ArrowDownWideNarrow, ArrowUpDown, ArrowUpNarrowWide, ArrowUpRight, ChevronDown, ExternalLink, Image, LayoutGrid, LayoutPanelTop, Search, SlidersHorizontal, Star, X } from 'lucide-react'
@@ -179,15 +180,26 @@ function PortfolioCard({ portfolio, index, onClick, showMeta, href }: { portfoli
 
   const cardInner = (
     <div className="relative overflow-hidden rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 transition hover:border-slate-300 dark:hover:border-white/20">
-      {portfolio.imageUrl && (
-        <div className="overflow-hidden bg-slate-200 dark:bg-white/5">
-          <img src={portfolio.imageUrl} alt={portfolio.title}
-            loading={index < 3 ? 'eager' : 'lazy'} decoding="async"
-            className="w-full h-auto block transition group-hover:scale-105" />
-        </div>
-      )}
+      <div className="overflow-hidden bg-slate-100 dark:bg-white/5">
+        {portfolio.imageUrl ? (
+          <NextImage
+            src={portfolio.imageUrl}
+            alt={portfolio.title}
+            width={800}
+            height={600}
+            priority={index < 3}
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="w-full h-auto block transition group-hover:scale-105"
+          />
+        ) : (
+          <div className="aspect-[4/3] flex items-center justify-center">
+            <span className="text-slate-300 dark:text-white/20 text-sm">No image</span>
+          </div>
+        )}
+      </div>
+      {/* Arrow badge — always visible on mobile, hover-only on desktop */}
       {portfolio.complexity === 'long' && (
-        <div className="absolute bottom-3 right-3 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none">
+        <div className="absolute bottom-3 right-3 opacity-100 md:opacity-0 md:translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none">
           <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white dark:bg-black shadow-sm shadow-black/5">
             <ArrowUpRight size={16} className="text-slate-900 dark:text-white" aria-hidden="true" />
           </div>
@@ -224,7 +236,7 @@ function PortfolioCard({ portfolio, index, onClick, showMeta, href }: { portfoli
       }}
     >
       {href ? (
-        <Link href={href} onClick={(e) => { if (portfolio.complexity !== 'long') { e.preventDefault(); onClick(); } }} className="block">
+        <Link href={href} onClick={(e) => { if (portfolio.complexity !== 'long') { e.preventDefault(); onClick(); } }} className="block" aria-label={portfolio.title}>
           {cardInner}
         </Link>
       ) : (
@@ -580,10 +592,10 @@ export default function ProjectsPage() {
     return () => obs.disconnect()
   }, [hasMore]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Close panels on outside click
+  // Close panels on outside click or Escape
   useEffect(() => {
     if (!isFilterOpen && !isSortOpen) return
-    const handler = (e: MouseEvent) => {
+    const handleClick = (e: MouseEvent) => {
       if (filterPanelRef.current && !filterPanelRef.current.contains(e.target as Node)) {
         setIsFilterOpen(false)
       }
@@ -591,8 +603,15 @@ export default function ProjectsPage() {
         setIsSortOpen(false)
       }
     }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setIsFilterOpen(false); setIsSortOpen(false) }
+    }
+    document.addEventListener('mousedown', handleClick)
+    document.addEventListener('keydown', handleKey)
+    return () => {
+      document.removeEventListener('mousedown', handleClick)
+      document.removeEventListener('keydown', handleKey)
+    }
   }, [isFilterOpen, isSortOpen])
 
   const resetAll = () => {
@@ -823,11 +842,17 @@ export default function ProjectsPage() {
                     <div className="p-4 border-b border-slate-100 dark:border-white/10">
                       <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-white/30 mb-3">Date Range</p>
                       <div className="flex items-center gap-3">
-                        <span className="text-xs tabular-nums text-slate-500 dark:text-white/40 w-10 text-right shrink-0">{yearRange[1]}</span>
+                        <div className="flex flex-col items-end shrink-0 w-10">
+                          <span className="text-[10px] text-slate-400 dark:text-white/20 leading-none mb-0.5">newest</span>
+                          <span className="text-xs tabular-nums text-slate-500 dark:text-white/40">{yearRange[1]}</span>
+                        </div>
                         <div className="flex-1">
                           <RangeSlider min={dataYears.min} max={dataYears.max} value={yearRange} onChange={setYearRange} />
                         </div>
-                        <span className="text-xs tabular-nums text-slate-500 dark:text-white/40 w-10 shrink-0">{yearRange[0]}</span>
+                        <div className="flex flex-col shrink-0 w-10">
+                          <span className="text-[10px] text-slate-400 dark:text-white/20 leading-none mb-0.5">oldest</span>
+                          <span className="text-xs tabular-nums text-slate-500 dark:text-white/40">{yearRange[0]}</span>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -894,16 +919,16 @@ export default function ProjectsPage() {
         </div>
       </div>
 
-      {/* Tag shortcuts bar — desktop only */}
+      {/* Tag shortcuts bar */}
       {tagShortcuts.length > 0 && (
-        <div className="hidden lg:block bg-white dark:bg-black">
+        <div className="bg-white dark:bg-black">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 py-2">
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none snap-x">
               {tagShortcuts.map(tag => (
                 <button
                   key={tag.id}
                   onClick={() => setSearch(search === tag.name ? '' : tag.name)}
-                  className={`px-2.5 py-1 text-xs rounded-full border transition ${
+                  className={`flex-shrink-0 snap-start px-2.5 py-1 text-xs rounded-full border transition ${
                     search === tag.name
                       ? 'bg-slate-900 dark:bg-white text-white dark:text-black border-slate-900 dark:border-white'
                       : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white/60 border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10'
@@ -983,8 +1008,8 @@ export default function ProjectsPage() {
                           {selectedPortfolio.title}
                         </h2>
                       </div>
-                      <RadixDialog.Close className="flex-shrink-0 p-2 rounded-lg text-slate-400 hover:text-slate-700 dark:text-white/40 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition">
-                        <X size={20} />
+                      <RadixDialog.Close aria-label="Close" className="flex-shrink-0 p-2 rounded-lg text-slate-400 hover:text-slate-700 dark:text-white/40 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition">
+                        <X size={20} aria-hidden="true" />
                       </RadixDialog.Close>
                     </div>
 
