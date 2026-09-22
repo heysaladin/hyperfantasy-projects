@@ -207,15 +207,15 @@ export default async function AboutPage() {
         .dark .svc-tag { border-color:rgba(255,255,255,.1); background:transparent; color:rgba(255,255,255,.65); }
       `}</style>
 
-      <main className="hf-page">
+      <div className="hf-page">
 
         {/* ── 01 · ABOUT + STATS ── */}
-        <section className="px-6 lg:px-8 border-b border-black/8 dark:border-white/7" style={{ paddingTop: '8rem', paddingBottom: '5rem' }}>
+        <section className="px-6 lg:px-8 border-b border-black/8 dark:border-white/7 pt-32 pb-20">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
               {/* Left: prose */}
-              <ScrollReveal>
+              <div>
                 <span className="hf-label">About Us</span>
                 <h1 className="hf-title" style={{ fontSize: 'clamp(36px,5vw,60px)', fontWeight: 300, lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: '1.5rem' }}>
                   No bloated agency — just senior specialists, assembled per project.
@@ -226,36 +226,37 @@ export default async function AboutPage() {
                 <EnquiryCTAButton className="grad-btn" id="about-hero-cta">
                   Start a Project <ArrowRight size={14} aria-hidden="true" />
                 </EnquiryCTAButton>
-              </ScrollReveal>
+              </div>
 
               {/* Right: stats */}
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <dl style={{ display: 'flex', flexDirection: 'column' }}>
                 {STATS.map((s, i) => (
                   <ScrollReveal key={s.label} delay={100 + i * 110}>
                     <div
                       style={{ paddingTop: '1.25rem', paddingBottom: '1.25rem', borderTop: '1px solid rgba(0,0,0,0.08)', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}
                       className="dark:border-white/8"
                     >
-                      <span className="hf-stat-num hf-title">{s.value}</span>
-                      <span className="hf-muted" style={{ fontSize: 14, fontWeight: 400 }}>{s.label}</span>
+                      <dt className="hf-stat-num hf-title">{s.value}</dt>
+                      <dd className="hf-muted" style={{ fontSize: 14, fontWeight: 400 }}>{s.label}</dd>
                     </div>
                   </ScrollReveal>
                 ))}
-              </div>
+              </dl>
 
             </div>
           </div>
         </section>
 
         {/* ── 02 · LOGO CAROUSEL ── */}
-        <section className="border-b border-black/8 dark:border-white/7 py-10">
-          <div className="marquee-wrapper" dir="ltr">
+        <section aria-label="Brands we've worked with" className="border-b border-black/8 dark:border-white/7 py-10">
+          <p className="text-center text-xs font-semibold uppercase tracking-widest hf-muted mb-6">Trusted by</p>
+          <div aria-hidden="true" className="marquee-wrapper" dir="ltr">
             <div className="marquee-track" style={{ animationDuration: '35.4333s' }}>
               {[...LOGOS, ...LOGOS].map((logo, i) => (
                 <Image
                   key={i}
                   src={logo.src}
-                  alt={logo.alt}
+                  alt=""
                   width={120}
                   height={48}
                   style={{ objectFit: 'contain', marginRight: 48, flexShrink: 0 }}
@@ -286,7 +287,7 @@ export default async function AboutPage() {
                     <div key={num} className="svc-block">
                       <div className="svc-block-header">
                         <span className="svc-num">{num}</span>
-                        <Link href={href}>
+                        <Link href={href} className="hover:underline decoration-current">
                           <h3 className="svc-title hf-title">{label}</h3>
                         </Link>
                       </div>
@@ -323,7 +324,7 @@ export default async function AboutPage() {
           </div>
         </section>
 
-      </main>
+      </div>
 
       <HomeFloatingCTA ctaBtnId="about-hero-cta" scrollThreshold={300} />
     </div>

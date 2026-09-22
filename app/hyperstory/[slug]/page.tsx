@@ -45,9 +45,8 @@ export default async function HyperstoryDetailPage({
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-
   const { slug } = await params
+  if (!user) redirect(`/login?redirect=/hyperstory/${slug}`)
   const story = getHyperstory(slug)
 
   if (!story) notFound()

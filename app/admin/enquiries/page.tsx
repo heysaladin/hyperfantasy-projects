@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Search, ChevronDown, FileText, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
+import { Trash2 } from 'lucide-react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,16 +43,20 @@ function StatusDropdown({ status, onChange }: { status: string; onChange: (s: st
     <div ref={ref} className="relative inline-block">
       <button
         onClick={() => setOpen(v => !v)}
+        aria-expanded={open}
+        aria-haspopup="listbox"
         className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded capitalize font-medium transition hover:opacity-80 ${STATUS_STYLES[status] ?? STATUS_STYLES['new']}`}
       >
         {status}
         <ChevronDown size={11} aria-hidden="true" />
       </button>
       {open && (
-        <div className="absolute left-0 top-full mt-1 z-50 min-w-32 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-zinc-900 shadow-lg py-1">
+        <div role="listbox" aria-label="Select status" className="absolute left-0 top-full mt-1 z-50 min-w-32 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-zinc-900 shadow-lg py-1">
           {STATUS_OPTIONS.map(s => (
             <button
               key={s}
+              role="option"
+              aria-selected={s === status}
               onClick={() => { onChange(s); setOpen(false) }}
               className={`w-full text-left px-3 py-1.5 text-xs capitalize hover:bg-slate-100 dark:hover:bg-white/10 transition ${s === status ? 'font-semibold' : ''}`}
             >
@@ -70,15 +75,10 @@ export default function AdminEnquiriesPage() {
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [deleteId, setDeleteId] = useState<string | null>(null)
-  const [usdRate, setUsdRate] = useState<number | null>(null)
   const itemsPerPage = 6
 
   useEffect(() => {
     fetchEnquiries()
-    fetch('https://open.er-api.com/v6/latest/USD')
-      .then(r => r.json())
-      .then(data => setUsdRate(data.rates?.IDR ?? null))
-      .catch(() => {})
   }, [])
 
   const fetchEnquiries = async () => {
@@ -89,7 +89,6 @@ export default function AdminEnquiriesPage() {
         return
       }
       const data = await res.json()
-      console.log('Enquiries fetched:', data) // Debug log
       const sorted = (Array.isArray(data) ? data : []).sort((a: any, b: any) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       )
@@ -100,14 +99,8 @@ export default function AdminEnquiriesPage() {
     }
   }
 
-  const totalDoneBudget = enquiries
-    .filter((e: any) => e.status === 'done')
-    .reduce((sum: number, e: any) => {
-      const val = Number(e.budget?.toString().replace(/[^0-9.]/g, '') ?? '0')
-      return sum + (isNaN(val) ? 0 : val)
-    }, 0)
-
-  const totalDoneUSD = usdRate && totalDoneBudget > 0 ? totalDoneBudget / usdRate : null
+  const doneBudgets = enquiries.filter((e: any) => e.status === 'done' && e.budget)
+  const totalDoneBudget = doneBudgets.length
 
   // Search filter
   useEffect(() => {
@@ -153,22 +146,18 @@ export default function AdminEnquiriesPage() {
         </div>
         {totalDoneBudget > 0 && (
           <div className="text-right">
-            <div className="text-3xl font-bold">
-              Rp {totalDoneBudget.toLocaleString('id-ID')}
-            </div>
-            <p className="text-slate-600 dark:text-white/60 text-sm mt-1">
-              {totalDoneUSD
-                ? `$${totalDoneUSD.toLocaleString('en-US', { maximumFractionDigits: 0 })} USD`
-                : usdRate === null ? 'Loading rate…' : '$0 USD'}
-            </p>
+            <div className="text-3xl font-bold tabular-nums">{totalDoneBudget}</div>
+            <p className="text-slate-600 dark:text-white/60 text-sm mt-1">done with budget</p>
           </div>
         )}
       </div>
 
       {/* Search */}
       <div className="mb-6 relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40" size={20} />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40" size={20} aria-hidden="true" />
+        <label htmlFor="enquiry-search" className="sr-only">Search enquiries by name or message</label>
         <Input
+          id="enquiry-search"
           placeholder="Search by name or message..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -183,7 +172,7 @@ export default function AdminEnquiriesPage() {
           <thead className="bg-slate-100 dark:bg-white/5 border-b border-slate-300 dark:border-white/10">
             <tr>
               <th className="text-left p-4 font-semibold">Name</th>
-              <th className="text-left p-4 font-semibold w-48">Budget (IDR)</th>
+              <th className="text-left p-4 font-semibold w-48">Budget</th>
               <th className="text-left p-4 font-semibold">Email</th>
               <th className="text-left p-4 font-semibold w-40">Date</th>
               <th className="text-left p-4 font-semibold w-36">Status</th>
@@ -202,9 +191,7 @@ export default function AdminEnquiriesPage() {
                   </div>
                 </td>
                 <td className="p-4 text-slate-600 dark:text-white/60 w-48">
-                  {enquiry.budget
-                    ? Number(enquiry.budget.toString().replace(/[^0-9.]/g, '')).toLocaleString('id-ID')
-                    : '-'}
+                  {enquiry.budget ?? '-'}
                 </td>
                 <td className="p-4 text-slate-600 dark:text-white/60 lowercase">{enquiry.email || '-'}</td>
                 <td className="p-4 text-slate-600 dark:text-white/60 w-40">
@@ -219,15 +206,24 @@ export default function AdminEnquiriesPage() {
                 <td className="p-4">
                   <div className="flex gap-2 justify-end">
                     <Link href={`/admin/enquiries/${enquiry.id}`}>
-                      <Button variant="outline" size="sm" title="Details">
-                        <FileText size={15} />
+                      <Button variant="outline" size="sm" aria-label="View details">
+                        <FileText size={15} aria-hidden="true" />
                       </Button>
                     </Link>
                     <Link href={`/enquiry/${enquiry.id}`} target="_blank">
-                      <Button variant="outline" size="sm" title="View status page">
-                        <ExternalLink size={15} />
+                      <Button variant="outline" size="sm" aria-label="View status page">
+                        <ExternalLink size={15} aria-hidden="true" />
                       </Button>
                     </Link>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      aria-label="Delete enquiry"
+                      className="text-red-500 hover:text-red-600 hover:border-red-300 dark:hover:border-red-700"
+                      onClick={() => setDeleteId(enquiry.id)}
+                    >
+                      <Trash2 size={15} aria-hidden="true" />
+                    </Button>
                   </div>
                 </td>
               </tr>

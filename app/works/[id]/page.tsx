@@ -3,15 +3,38 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, ExternalLink, Github } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { prisma } from '@/lib/prisma'
 import type { Metadata } from 'next'
 
+function extractPlainText(value: string): string {
+  if (!value) return ''
+  try {
+    const doc = JSON.parse(value)
+    if (doc?.type === 'doc' && Array.isArray(doc.content)) {
+      const parts: string[] = []
+      const walk = (nodes: any[]) => {
+        for (const node of nodes) {
+          if (node.type === 'text' && node.text) parts.push(node.text)
+          if (Array.isArray(node.content)) walk(node.content)
+        }
+      }
+      walk(doc.content)
+      return parts.join(' ')
+    }
+  } catch {
+    // not JSON — return as-is
+  }
+  return value
+}
+
 async function getPortfolio(id: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/portfolios`, {
-    cache: 'no-store'
-  })
-  if (!res.ok) return null
-  const portfolios = await res.json()
-  return portfolios.find((p: any) => p.id === id && p.isVisible)
+  try {
+    const portfolio = await prisma.portfolio.findUnique({ where: { id } })
+    if (!portfolio || !portfolio.isVisible) return null
+    return portfolio
+  } catch {
+    return null
+  }
 }
 
 export async function generateMetadata({
@@ -24,7 +47,7 @@ export async function generateMetadata({
   if (!portfolio) return {}
   return {
     title: `${portfolio.title} — Hyperfantasy`,
-    description: portfolio.description?.slice(0, 160) ?? undefined,
+    description: extractPlainText(portfolio.description ?? '').slice(0, 160) || undefined,
   }
 }
 
@@ -40,13 +63,18 @@ export default async function PortfolioDetailPage({
     notFound()
   }
 
+  const description = extractPlainText(portfolio.description ?? '')
+
   return (
     <div className="min-h-screen bg-white dark:bg-black text-slate-900 dark:text-white transition-colors">
       {/* Header */}
       <div className="border-b border-slate-200 dark:border-white/10">
         <div className="max-w-5xl mx-auto px-6 lg:px-8 py-8">
-          <Link href="/works" className="inline-flex items-center text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition mb-8">
-            <ArrowLeft size={20} className="mr-2" />
+          <Link
+            href="/works"
+            className="inline-flex items-center text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition mb-8"
+          >
+            <ArrowLeft size={20} className="mr-2" aria-hidden="true" />
             Back to Works
           </Link>
         </div>
@@ -54,7 +82,7 @@ export default async function PortfolioDetailPage({
 
       {/* Content */}
       <div className="max-w-5xl mx-auto px-6 lg:px-8 py-16">
-        
+
         {/* Title & Category */}
         <div className="mb-12">
           {portfolio.category && (
@@ -65,24 +93,24 @@ export default async function PortfolioDetailPage({
           <h1 className="text-4xl md:text-5xl font-bold mt-4 mb-6">
             {portfolio.title}
           </h1>
-          
+
           {/* Links */}
           <div className="flex flex-wrap gap-4">
             {portfolio.liveUrl && (
-              <a href={portfolio.liveUrl} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline">
-                  <ExternalLink size={16} className="mr-2" />
+              <Button variant="outline" asChild>
+                <Link href={portfolio.liveUrl} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink size={16} className="mr-2" aria-hidden="true" />
                   View Live Site
-                </Button>
-              </a>
+                </Link>
+              </Button>
             )}
             {portfolio.copyright && (
-              <a href={portfolio.copyright} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline">
-                  <Github size={16} className="mr-2" />
+              <Button variant="outline" asChild>
+                <Link href={portfolio.copyright} target="_blank" rel="noopener noreferrer">
+                  <Github size={16} className="mr-2" aria-hidden="true" />
                   View Code
-                </Button>
-              </a>
+                </Link>
+              </Button>
             )}
           </div>
         </div>
@@ -101,18 +129,13 @@ export default async function PortfolioDetailPage({
         )}
 
         {/* Description */}
-        <div className="prose prose-slate dark:prose-invert max-w-none mb-12">
-          <p className="text-lg text-slate-700 dark:text-white/80 leading-relaxed">
-            {portfolio.description}
-          </p>
-          
-          {/* Long Description */}
-          {portfolio.longDescription && (
-            <div className="mt-8 text-slate-600 dark:text-white/70 leading-relaxed whitespace-pre-line">
-              {portfolio.longDescription}
-            </div>
-          )}
-        </div>
+        {description && (
+          <div className="prose prose-slate dark:prose-invert max-w-none mb-12">
+            <p className="text-lg text-slate-700 dark:text-white/80 leading-relaxed">
+              {description}
+            </p>
+          </div>
+        )}
 
         {/* Meta Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-12 border-t border-slate-200 dark:border-white/10">
@@ -181,6 +204,16 @@ export default async function PortfolioDetailPage({
               </p>
             </div>
           )}
+        </div>
+
+        {/* CTA */}
+        <div className="border-t border-slate-200 dark:border-white/10 pt-12 text-center">
+          <p className="text-slate-600 dark:text-white/60 mb-6">
+            Interested in working together?
+          </p>
+          <Button asChild size="lg">
+            <Link href="/enquiry">Get in Touch</Link>
+          </Button>
         </div>
 
       </div>

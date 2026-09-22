@@ -57,7 +57,7 @@ export default async function WorksPage() {
           {portfolios.map((portfolio: any) => (
             <Link
               key={portfolio.id}
-              href={`/projects/${portfolio.id}`}
+              href={`/works/${portfolio.id}`}
               className="group block"
               aria-label={portfolio.title}
             >

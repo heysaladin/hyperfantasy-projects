@@ -91,7 +91,7 @@ export default function AdminSidebar({ collapsed, setCollapsed, mobileOpen, setM
           <div className="flex items-center justify-center w-full">
             <Image
               src="/logo-pictogram.svg"
-              alt="Tamawal"
+              alt="Hyperfantasy"
               width={26}
               height={26}
             />
@@ -105,7 +105,7 @@ export default function AdminSidebar({ collapsed, setCollapsed, mobileOpen, setM
             >
               <Image
                 src="/logo-pictogram.svg"
-                alt="Tamawal"
+                alt="Hyperfantasy"
                 width={24}
                 height={24}
               />
@@ -157,7 +157,8 @@ export default function AdminSidebar({ collapsed, setCollapsed, mobileOpen, setM
             <Link
               key={href}
               href={href}
-              title={collapsed ? label : undefined}
+              aria-label={collapsed ? label : undefined}
+              aria-current={active ? 'page' : undefined}
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 collapsed ? 'justify-center' : ''
@@ -199,6 +200,8 @@ export default function AdminSidebar({ collapsed, setCollapsed, mobileOpen, setM
               onClick={() => setDropdownOpen((v) => !v)}
               className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group"
               aria-label="User menu"
+              aria-expanded={dropdownOpen}
+              aria-haspopup="menu"
             >
               {/* Avatar */}
               {user?.avatar ? (
@@ -230,9 +233,15 @@ export default function AdminSidebar({ collapsed, setCollapsed, mobileOpen, setM
 
             {/* Dropdown */}
             {dropdownOpen && (
-              <div className="absolute bottom-full left-0 right-0 mb-1 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-lg py-1 z-50">
+              <div
+                role="menu"
+                aria-label="User menu"
+                className="absolute bottom-full left-0 right-0 mb-1 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-lg py-1 z-50"
+                onKeyDown={e => { if (e.key === 'Escape') setDropdownOpen(false) }}
+              >
                 <Link
                   href="/"
+                  role="menuitem"
                   onClick={() => setDropdownOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2 text-sm text-slate-600 dark:text-white/60 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-colors"
                 >
@@ -241,14 +250,16 @@ export default function AdminSidebar({ collapsed, setCollapsed, mobileOpen, setM
                 </Link>
                 <Link
                   href="/profile"
+                  role="menuitem"
                   onClick={() => setDropdownOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2 text-sm text-slate-600 dark:text-white/60 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-colors"
                 >
                   <User size={15} aria-hidden="true" />
                   Go to Profile
                 </Link>
-                <div className="my-1 border-t border-slate-100 dark:border-white/10" />
+                <div role="separator" className="my-1 border-t border-slate-100 dark:border-white/10" />
                 <button
+                  role="menuitem"
                   onClick={handleLogout}
                   className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-slate-600 dark:text-white/60 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                 >

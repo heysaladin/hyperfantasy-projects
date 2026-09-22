@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowUpRight, CheckCircle } from 'lucide-react'
 
 const GRADIENT = 'linear-gradient(256.86deg,#1e40af 0%,#7c3aed 55%,#be185d 100%)'
@@ -32,6 +32,12 @@ export default function EnquiryPage() {
   const [submitError, setSubmitError] = useState('')
   const [formData, setFormData]       = useState(EMPTY)
   const [fieldErrors, setFieldErrors] = useState(EMPTY_ERRORS)
+
+  const successRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (success) successRef.current?.focus()
+  }, [success])
 
   const set = (field: keyof typeof EMPTY, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -107,9 +113,9 @@ export default function EnquiryPage() {
         .enq-input, .enq-textarea {
           display:block; width:100%; background:transparent;
           border:1px solid rgba(0,0,0,0.14); border-radius:999px;
-          padding:14px 20px; font-size:16px; color:#0a0a0a; outline:none;
+          padding:14px 20px; font-size:16px; color:#0a0a0a;
           font-family:inherit; transition:border-color 0.2s;
-          -webkit-appearance:none;
+          -webkit-appearance:none; outline:none;
         }
         .enq-textarea { border-radius:24px; }
         .dark .enq-input, .dark .enq-textarea {
@@ -120,6 +126,9 @@ export default function EnquiryPage() {
         .dark .enq-input::placeholder, .dark .enq-textarea::placeholder { color:rgba(255,255,255,0.22); }
         .enq-input:focus, .enq-textarea:focus { border-color:rgba(0,0,0,0.55); }
         .dark .enq-input:focus, .dark .enq-textarea:focus { border-color:rgba(255,255,255,0.55); }
+        .enq-input:focus-visible, .enq-textarea:focus-visible {
+          outline: 2px solid #7c3aed; outline-offset: 2px;
+        }
         .enq-input.err, .enq-textarea.err { border-color:#f87171; }
         .enq-err { font-size:12px; color:#f87171; }
         .enq-hint { font-size:11px; color:rgba(0,0,0,0.3); }
@@ -139,6 +148,7 @@ export default function EnquiryPage() {
         }
         .enq-submit:hover { opacity:0.88; }
         .enq-submit:disabled { opacity:0.55; cursor:not-allowed; }
+        .enq-submit:focus-visible { outline: 2px solid #7c3aed; outline-offset: 3px; }
 
         /* ── Email link ── */
         .enq-email-link {
@@ -146,6 +156,7 @@ export default function EnquiryPage() {
           display:inline-flex; align-items:center; gap:6px; transition:color 0.2s;
         }
         .enq-email-link:hover { color:#0a0a0a; }
+        .enq-email-link:focus-visible { outline: 2px solid #7c3aed; outline-offset: 3px; border-radius: 4px; }
         .dark .enq-email-link { color:rgba(255,255,255,0.4); }
         .dark .enq-email-link:hover { color:#fff; }
 
@@ -164,6 +175,7 @@ export default function EnquiryPage() {
           color:#0a0a0a; cursor:pointer; font-family:inherit; transition:background 0.2s;
         }
         .enq-reset-btn:hover { background:rgba(0,0,0,0.04); }
+        .enq-reset-btn:focus-visible { outline: 2px solid #7c3aed; outline-offset: 3px; }
         .dark .enq-reset-btn { border-color:rgba(255,255,255,0.2); color:#fff; }
         .dark .enq-reset-btn:hover { background:rgba(255,255,255,0.06); }
 
@@ -177,6 +189,7 @@ export default function EnquiryPage() {
         }
         .enq-chip:hover { border-color:rgba(0,0,0,0.3); }
         .enq-chip.active { background:#151515; color:#fff; border-color:#151515; }
+        .enq-chip:focus-visible { outline: 2px solid #7c3aed; outline-offset: 2px; }
         .dark .enq-chip { background:transparent; color:rgba(255,255,255,0.65); border-color:rgba(255,255,255,0.14); }
         .dark .enq-chip:hover { border-color:rgba(255,255,255,0.35); }
         .dark .enq-chip.active { background:#fff; color:#151515; border-color:#fff; }
@@ -190,7 +203,7 @@ export default function EnquiryPage() {
         .dark .enq-alert { background:rgba(239,68,68,0.1); border-color:rgba(239,68,68,0.25); color:#f87171; }
       `}</style>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8" style={{ paddingTop: '9rem', paddingBottom: '8rem' }}>
+      <div className="max-w-7xl mx-auto px-6 lg:px-8" style={{ paddingTop: '9rem', paddingBottom: '4rem' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6rem', alignItems: 'start' }}
           className="max-lg:!grid-cols-1 max-lg:!gap-12">
 
@@ -213,7 +226,13 @@ export default function EnquiryPage() {
           {/* ── Right: form ── */}
           <div>
             {success ? (
-              <div role="status" aria-live="polite" style={{ paddingTop: '3rem' }}>
+              <div
+                ref={successRef}
+                role="status"
+                aria-live="polite"
+                tabIndex={-1}
+                style={{ paddingTop: '3rem', outline: 'none' }}
+              >
                 <CheckCircle size={52} strokeWidth={1.5} style={{ color: '#4ade80', marginBottom: '1.5rem' }} />
                 <p className="enq-h1" style={{ fontSize: 24, fontWeight: 400, marginBottom: '0.5rem' }}>Message sent!</p>
                 <p className="enq-subtext" style={{ fontSize: 15, marginBottom: '2.5rem' }}>
@@ -227,14 +246,12 @@ export default function EnquiryPage() {
               <form onSubmit={handleSubmit} noValidate aria-label="Enquiry form"
                 style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
 
-                {submitError && (
-                  <div role="alert" className="enq-alert">{submitError}</div>
-                )}
-
                 {/* Project Type */}
-                <div className="enq-field">
-                  <label className="enq-label">Project Type <span aria-hidden="true">*</span></label>
-                  <div className="enq-chips" style={{ paddingTop: '6px' }}>
+                <fieldset className="enq-field" style={{ border: 'none', padding: 0, margin: 0 }}>
+                  <legend className="enq-label" style={{ float: 'left', width: '100%', marginBottom: 6 }}>
+                    Project Type <span aria-hidden="true">*</span>
+                  </legend>
+                  <div className="enq-chips" style={{ paddingTop: '6px', clear: 'both' }}>
                     {PROJECT_TYPES.map(type => (
                       <button
                         key={type}
@@ -247,30 +264,42 @@ export default function EnquiryPage() {
                       </button>
                     ))}
                   </div>
-                  {fieldErrors.projectType && <p className="enq-err" role="alert">{fieldErrors.projectType}</p>}
-                </div>
+                  {fieldErrors.projectType && (
+                    <p id="projectType-err" className="enq-err" role="alert">{fieldErrors.projectType}</p>
+                  )}
+                </fieldset>
 
                 {/* Budget */}
-                <div className="enq-field">
-                  <label className="enq-label">Budget (USD) <span aria-hidden="true">*</span></label>
-                  <div className="enq-chips" style={{ paddingTop: '6px' }}>
+                <fieldset className="enq-field" style={{ border: 'none', padding: 0, margin: 0 }}>
+                  <legend className="enq-label" style={{ float: 'left', width: '100%', marginBottom: 6 }}>
+                    Budget (USD) <span aria-hidden="true">*</span>
+                  </legend>
+                  <div
+                    role="radiogroup"
+                    aria-label="Budget (USD)"
+                    className="enq-chips"
+                    style={{ paddingTop: '6px', clear: 'both' }}
+                  >
                     {BUDGET_OPTIONS.map(opt => (
                       <button
                         key={opt}
                         type="button"
+                        role="radio"
+                        aria-checked={formData.budget === opt}
                         className={`enq-chip${formData.budget === opt ? ' active' : ''}`}
                         onClick={() => {
                           set('budget', formData.budget === opt ? '' : opt)
                           setFieldErrors(prev => ({ ...prev, budget: '' }))
                         }}
-                        aria-pressed={formData.budget === opt}
                       >
                         {opt}
                       </button>
                     ))}
                   </div>
-                  {fieldErrors.budget && <p className="enq-err" role="alert">{fieldErrors.budget}</p>}
-                </div>
+                  {fieldErrors.budget && (
+                    <p id="budget-err" className="enq-err" role="alert">{fieldErrors.budget}</p>
+                  )}
+                </fieldset>
 
                 {/* Name + Email */}
                 <div className="enq-grid">
@@ -283,9 +312,13 @@ export default function EnquiryPage() {
                       value={formData.name}
                       onChange={e => set('name', e.target.value)}
                       onBlur={() => blur('name')}
-                      aria-required="true" aria-invalid={!!fieldErrors.name}
+                      aria-required="true"
+                      aria-invalid={!!fieldErrors.name}
+                      aria-describedby={fieldErrors.name ? 'name-err' : undefined}
                     />
-                    {fieldErrors.name && <p className="enq-err" role="alert">{fieldErrors.name}</p>}
+                    {fieldErrors.name && (
+                      <p id="name-err" className="enq-err" role="alert">{fieldErrors.name}</p>
+                    )}
                   </div>
                   <div className="enq-field">
                     <label htmlFor="email" className="enq-label">Email <span aria-hidden="true">*</span></label>
@@ -296,9 +329,13 @@ export default function EnquiryPage() {
                       value={formData.email}
                       onChange={e => set('email', e.target.value)}
                       onBlur={() => blur('email')}
-                      aria-required="true" aria-invalid={!!fieldErrors.email}
+                      aria-required="true"
+                      aria-invalid={!!fieldErrors.email}
+                      aria-describedby={fieldErrors.email ? 'email-err' : undefined}
                     />
-                    {fieldErrors.email && <p className="enq-err" role="alert">{fieldErrors.email}</p>}
+                    {fieldErrors.email && (
+                      <p id="email-err" className="enq-err" role="alert">{fieldErrors.email}</p>
+                    )}
                   </div>
                 </div>
 
@@ -332,23 +369,35 @@ export default function EnquiryPage() {
                   <textarea
                     id="message"
                     rows={6}
-                    placeholder="Describe your project goals — e.g. 'I want a website that helps me sell my products more effectively' or 'I need a dashboard to track company performance.'"
+                    placeholder="Describe your project goals…"
                     className={`enq-textarea${fieldErrors.message ? ' err' : ''}`}
                     value={formData.message}
                     onChange={e => set('message', e.target.value)}
                     onBlur={() => blur('message')}
-                    aria-required="true" aria-invalid={!!fieldErrors.message}
+                    aria-required="true"
+                    aria-invalid={!!fieldErrors.message}
+                    aria-describedby={fieldErrors.message ? 'message-err' : 'message-hint'}
                   />
-                  {fieldErrors.message && <p className="enq-err" role="alert">{fieldErrors.message}</p>}
+                  <p id="message-hint" className="enq-hint">
+                    e.g. 'I want a website that helps me sell my products more effectively'
+                  </p>
+                  {fieldErrors.message && (
+                    <p id="message-err" className="enq-err" role="alert">{fieldErrors.message}</p>
+                  )}
                 </div>
 
                 {/* Submit */}
-                <div style={{ paddingTop: '0.5rem' }}>
-                  <button type="submit" className="enq-submit" disabled={loading} aria-disabled={loading} aria-busy={loading}>
-                    {loading
-                      ? <span aria-live="polite">Submitting…</span>
-                      : <>Submit Enquiry <ArrowUpRight size={15} aria-hidden="true" /></>}
-                  </button>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: '0.5rem' }}>
+                  {submitError && (
+                    <div role="alert" className="enq-alert">{submitError}</div>
+                  )}
+                  <div>
+                    <button type="submit" className="enq-submit" disabled={loading} aria-disabled={loading} aria-busy={loading}>
+                      {loading
+                        ? <span aria-live="polite">Submitting…</span>
+                        : <>Submit Enquiry <ArrowUpRight size={15} aria-hidden="true" /></>}
+                    </button>
+                  </div>
                 </div>
 
               </form>

@@ -122,7 +122,7 @@ export default function ArticlesPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search articles…"
-              className="w-full pl-9 pr-8 py-2.5 text-sm bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg outline-none focus:border-slate-400 dark:focus:border-white/30 transition placeholder:text-slate-400 dark:placeholder:text-white/30"
+              className="w-full pl-9 pr-8 py-2.5 text-sm bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg outline-none focus:border-slate-400 dark:focus:border-white/30 focus-visible:ring-2 focus-visible:ring-violet-500 transition placeholder:text-slate-400 dark:placeholder:text-white/30"
               style={{ fontFamily: 'var(--font-inter)' }}
             />
             {search && (
@@ -136,20 +136,23 @@ export default function ArticlesPage() {
             )}
           </div>
           {isAdmin && (
-            <label className="flex-shrink-0 flex items-center gap-2 cursor-pointer select-none">
-              <span className="text-xs font-medium text-slate-500 dark:text-white/40" style={{ fontFamily: 'var(--font-inter)' }}>Drafts</span>
-              <span
-                onClick={() => setShowDrafts(v => !v)}
+            <div className="flex-shrink-0 flex items-center gap-2">
+              <span className="text-xs font-medium text-slate-500 dark:text-white/40" style={{ fontFamily: 'var(--font-inter)' }} id="drafts-label">Drafts</span>
+              <button
                 role="switch"
                 aria-checked={showDrafts}
-                className={`relative inline-flex h-5 w-9 rounded-full transition-colors duration-200 ${showDrafts ? 'bg-amber-400' : 'bg-slate-300 dark:bg-white/20'}`}
+                aria-labelledby="drafts-label"
+                tabIndex={0}
+                onClick={() => setShowDrafts(v => !v)}
+                onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setShowDrafts(v => !v) } }}
+                className={`relative inline-flex h-5 w-9 rounded-full transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none ${showDrafts ? 'bg-amber-400' : 'bg-slate-300 dark:bg-white/20'}`}
               >
                 <span
                   className="absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200"
                   style={{ transform: showDrafts ? 'translateX(16px)' : 'translateX(0px)' }}
                 />
-              </span>
-            </label>
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -158,7 +161,12 @@ export default function ArticlesPage() {
       <div className="max-w-[728px] mx-auto px-6 pt-0 pb-20">
 
         {isLoading ? (
-          <div className="divide-y divide-slate-200 dark:divide-white/10">
+          <div
+            className="divide-y divide-slate-200 dark:divide-white/10"
+            aria-busy="true"
+            aria-label="Loading articles"
+            role="status"
+          >
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex items-start gap-6 py-8 animate-pulse">
                 <div className="flex-1 space-y-3">
@@ -172,9 +180,13 @@ export default function ArticlesPage() {
             ))}
           </div>
         ) : paginated.length > 0 ? (
-          <div className="divide-y divide-slate-200 dark:divide-white/10">
+          <div
+            className="divide-y divide-slate-200 dark:divide-white/10"
+            aria-live="polite"
+            aria-label={search ? `${paginated.length} article${paginated.length === 1 ? '' : 's'} found` : undefined}
+          >
             {paginated.map((blog: any) => (
-              <Link key={blog.id} href={`/articles/${blog.slug}`} className="block group py-8 first:pt-10">
+              <Link key={blog.id} href={`/articles/${blog.slug}`} aria-label={blog.title} className="block group py-8 first:pt-10">
                 <article>
                   {/* Date — top */}
                   <time style={{
@@ -200,7 +212,7 @@ export default function ArticlesPage() {
                         lineHeight: 1.3,
                         letterSpacing: '-0.008em',
                         marginBottom: '6px',
-                      }} className="text-[#292929] dark:text-white/90 group-hover:text-[#6b6b6b] dark:group-hover:text-white/55 transition line-clamp-2">
+                      }} className="text-[#292929] dark:text-white/90 group-hover:underline decoration-[#292929]/30 dark:decoration-white/30 underline-offset-2 transition line-clamp-2">
                         {blog.title}
                         {!blog.isPublished && (
                           <span className="ml-2 text-[10px] font-semibold uppercase tracking-widest px-1.5 py-0.5 rounded bg-amber-400/90 text-amber-900 align-middle">
@@ -284,8 +296,10 @@ export default function ArticlesPage() {
               <button
                 key={n}
                 onClick={() => setPage(n)}
+                aria-current={n === page ? 'page' : undefined}
+                aria-label={`Page ${n}`}
                 style={{ fontFamily: 'var(--font-inter)', fontSize: '14px' }}
-                className={`w-9 h-9 rounded-full font-medium transition ${
+                className={`w-9 h-9 rounded-full font-medium transition focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none ${
                   n === page
                     ? 'bg-[#292929] dark:bg-white text-white dark:text-black'
                     : 'border border-slate-200 dark:border-white/10 text-[#6b6b6b] dark:text-white/50 hover:bg-slate-100 dark:hover:bg-white/5'

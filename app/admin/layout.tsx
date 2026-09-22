@@ -16,6 +16,13 @@ export default function AdminLayout({
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-slate-900 dark:text-white transition-colors">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-slate-900 focus:rounded-lg focus:shadow-lg focus:text-sm focus:font-medium"
+      >
+        Skip to content
+      </a>
+
       <AdminSidebar
         collapsed={collapsed}
         setCollapsed={setCollapsed}
@@ -28,6 +35,8 @@ export default function AdminLayout({
         <div
           className="fixed inset-0 bg-black/50 z-20 md:hidden"
           onClick={() => setMobileOpen(false)}
+          onKeyDown={e => { if (e.key === 'Escape') setMobileOpen(false) }}
+          role="presentation"
         />
       )}
 
@@ -47,6 +56,7 @@ export default function AdminLayout({
       </div>
 
       <main
+        id="main-content"
         className={`min-h-screen pb-16 transition-all duration-200 pt-14 md:pt-0 ${collapsed ? 'md:ml-16' : 'md:ml-60'}`}
       >
         {children}
