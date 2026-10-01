@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { label: 'Projects',   href: '/projects'   },
   { label: 'Hyperstory', href: '/hyperstory' },
   { label: 'Articles',   href: '/articles'   },
+  { label: 'Offer',      href: '/offer'      },
   { label: 'About',      href: '/about'      },
   { label: 'Contact',    href: '/enquiry'    },
 ]

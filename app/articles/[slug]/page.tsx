@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowLeft } from 'lucide-react'
 import { Source_Serif_4 } from 'next/font/google'
 import { ClientDate } from '@/components/client-date'
@@ -30,9 +31,29 @@ function stripHtml(html: string): string {
     .trim()
 }
 
+function readingTime(content: string): number {
+  const text = content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+  const words = text.split(' ').filter(Boolean).length
+  return Math.max(1, Math.ceil(words / 200))
+}
+
 async function getBlog(slug: string) {
   return await prisma.blog.findFirst({
-    where: { slug }
+    where: { slug, isPublished: true },
+    include: { author: { select: { name: true } } },
+  })
+}
+
+async function getMoreArticles(currentSlug: string, tags: string[]) {
+  return await prisma.blog.findMany({
+    where: {
+      isPublished: true,
+      slug: { not: currentSlug },
+      ...(tags.length > 0 ? { tags: { hasSome: tags } } : {}),
+    },
+    orderBy: { createdAt: 'desc' },
+    take: 3,
+    select: { id: true, title: true, slug: true, excerpt: true, coverImage: true, createdAt: true, tags: true },
   })
 }
 
@@ -68,7 +89,10 @@ export async function generateMetadata({
     description = `Read "${blog.title}"${tagSuffix} on Hyperfantasy.`
   }
 
-  const title = `${blog.title} — Hyperfantasy`
+  const title = blog.title
+  const images = blog.coverImage
+    ? [{ url: blog.coverImage, width: 1200, height: 630, alt: blog.title }]
+    : [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Hyperfantasy' }]
 
   return {
     title,
@@ -78,12 +102,18 @@ export async function generateMetadata({
       title,
       description,
       type: 'article',
+      siteName: 'Hyperfantasy',
       ...(blog.createdAt && { publishedTime: blog.createdAt.toISOString() }),
+      ...(blog.updatedAt && { modifiedTime: blog.updatedAt.toISOString() }),
+      tags: blog.tags as string[] | undefined,
+      images,
     },
     twitter: {
-      card: 'summary',
+      card: 'summary_large_image',
+      site: '@hyperfantasy_',
       title,
       description,
+      images: [images[0].url],
     },
   }
 }
@@ -100,7 +130,39 @@ export default async function ArticleDetailPage({
     notFound()
   }
 
+  const mins = readingTime(resolveContent(blog.content))
+  const morePosts = await getMoreArticles(slug, blog.tags as string[])
+
+  const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://hyperfantasy.co'
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: blog.title,
+    description: blog.excerpt ?? undefined,
+    image: blog.coverImage ?? `${SITE_URL}/og-image.png`,
+    url: `${SITE_URL}/articles/${slug}`,
+    datePublished: blog.createdAt?.toISOString(),
+    dateModified: blog.updatedAt?.toISOString(),
+    author: {
+      '@type': 'Organization',
+      name: blog.author?.name ?? 'Hyperfantasy',
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Hyperfantasy',
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo-pictogram.svg` },
+    },
+    keywords: (blog.tags as string[])?.join(', '),
+    inLanguage: (blog.tags as string[])?.includes('ID') ? 'id' : 'en',
+  }
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
     <div className={`${sourceSerif4.variable} min-h-screen bg-white dark:bg-black transition-colors pt-16`}>
 
       {/* Back nav */}
@@ -114,8 +176,16 @@ export default async function ArticleDetailPage({
       <article className="max-w-[728px] mx-auto px-6 pt-8 pb-24">
 
         {/* Meta line */}
-        <div className="mb-6 flex items-center gap-2 text-[13px] text-[#6b6b6b] dark:text-white/40" style={{ fontFamily: 'var(--font-geist-sans)', letterSpacing: '0' }}>
+        <div className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-[#6b6b6b] dark:text-white/40" style={{ fontFamily: 'var(--font-geist-sans)', letterSpacing: '0' }}>
+          {blog.author?.name && (
+            <>
+              <span>{blog.author.name}</span>
+              <span aria-hidden="true">·</span>
+            </>
+          )}
           {blog.createdAt && <ClientDate date={blog.createdAt.toISOString()} />}
+          <span aria-hidden="true">·</span>
+          <span>{mins} min read</span>
         </div>
 
         {/* Title — sans-serif like Medium */}
@@ -154,9 +224,12 @@ export default async function ArticleDetailPage({
         {/* Feature image */}
         {blog.coverImage && (
           <div style={{ marginBottom: '48px', borderRadius: 4, overflow: 'hidden' }}>
-            <img
+            <Image
               src={blog.coverImage}
               alt={blog.title}
+              width={728}
+              height={410}
+              priority
               style={{ width: '100%', height: 'auto', display: 'block' }}
             />
           </div>
@@ -396,9 +469,10 @@ export default async function ArticleDetailPage({
         {blog.tags && blog.tags.length > 0 && (
           <div className="mt-16 pt-8 border-t" style={{ borderColor: 'var(--article-divider)' }}>
             <div className="flex flex-wrap gap-2">
-              {blog.tags.map((tag: string) => (
-                <span
+              {(blog.tags as string[]).map((tag) => (
+                <Link
                   key={tag}
+                  href={`/articles?tag=${encodeURIComponent(tag)}`}
                   style={{
                     fontFamily: 'var(--font-geist-sans)',
                     fontSize: '13px',
@@ -407,15 +481,60 @@ export default async function ArticleDetailPage({
                     borderRadius: '100px',
                     border: '1px solid var(--article-divider)',
                     color: 'var(--article-muted)',
+                    textDecoration: 'none',
+                    transition: 'color 0.15s, border-color 0.15s',
                   }}
                 >
                   {tag}
-                </span>
+                </Link>
               ))}
             </div>
           </div>
         )}
       </article>
+
+      {/* More articles */}
+      {morePosts.length > 0 && (
+        <div className="max-w-[728px] mx-auto px-6 pb-24" style={{ fontFamily: 'var(--font-geist-sans)' }}>
+          <div style={{ height: '1px', background: 'var(--article-divider)', marginBottom: '40px' }} />
+          <h2 style={{ fontSize: '13px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--article-muted)', marginBottom: '24px' }}>
+            More Articles
+          </h2>
+          <div className="flex flex-col gap-6">
+            {morePosts.map((post) => (
+              <Link
+                key={post.id}
+                href={`/articles/${post.slug}`}
+                className="group flex items-start gap-4"
+                style={{ textDecoration: 'none' }}
+              >
+                {post.coverImage && (
+                  <div style={{ flexShrink: 0, width: 80, height: 56, borderRadius: 4, overflow: 'hidden' }}>
+                    <Image
+                      src={post.coverImage}
+                      alt={post.title}
+                      width={80}
+                      height={56}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                )}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: '16px', fontWeight: 600, lineHeight: 1.3, color: 'var(--article-title)', marginBottom: '4px' }} className="group-hover:underline">
+                    {post.title}
+                  </p>
+                  {post.excerpt && (
+                    <p style={{ fontSize: '13px', color: 'var(--article-muted)', lineHeight: 1.4, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as const }}>
+                      {post.excerpt}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
+    </>
   )
 }

@@ -1,2 +1,10 @@
 User-agent: *
 Allow: /
+
+Disallow: /admin/
+Disallow: /api/
+Disallow: /profile/
+Disallow: /login/
+Disallow: /hyperstory/
+
+Sitemap: https://hyperfantasy.co/sitemap.xml

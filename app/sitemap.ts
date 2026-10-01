@@ -18,13 +18,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ])
 
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: BASE_URL, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
-    { url: `${BASE_URL}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE_URL}/works`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${BASE_URL}/projects`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${BASE_URL}/articles`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${BASE_URL}/enquiry`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/lab`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    { url: BASE_URL,                          lastModified: new Date(), changeFrequency: 'weekly',  priority: 1   },
+    { url: `${BASE_URL}/about`,               lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE_URL}/works`,               lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },
+    { url: `${BASE_URL}/works/hikari`,        lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.8 },
+    { url: `${BASE_URL}/works/dravenclaw`,    lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.8 },
+    { url: `${BASE_URL}/works/thinksoft`,     lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.8 },
+    { url: `${BASE_URL}/works/mitayani`,      lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.8 },
+    { url: `${BASE_URL}/offer`,               lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${BASE_URL}/projects`,            lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },
+    { url: `${BASE_URL}/articles`,            lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.8 },
+    { url: `${BASE_URL}/enquiry`,             lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/lab`,                 lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
   ]
 
   const blogRoutes: MetadataRoute.Sitemap = blogs.map((blog) => ({

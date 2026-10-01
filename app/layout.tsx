@@ -32,9 +32,47 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://hyperfantasy.co'
+const SITE_NAME = 'Hyperfantasy'
+const DEFAULT_DESC = 'A creative collective of senior designers, developers, and brand strategists — assembled per project, without the agency overhead. Based in Indonesia, working globally.'
+
 export const metadata: Metadata = {
-  title: "Hyperfantasy - Creative Studio Design & Development",
-  description: "A creative studio specializing in brand design, web development, and digital strategy. We help brands stand out in the digital landscape.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'Hyperfantasy — Creative Studio for Design & Development',
+    template: '%s — Hyperfantasy',
+  },
+  description: DEFAULT_DESC,
+  keywords: [
+    'creative studio', 'brand identity', 'UI/UX design', 'web development',
+    'design system', 'Indonesia', 'freelance design', 'startup design',
+    'studio desain', 'desain brand', 'pengembangan web',
+  ],
+  authors: [{ name: 'Hyperfantasy', url: SITE_URL }],
+  creator: 'Hyperfantasy',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    alternateLocale: 'id_ID',
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: 'Hyperfantasy — Creative Studio for Design & Development',
+    description: DEFAULT_DESC,
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Hyperfantasy Creative Studio' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@hyperfantasy_',
+    creator: '@hyperfantasy_',
+    title: 'Hyperfantasy — Creative Studio for Design & Development',
+    description: DEFAULT_DESC,
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -42,18 +80,48 @@ export const metadata: Metadata = {
     title: "Hyperfantasy",
   },
   icons: {
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
     icon: [
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
     ],
   },
-  other: {
-    "mobile-web-app-capable": "yes",
-  },
+  other: { "mobile-web-app-capable": "yes" },
 };
+
+const ORG_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Hyperfantasy',
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo-pictogram.svg`,
+  description: DEFAULT_DESC,
+  foundingDate: '2015',
+  areaServed: ['ID', 'US', 'AU', 'NZ', 'AE', 'SA'],
+  sameAs: [
+    'https://www.instagram.com/hyperfantasy.creative/',
+    'https://dribbble.com/hyperfantasy',
+    'https://www.behance.net/hyperfantasy',
+    'https://x.com/hyperfantasy_',
+  ],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: 'hello.hyperfantasy@gmail.com',
+    contactType: 'customer service',
+  },
+}
+
+const WEBSITE_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Hyperfantasy',
+  url: SITE_URL,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: { '@type': 'EntryPoint', urlTemplate: `${SITE_URL}/articles?q={search_term_string}` },
+    'query-input': 'required name=search_term_string',
+  },
+}
 
 export default function RootLayout({
   children,
@@ -67,6 +135,14 @@ export default function RootLayout({
         <link rel="preconnect" href="https://mir-s3-cdn-cf.behance.net" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_SCHEMA) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_SCHEMA) }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}

@@ -75,6 +75,32 @@ export async function POST(request: NextRequest) {
       `,
     }).catch(console.error)
 
+    // Push to Zopavo as a new lead (non-blocking, skip if not configured)
+    // To activate: set ZOPAVO_WEBHOOK_URL=https://zopavo.vercel.app/api/enquiries/intake
+    // and optionally ZOPAVO_WEBHOOK_SECRET=<shared-secret> in your env vars.
+    if (process.env.ZOPAVO_WEBHOOK_URL) {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+      if (process.env.ZOPAVO_WEBHOOK_SECRET) {
+        headers['x-webhook-secret'] = process.env.ZOPAVO_WEBHOOK_SECRET
+      }
+      fetch(process.env.ZOPAVO_WEBHOOK_URL, {
+        method:  'POST',
+        headers,
+        body: JSON.stringify({
+          source:      'hyperfantasy.co',
+          source_id:   enquiry.id,
+          created_at:  enquiry.createdAt,
+          name:        enquiry.name,
+          email:       enquiry.email,
+          company:     enquiry.company  ?? null,
+          role:        body.role        ?? null,
+          budget:      enquiry.budget   ?? null,
+          project_type: body.projectType ?? null,
+          message:     enquiry.message,
+        }),
+      }).catch(err => console.error('[zopavo] push failed:', err))
+    }
+
     return Response.json(enquiry)
   } catch (error) {
     return Response.json({ error: 'Failed to create enquiry' }, { status: 500 })
