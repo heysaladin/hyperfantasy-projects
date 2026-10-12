@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, ChevronDown } from 'lucide-react'
@@ -36,8 +36,19 @@ function Dropdown({
   value: string; options: string[]; styles: Record<string, string>; onChange: (v: string) => void
 }) {
   const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
+
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-block" ref={ref}>
       <button
         onClick={() => setOpen(v => !v)}
         className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs rounded-full capitalize font-medium transition hover:opacity-80 ${styles[value] ?? 'bg-slate-100 dark:bg-white/10 text-slate-500'}`}
@@ -86,12 +97,13 @@ export default function AdminEnquiryDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [enquiry, setEnquiry] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     fetch(`/api/enquiries/${id}`)
       .then(r => r.json())
       .then(data => { setEnquiry(data); setLoading(false) })
-      .catch(() => setLoading(false))
+      .catch(() => { setError(true); setLoading(false) })
   }, [id])
 
   const update = async (patch: Record<string, any>) => {
@@ -105,6 +117,10 @@ export default function AdminEnquiryDetailPage() {
 
   if (loading) return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-slate-400 dark:text-white/30 text-sm">Loading…</div>
+  )
+
+  if (error) return (
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-sm text-red-500 dark:text-red-400">Failed to load enquiry. Please try again.</div>
   )
 
   if (!enquiry?.id) return (
@@ -213,8 +229,9 @@ export default function AdminEnquiryDetailPage() {
       </div>
 
       <div className="mt-8">
-        <Link href="/admin/enquiries">
-          <Button variant="outline">Back</Button>
+        <Link href="/admin/enquiries" className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white transition">
+          <ArrowLeft size={15} aria-hidden="true" />
+          Back to enquiries
         </Link>
       </div>
     </div>

@@ -78,32 +78,24 @@ export default function NewPortfolioPage() {
         teamId: null,
         }
 
-        console.log('Sending payload:', payload)
-
         const res = await fetch('/api/portfolios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
         })
 
-        // Check response before parsing JSON
-        console.log('Response status:', res.status)
-        console.log('Response headers:', res.headers)
-        
-        const text = await res.text()  // ← Get as text first
-        console.log('Response text:', text)
-        
+        const text = await res.text()
+
         if (!text) {
         throw new Error('Empty response from server')
         }
 
-        const data = JSON.parse(text)  // ← Then parse
-        
+        const data = JSON.parse(text)
+
         if (!res.ok) {
         throw new Error(data.details || data.error || 'Failed to create')
         }
 
-        console.log('Success:', data)
         router.push('/admin/portfolios')
         router.refresh()
         
@@ -175,6 +167,11 @@ export default function NewPortfolioPage() {
               {extractingColor ? 'Extracting…' : 'Extract Color'}
             </Button>
           </div>
+          {formData.imageUrl && (
+            <div className="mt-2 rounded-md overflow-hidden border border-slate-200 dark:border-white/10 max-h-48">
+              <img src={formData.imageUrl} alt="Image preview" className="w-full object-cover max-h-48" />
+            </div>
+          )}
         </div>
 
         {/* Color Fields */}

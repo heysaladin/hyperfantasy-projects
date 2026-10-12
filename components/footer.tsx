@@ -249,8 +249,8 @@ export function Footer() {
               {/* Big CTA */}
               {!isEnquiry && (
                 <div className="flex flex-col gap-5">
-                  <Link href="/enquiry" className="group inline-flex items-end gap-4">
-                    <span className="relative inline-flex overflow-hidden" style={{ height: 'clamp(56px,7.5vw,90px)' }}>
+                  <Link href="/enquiry" aria-label="Let's Collaborate" className="group inline-flex items-end gap-4">
+                    <span className="relative inline-flex overflow-hidden" style={{ height: 'clamp(56px,7.5vw,90px)' }} aria-hidden="true">
                       <span
                         className="flex items-center transition-transform duration-500 ease-in-out group-hover:-translate-y-full"
                         style={{ fontSize: 'clamp(48px,6.5vw,78px)', fontWeight: 300, letterSpacing: '-0.03em', lineHeight: 1 }}
@@ -321,8 +321,8 @@ export function Footer() {
           {/* CTA */}
           {!isEnquiry && (
             <div className="flex flex-col gap-4">
-              <Link href="/enquiry" className="group inline-flex items-center gap-3 self-start">
-                <span className="relative inline-flex overflow-hidden" style={{ height: 'clamp(40px,10vw,56px)' }}>
+              <Link href="/enquiry" aria-label="Let's Collaborate" className="group inline-flex items-center gap-3 self-start">
+                <span className="relative inline-flex overflow-hidden" style={{ height: 'clamp(40px,10vw,56px)' }} aria-hidden="true">
                   <span
                     className="flex items-center transition-transform duration-500 ease-in-out group-hover:-translate-y-full"
                     style={{ fontSize: 'clamp(34px,9vw,48px)', fontWeight: 300, letterSpacing: '-0.03em', lineHeight: 1 }}

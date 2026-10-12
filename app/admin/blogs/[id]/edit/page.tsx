@@ -39,6 +39,7 @@ export default function EditBlogPage({
     coverImage: '',
     tags: [] as string[],
     isPublished: false,
+    isFeatured: false,
     index: 0,
   })
 
@@ -51,25 +52,22 @@ export default function EditBlogPage({
 
   const fetchBlog = async (blogId: string) => {
     try {
-      const res = await fetch('/api/blogs')
-      const blogs = await res.json()
-      const blog = blogs.find((p: any) => p.id === blogId)
-
-      if (blog) {
-        setFormData({
-          title: blog.title || '',
-          slug: blog.slug || '',
-          excerpt: blog.excerpt || '',
-          content: blog.content || '',
-          coverImage: blog.coverImage || '',
-          tags: Array.isArray(blog.tags) ? blog.tags : [],
-          isPublished: blog.isPublished || false,
-          index: blog.index ?? 0,
-        })
-      }
+      const res = await fetch(`/api/blogs/${blogId}`)
+      if (!res.ok) throw new Error('Blog not found')
+      const blog = await res.json()
+      setFormData({
+        title: blog.title || '',
+        slug: blog.slug || '',
+        excerpt: blog.excerpt || '',
+        content: blog.content || '',
+        coverImage: blog.coverImage || '',
+        tags: Array.isArray(blog.tags) ? blog.tags : [],
+        isPublished: blog.isPublished || false,
+        isFeatured: blog.isFeatured || false,
+        index: blog.index ?? 0,
+      })
       setFetching(false)
     } catch (error) {
-      console.error('Error fetching blog:', error)
       setFetching(false)
     }
   }
@@ -87,6 +85,7 @@ export default function EditBlogPage({
         coverImage: formData.coverImage || null,
         tags: formData.tags,
         isPublished: formData.isPublished,
+        isFeatured: formData.isFeatured,
         index: formData.index,
       }
 
@@ -198,6 +197,11 @@ export default function EditBlogPage({
             className="bg-slate-50 dark:bg-white/5"
             placeholder="https://images.unsplash.com/..."
           />
+          {formData.coverImage && (
+            <div className="mt-2 rounded-md overflow-hidden border border-slate-200 dark:border-white/10 w-full max-h-48">
+              <img src={formData.coverImage} alt="Cover preview" className="w-full h-full object-cover max-h-48" />
+            </div>
+          )}
         </div>
 
         {/* Index */}
@@ -265,6 +269,15 @@ export default function EditBlogPage({
               className="border-slate-300 dark:border-white/30 data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900 dark:data-[state=checked]:bg-white dark:data-[state=checked]:border-white data-[state=checked]:text-white dark:data-[state=checked]:text-black"
             />
             <Label htmlFor="isPublished" className="cursor-pointer font-normal text-slate-700 dark:text-white/80">Published</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="isFeatured"
+              checked={formData.isFeatured}
+              onCheckedChange={(checked) => setFormData({...formData, isFeatured: checked === true})}
+              className="border-slate-300 dark:border-white/30 data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900 dark:data-[state=checked]:bg-white dark:data-[state=checked]:border-white data-[state=checked]:text-white dark:data-[state=checked]:text-black"
+            />
+            <Label htmlFor="isFeatured" className="cursor-pointer font-normal text-slate-700 dark:text-white/80">Featured</Label>
           </div>
         </div>
 

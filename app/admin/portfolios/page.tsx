@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Plus, Pencil, Trash2, Search, ArrowUpDown, ImageIcon } from 'lucide-react'
+import { Plus, Pencil, Trash2, Search, ArrowUpDown, ImageIcon, Star } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { resolveContentAsText } from '@/lib/tiptap-content'
@@ -147,6 +147,16 @@ export default function AdminPortfoliosPage() {
     if (currentPage > newTotal) setCurrentPage(newTotal)
   }
 
+  const toggleFeatured = async (portfolio: any) => {
+    const next = !portfolio.isFeatured
+    setPortfolios(prev => prev.map(p => p.id === portfolio.id ? { ...p, isFeatured: next } : p))
+    await fetch(`/api/portfolios/${portfolio.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...portfolio, isFeatured: next }),
+    })
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
@@ -257,6 +267,16 @@ export default function AdminPortfoliosPage() {
                   <p className="text-xs text-slate-400 dark:text-white/40 truncate">{portfolio.category || '—'}</p>
                 </div>
                 <div className="flex gap-1 shrink-0">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className={`h-8 w-8 p-0 ${portfolio.isFeatured ? 'text-yellow-500 dark:text-yellow-400' : 'hover:text-yellow-500 dark:hover:text-yellow-400'}`}
+                    onClick={() => toggleFeatured(portfolio)}
+                    aria-label={portfolio.isFeatured ? 'Unfeature' : 'Feature'}
+                    title={portfolio.isFeatured ? 'Unfeature' : 'Feature on homepage'}
+                  >
+                    <Star size={14} fill={portfolio.isFeatured ? 'currentColor' : 'none'} aria-hidden="true" />
+                  </Button>
                   <Link href={`/admin/portfolios/${portfolio.id}/edit`}>
                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                       <Pencil size={14} aria-hidden="true" />

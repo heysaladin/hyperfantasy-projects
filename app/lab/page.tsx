@@ -1,53 +1,58 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Folder, FileCode, ExternalLink, ArrowUpRight } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: 'Lab — Hyperfantasy',
+}
 
 const ENTRIES = [
   {
     type: 'external' as const,
     label: 'Hyperfantasy',
-    description: 'hyperfantasy.web.app',
+    description: 'Brand portfolio v1',
     href: 'https://hyperfantasy.web.app/',
   },
   {
     type: 'external' as const,
     label: 'Hey Saladin Design',
-    description: 'heysaladindesign.web.app',
+    description: 'Personal design portfolio',
     href: 'https://heysaladindesign.web.app/',
   },
   {
     type: 'external' as const,
     label: 'Hey Hey Saladin',
-    description: 'heyheysaladin.web.app',
+    description: 'Personal site experiment',
     href: 'https://heyheysaladin.web.app/',
   },
   {
     type: 'external' as const,
     label: 'Farooqa Studio',
-    description: 'farooq-agent.web.app',
+    description: 'Studio landing page',
     href: 'https://farooq-agent.web.app/',
   },
   {
     type: 'file' as const,
-    label: 'heysaladin playful',
-    description: 'index.html',
+    label: 'Heysaladin Playful',
+    description: 'Playful design variant',
     href: '/lab/heysaladin-design-playful/index.html',
   },
   {
     type: 'file' as const,
-    label: 'colab',
-    description: 'index.html',
+    label: 'Colab',
+    description: 'Collaboration tool prototype',
     href: '/lab/colab/index.html',
   },
   {
     type: 'file' as const,
-    label: 'interestory lite',
-    description: 'index.html',
+    label: 'Interestory Lite',
+    description: 'Lightweight story builder',
     href: '/lab/interestory-lite/index.html',
   },
   {
     type: 'external' as const,
-    label: 'ikhbar',
-    description: 'Newsletter Creator',
+    label: 'Ikhbar',
+    description: 'Newsletter creator tool',
     href: 'https://heysaladinme.web.app/ikhbar',
   },
 ]
@@ -85,6 +90,7 @@ function Card({ entry }: { entry: typeof ENTRIES[number] }) {
     return (
       <a href={entry.href} target="_blank" rel="noopener noreferrer" className={className}>
         {inner}
+        <span className="sr-only"> (opens in new tab)</span>
       </a>
     )
   }
@@ -97,7 +103,7 @@ function Card({ entry }: { entry: typeof ENTRIES[number] }) {
 
 export default function LabPage() {
   return (
-    <div className="bg-white dark:bg-black text-slate-900 dark:text-white min-h-screen transition-colors pt-16">
+    <div className="bg-white dark:bg-black text-slate-900 dark:text-white transition-colors pt-16">
       <div className="max-w-4xl mx-auto px-6 py-10">
 
         {/* Header */}
@@ -117,7 +123,6 @@ export default function LabPage() {
           ))}
         </div>
 
-        <p className="text-xs text-slate-400 dark:text-white/20 mt-4 font-mono">{ENTRIES.length} entries</p>
       </div>
     </div>
   )

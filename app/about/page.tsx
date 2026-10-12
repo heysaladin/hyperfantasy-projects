@@ -160,6 +160,7 @@ export default async function AboutPage() {
           display:inline-flex; align-items:center; gap:8px; transition:opacity .2s;
         }
         .grad-btn:hover { opacity:.85; }
+        .grad-btn:focus-visible { outline: 2px solid #7c3aed; outline-offset: 3px; }
 
         /* ── Services — 2-col + sticky-stack ── */
         .svc-outer {

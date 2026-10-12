@@ -3,7 +3,7 @@
 import { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import NextImage from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Dialog as RadixDialog } from 'radix-ui'
 import { ArrowDownAZ, ArrowDownWideNarrow, ArrowUpDown, ArrowUpNarrowWide, ArrowUpRight, ChevronDown, ExternalLink, Image, LayoutGrid, LayoutPanelTop, Search, SlidersHorizontal, Star, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -366,6 +366,7 @@ function writeCache(items: any[]) {
 
 export default function ProjectsPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const [user, setUser] = useState<User | null>(null)
 
@@ -402,6 +403,12 @@ export default function ProjectsPage() {
   const [showVisibleOnly, setShowVisibleOnly] = useState(true)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [isSortOpen, setIsSortOpen] = useState(false)
+
+  // Auto-populate search from ?tag= query param (e.g. from detail page tag links)
+  useEffect(() => {
+    const tag = searchParams.get('tag')
+    if (tag) setSearch(tag)
+  }, [searchParams])
 
   // How many filtered results to display (infinite scroll)
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE)
@@ -679,8 +686,8 @@ export default function ProjectsPage() {
                 )}
               </div>
               <button
-                aria-label={showMeta ? 'Switch to image-only view' : 'Switch to detailed view'}
-                aria-pressed={!showMeta}
+                aria-label="Toggle detailed view"
+                aria-pressed={showMeta}
                 onClick={() => setShowMeta(v => !v)}
                 className={`px-2.5 py-2.5 rounded-lg border transition flex-shrink-0 ${
                   !showMeta
@@ -744,7 +751,7 @@ export default function ProjectsPage() {
               <button
                 aria-expanded={isFilterOpen}
                 aria-controls="filter-panel"
-                aria-haspopup="dialog"
+                aria-haspopup="listbox"
                 onClick={() => { setIsFilterOpen(v => !v); setIsSortOpen(false) }}
                 className={`flex items-center gap-2 px-3 py-3 text-sm rounded-lg border transition ${
                   isFilterOpen || activeFilterCount > 0
@@ -763,7 +770,7 @@ export default function ProjectsPage() {
               </button>
 
               {isFilterOpen && (
-                <div id="filter-panel" role="dialog" aria-label="Filter projects" className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-zinc-900 rounded-xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden z-20">
+                <div id="filter-panel" aria-label="Filter projects" className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-zinc-900 rounded-xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden z-20">
 
                   {/* Category section */}
                   <div className="p-4 border-b border-slate-100 dark:border-white/10">
@@ -919,9 +926,11 @@ export default function ProjectsPage() {
         </div>
       </div>
 
+      <main id="main-content">
+
       {/* Tag shortcuts bar */}
       {tagShortcuts.length > 0 && (
-        <div className="bg-white dark:bg-black">
+        <nav aria-label="Filter by tag" className="bg-white dark:bg-black">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 py-2">
             <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none snap-x">
               {tagShortcuts.map(tag => (
@@ -939,11 +948,16 @@ export default function ProjectsPage() {
               ))}
             </div>
           </div>
-        </div>
+        </nav>
       )}
 
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-12 pb-16">
+        {/* Live region: announces filter result count to screen readers */}
+        <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          {!isLoading && `${filtered.length} project${filtered.length !== 1 ? 's' : ''} found`}
+        </div>
+
         {isLoading ? (
           <div className="columns-1 md:columns-2 lg:columns-3 gap-8">
             {Array.from({ length: PAGE_SIZE }).map((_, i) => <SkeletonCard key={i} showMeta={showMeta} />)}
@@ -963,6 +977,12 @@ export default function ProjectsPage() {
           <div className="text-center py-24">
             <p className="text-slate-400 dark:text-white/30 text-lg mb-2">No projects found</p>
             <p className="text-slate-400 dark:text-white/20 text-sm">Try adjusting your search</p>
+            <button
+              onClick={() => { setSearch(''); resetAll() }}
+              className="mt-3 text-sm text-violet-500 hover:text-violet-400 underline"
+            >
+              Reset all filters
+            </button>
           </div>
         )}
 
@@ -974,6 +994,8 @@ export default function ProjectsPage() {
           <p className="text-center text-sm text-slate-400 dark:text-white/30 py-12">All projects loaded</p>
         )}
       </div>
+
+      </main>
 
       {/* Shot modal — Dribbble style */}
       <RadixDialog.Root open={!!selectedPortfolio} onOpenChange={() => setSelectedPortfolio(null)}>

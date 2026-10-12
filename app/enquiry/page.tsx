@@ -54,6 +54,25 @@ export default function EnquiryPage() {
     setFieldErrors(prev => ({ ...prev, projectType: '' }))
   }
 
+  const handleBudgetKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const radios = Array.from(e.currentTarget.querySelectorAll<HTMLElement>('[role="radio"]'))
+    const idx = radios.indexOf(document.activeElement as HTMLElement)
+    if (idx === -1) return
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault()
+      const next = (idx + 1) % BUDGET_OPTIONS.length
+      ;(radios[next] as HTMLElement).focus()
+      set('budget', BUDGET_OPTIONS[next])
+      setFieldErrors(prev => ({ ...prev, budget: '' }))
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault()
+      const prev = (idx - 1 + BUDGET_OPTIONS.length) % BUDGET_OPTIONS.length
+      ;(radios[prev] as HTMLElement).focus()
+      set('budget', BUDGET_OPTIONS[prev])
+      setFieldErrors(prev => ({ ...prev, budget: '' }))
+    }
+  }
+
   const blur = (field: keyof typeof EMPTY_ERRORS) => {
     const errs = validate({ ...formData })
     setFieldErrors(prev => ({ ...prev, [field]: errs[field] }))
@@ -94,7 +113,7 @@ export default function EnquiryPage() {
 
   return (
     <div
-      style={{ minHeight: '100vh', fontFamily: 'var(--font-inter, sans-serif)' }}
+      style={{ fontFamily: 'var(--font-inter, sans-serif)' }}
       className="enq-page transition-colors"
     >
       <style>{`
@@ -129,8 +148,8 @@ export default function EnquiryPage() {
         .enq-input:focus-visible, .enq-textarea:focus-visible {
           outline: 2px solid #7c3aed; outline-offset: 2px;
         }
-        .enq-input.err, .enq-textarea.err { border-color:#f87171; }
-        .enq-err { font-size:12px; color:#f87171; }
+        .enq-input.err, .enq-textarea.err { border-color:#dc2626; }
+        .enq-err { font-size:12px; color:#dc2626; }
         .enq-hint { font-size:11px; color:rgba(0,0,0,0.3); }
         .dark .enq-hint { color:rgba(255,255,255,0.25); }
 
@@ -246,12 +265,16 @@ export default function EnquiryPage() {
               <form onSubmit={handleSubmit} noValidate aria-label="Enquiry form"
                 style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
 
+                <p className="enq-hint" style={{ textAlign: 'right', marginBottom: '-1rem' }}>
+                  <span aria-hidden="true">*</span> Required fields
+                </p>
+
                 {/* Project Type */}
                 <fieldset className="enq-field" style={{ border: 'none', padding: 0, margin: 0 }}>
-                  <legend className="enq-label" style={{ float: 'left', width: '100%', marginBottom: 6 }}>
+                  <legend className="enq-label" style={{ display: 'block', width: '100%', marginBottom: 6 }}>
                     Project Type <span aria-hidden="true">*</span>
                   </legend>
-                  <div className="enq-chips" style={{ paddingTop: '6px', clear: 'both' }}>
+                  <div className="enq-chips" style={{ paddingTop: '6px' }}>
                     {PROJECT_TYPES.map(type => (
                       <button
                         key={type}
@@ -271,14 +294,26 @@ export default function EnquiryPage() {
 
                 {/* Budget */}
                 <fieldset className="enq-field" style={{ border: 'none', padding: 0, margin: 0 }}>
-                  <legend className="enq-label" style={{ float: 'left', width: '100%', marginBottom: 6 }}>
+                  <legend className="enq-label" style={{ display: 'block', width: '100%', marginBottom: 6 }}>
                     Budget (USD) <span aria-hidden="true">*</span>
                   </legend>
                   <div
                     role="radiogroup"
                     aria-label="Budget (USD)"
                     className="enq-chips"
-                    style={{ paddingTop: '6px', clear: 'both' }}
+                    onKeyDown={handleBudgetKeyDown}
+                    style={{ paddingTop: '6px' }}
+                    onKeyDown={(e) => {
+                      const buttons = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('button[role="radio"]'))
+                      const idx = buttons.indexOf(document.activeElement as HTMLButtonElement)
+                      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                        e.preventDefault()
+                        buttons[(idx + 1) % buttons.length]?.focus()
+                      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                        e.preventDefault()
+                        buttons[(idx - 1 + buttons.length) % buttons.length]?.focus()
+                      }
+                    }}
                   >
                     {BUDGET_OPTIONS.map(opt => (
                       <button
@@ -376,7 +411,7 @@ export default function EnquiryPage() {
                     onBlur={() => blur('message')}
                     aria-required="true"
                     aria-invalid={!!fieldErrors.message}
-                    aria-describedby={fieldErrors.message ? 'message-err' : 'message-hint'}
+                    aria-describedby={`message-hint${fieldErrors.message ? ' message-err' : ''}`}
                   />
                   <p id="message-hint" className="enq-hint">
                     e.g. 'I want a website that helps me sell my products more effectively'

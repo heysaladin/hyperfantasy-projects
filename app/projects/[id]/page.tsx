@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowLeft, ExternalLink, Mail } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import { ClientDate } from '@/components/client-date'
@@ -50,10 +51,26 @@ function buildDescription(portfolio: {
 
 async function getPortfolio(id: string) {
   try {
-    return await prisma.portfolio.findUnique({ where: { id } })
+    return await prisma.portfolio.findFirst({ where: { id, isVisible: true } })
   } catch {
     return null
   }
+}
+
+async function getRelatedProjects(currentId: string, category: string | null, tags: string[]) {
+  return await prisma.portfolio.findMany({
+    where: {
+      isVisible: true,
+      id: { not: currentId },
+      OR: [
+        ...(category ? [{ category }] : []),
+        ...(tags.length > 0 ? [{ tags: { hasSome: tags } }] : []),
+      ],
+    },
+    orderBy: { orderIndex: 'desc' },
+    take: 3,
+    select: { id: true, title: true, imageUrl: true, category: true },
+  })
 }
 
 export async function generateMetadata(
@@ -117,18 +134,22 @@ export default async function PortfolioDetailPage({
 
   if (!portfolio) notFound()
 
+  const related = await getRelatedProjects(
+    id,
+    portfolio.category,
+    portfolio.tags as string[],
+  )
+
   return (
     <div className="min-h-screen bg-white dark:bg-black text-slate-900 dark:text-white transition-colors pt-16">
-      <div className="border-b border-slate-200 dark:border-white/10">
-        <div className="max-w-3xl mx-auto px-6 lg:px-8 py-6">
-          <Link href="/projects" className="inline-flex items-center text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition">
-            <ArrowLeft size={20} className="mr-2" aria-hidden="true" />
-            Back to Projects
-          </Link>
-        </div>
+      <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-10">
+        <Link href="/projects" className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white transition mb-8">
+          <ArrowLeft size={15} aria-hidden="true" />
+          Back to Projects
+        </Link>
       </div>
 
-      <article className="max-w-3xl mx-auto px-6 lg:px-8 pt-10 pb-12">
+      <article className="max-w-3xl mx-auto px-6 lg:px-8 pb-12">
         <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-white/40">
           {portfolio.category && (
             <span className="uppercase tracking-wider">{portfolio.category}</span>
@@ -145,12 +166,26 @@ export default async function PortfolioDetailPage({
           {portfolio.title}
         </h1>
 
+        {portfolio.imageUrl && (
+          <div className="mb-10 rounded-lg overflow-hidden">
+            <Image
+              src={portfolio.imageUrl}
+              alt=""
+              role="presentation"
+              width={768}
+              height={432}
+              priority
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+            />
+          </div>
+        )}
+
         <ArticleContent
           html={resolveContent(portfolio.description as string)}
           className="prose prose-slate dark:prose-invert prose-lg max-w-none"
         />
 
-        <div className="mt-12 pt-8 border-t border-slate-200 dark:border-white/10 grid grid-cols-2 gap-8">
+        <div className="mt-12 pt-8 border-t border-slate-200 dark:border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-8">
 
           {portfolio.projectDate && (
             <div>
@@ -166,20 +201,24 @@ export default async function PortfolioDetailPage({
               <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-white/30 mb-2">Tags</p>
               <div className="flex flex-wrap gap-2">
                 {(portfolio.tags as string[]).map((tag) => (
-                  <span key={tag} className="px-3 py-1 bg-slate-200 dark:bg-white/10 rounded text-sm">
+                  <Link
+                    key={tag}
+                    href={`/projects?tag=${encodeURIComponent(tag)}`}
+                    className="px-3 py-1 bg-slate-200 dark:bg-white/10 rounded text-sm hover:bg-slate-300 dark:hover:bg-white/20 transition"
+                  >
                     {tag}
-                  </span>
+                  </Link>
                 ))}
               </div>
             </div>
           )}
 
-          {(portfolio.stack as string[])?.length > 0 && portfolio.category?.toLowerCase() === 'development' && (
+          {(portfolio.stack as string[])?.length > 0 && (
             <div className="col-span-2">
-              <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-white/30 mb-2">Stack</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-white/30 mb-2">Tools & Stack</p>
               <div className="flex flex-wrap gap-2">
                 {(portfolio.stack as string[]).map((tech) => (
-                  <span key={tech} className="px-3 py-1 bg-slate-200 dark:bg-white/10 rounded text-sm">
+                  <span key={tech} className="px-3 py-1 bg-slate-200 dark:bg-white/10 rounded text-sm capitalize">
                     {tech}
                   </span>
                 ))}
@@ -190,11 +229,11 @@ export default async function PortfolioDetailPage({
         </div>
 
         {(portfolio.liveUrl || portfolio.copyright) && (
-          <div className="mt-10 pt-6 border-t border-slate-200 dark:border-white/10 flex items-center justify-between gap-6 pb-6 border-b border-slate-200 dark:border-white/10">
+          <div className={`mt-10 pt-6 border-t border-slate-200 dark:border-white/10 flex items-center gap-6 pb-6 border-b border-slate-200 dark:border-white/10 ${portfolio.liveUrl && portfolio.copyright ? 'justify-between' : portfolio.liveUrl ? 'justify-end' : 'justify-start'}`}>
             {portfolio.copyright && (
               <p className="text-xs text-slate-400 dark:text-white/30">{portfolio.copyright}</p>
             )}
-            {portfolio.liveUrl ? (
+            {portfolio.liveUrl && (
               <a
                 href={portfolio.liveUrl}
                 target="_blank"
@@ -204,7 +243,35 @@ export default async function PortfolioDetailPage({
                 <ExternalLink size={14} aria-hidden="true" />
                 View Live Site
               </a>
-            ) : <span />}
+            )}
+          </div>
+        )}
+
+        {related.length > 0 && (
+          <div className="mt-16">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-white/30 mb-6">More Projects</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {related.map((p) => (
+                <Link key={p.id} href={`/projects/${p.id}`} className="group block rounded-lg overflow-hidden border border-slate-200 dark:border-white/10 hover:border-slate-400 dark:hover:border-white/30 transition">
+                  {p.imageUrl && (
+                    <div className="aspect-video overflow-hidden bg-slate-100 dark:bg-white/5">
+                      <Image
+                        src={p.imageUrl}
+                        alt={p.title}
+                        width={256}
+                        height={144}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        className="group-hover:scale-105 transition duration-300"
+                      />
+                    </div>
+                  )}
+                  <div className="p-3">
+                    <p className="text-xs text-slate-400 dark:text-white/30 uppercase tracking-wider mb-1">{p.category}</p>
+                    <p className="text-sm font-medium text-slate-800 dark:text-white/80 leading-snug line-clamp-2">{p.title}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         )}
 
@@ -220,13 +287,6 @@ export default async function PortfolioDetailPage({
           >
             <Mail size={18} aria-hidden="true" /> Let&apos;s talk!
           </EnquiryCTAButton>
-        </div>
-
-        <div className="mt-10 text-center">
-          <Link href="/projects" className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white transition">
-            <ArrowLeft size={15} aria-hidden="true" />
-            Back to Projects
-          </Link>
         </div>
       </article>
 

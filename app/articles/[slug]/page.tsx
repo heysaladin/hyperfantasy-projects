@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { prisma } from '@/lib/prisma'
+import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -37,9 +38,9 @@ function readingTime(content: string): number {
   return Math.max(1, Math.ceil(words / 200))
 }
 
-async function getBlog(slug: string) {
+async function getBlog(slug: string, isAdmin = false) {
   return await prisma.blog.findFirst({
-    where: { slug, isPublished: true },
+    where: { slug, ...(isAdmin ? {} : { isPublished: true }) },
     include: { author: { select: { name: true } } },
   })
 }
@@ -63,7 +64,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const blog = await getBlog(slug)
+  const blog = await getBlog(slug, true)
 
   if (!blog) {
     return {
@@ -124,7 +125,9 @@ export default async function ArticleDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const blog = await getBlog(slug)
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const blog = await getBlog(slug, !!user)
 
   if (!blog) {
     notFound()
@@ -164,6 +167,15 @@ export default async function ArticleDetailPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
     <div className={`${sourceSerif4.variable} min-h-screen bg-white dark:bg-black transition-colors pt-16`}>
+
+      {/* Draft banner */}
+      {!blog.isPublished && (
+        <div className="sticky top-16 z-10 px-6">
+          <div className="max-w-[728px] mx-auto bg-yellow-400 text-yellow-900 text-center text-xs font-semibold py-1.5 tracking-wide rounded-b-lg" style={{ fontFamily: 'var(--font-geist-sans)' }}>
+            DRAFT — belum dipublikasikan
+          </div>
+        </div>
+      )}
 
       {/* Back nav */}
       <div className="max-w-[728px] mx-auto px-6 pt-10 pb-0">

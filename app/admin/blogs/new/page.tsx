@@ -24,6 +24,7 @@ function slugify(text: string): string {
 export default function NewBlogPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [tagInput, setTagInput] = useState('')
   const [formData, setFormData] = useState({
     title: '',
@@ -33,6 +34,7 @@ export default function NewBlogPage() {
     coverImage: '',
     tags: [] as string[],
     isPublished: false,
+    isFeatured: false,
     index: 0,
   })
 
@@ -49,10 +51,9 @@ export default function NewBlogPage() {
         coverImage: formData.coverImage || null,
         tags: formData.tags,
         isPublished: formData.isPublished,
+        isFeatured: formData.isFeatured,
         index: formData.index,
       }
-
-      console.log('Sending payload:', payload)
 
       const res = await fetch('/api/blogs', {
         method: 'POST',
@@ -60,22 +61,17 @@ export default function NewBlogPage() {
         body: JSON.stringify(payload)
       })
 
-      console.log('Response status:', res.status)
-
       const data = await res.json()
-      console.log('Response data:', data)
-      
+
       if (!res.ok) {
         throw new Error(data.error || data.message || `Server error: ${res.status}`)
       }
 
-      console.log('Success:', data)
-      alert('Blog created successfully!')
       router.push('/admin/blogs')
       router.refresh()
     } catch (error: any) {
       console.error('Submit error:', error)
-      alert(`Error: ${error.message}`)
+      setError(error.message)
       setLoading(false)
     }
   }
@@ -91,6 +87,12 @@ export default function NewBlogPage() {
       </Link>
 
       <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Add New Blog</h1>
+
+      {error && (
+        <div className="mb-4 px-4 py-3 rounded-lg bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-sm text-red-700 dark:text-red-400">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="admin-form space-y-6">
         
@@ -164,6 +166,11 @@ export default function NewBlogPage() {
             className="bg-slate-50 dark:bg-white/5"
             placeholder="https://images.unsplash.com/..."
           />
+          {formData.coverImage && (
+            <div className="mt-2 rounded-md overflow-hidden border border-slate-200 dark:border-white/10 max-h-48">
+              <img src={formData.coverImage} alt="Cover preview" className="w-full object-cover max-h-48" />
+            </div>
+          )}
         </div>
 
         {/* Index */}
@@ -231,6 +238,15 @@ export default function NewBlogPage() {
               className="border-slate-300 dark:border-white/30 data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900 dark:data-[state=checked]:bg-white dark:data-[state=checked]:border-white data-[state=checked]:text-white dark:data-[state=checked]:text-black"
             />
             <Label htmlFor="isPublished" className="cursor-pointer font-normal text-slate-700 dark:text-white/80">Published</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="isFeatured"
+              checked={formData.isFeatured}
+              onCheckedChange={(checked) => setFormData({...formData, isFeatured: checked === true})}
+              className="border-slate-300 dark:border-white/30 data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900 dark:data-[state=checked]:bg-white dark:data-[state=checked]:border-white data-[state=checked]:text-white dark:data-[state=checked]:text-black"
+            />
+            <Label htmlFor="isFeatured" className="cursor-pointer font-normal text-slate-700 dark:text-white/80">Featured</Label>
           </div>
         </div>
 

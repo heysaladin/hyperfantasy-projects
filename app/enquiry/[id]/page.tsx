@@ -192,7 +192,14 @@ export default function EnquiryDetailPage() {
           Back to enquiries
         </Link>
 
-        {loading && <div className="text-slate-400 dark:text-white/30 text-sm">Loading…</div>}
+        {loading && (
+          <div className="space-y-4 animate-pulse">
+            <div className="h-8 bg-white/5 rounded w-1/2" />
+            <div className="h-4 bg-white/5 rounded w-3/4" />
+            <div className="h-4 bg-white/5 rounded w-2/3" />
+            <div className="h-32 bg-white/5 rounded mt-6" />
+          </div>
+        )}
         {!loading && !enquiry?.id && <div className="text-slate-500 dark:text-white/40">Enquiry not found.</div>}
 
         {!loading && enquiry?.id && (
@@ -230,13 +237,13 @@ export default function EnquiryDetailPage() {
                   style={{ borderColor: `${stageColor}60` }}
                 >
                   <style>{`
-                    .confirmed-call-box { background: #0f0f0f; border-color: #222; }
-                    .dark .confirmed-call-box { background: #f0f0f0; border-color: #ddd; }
+                    .confirmed-call-box { background: #f0f0f0; border-color: #ddd; }
+                    .dark .confirmed-call-box { background: #0f0f0f; border-color: #222; }
                   `}</style>
                   <div className="relative flex items-center justify-center mb-5">
                     <p className="text-xs font-semibold uppercase tracking-widest text-white/50 dark:text-slate-500">Confirmed Call</p>
                     {confirmedCall && (!editingCall || !isAdmin) && isAdmin && (
-                      <button onClick={() => setEditingCall(true)} className="absolute right-0 text-white/40 dark:text-slate-400 hover:text-white dark:hover:text-slate-700 transition-colors">
+                      <button onClick={() => setEditingCall(true)} aria-label="Edit confirmed call" className="absolute right-0 text-white/40 dark:text-slate-400 hover:text-white dark:hover:text-slate-700 transition-colors">
                         <Pencil size={15} />
                       </button>
                     )}
@@ -266,6 +273,7 @@ export default function EnquiryDetailPage() {
                           <PopoverTrigger asChild>
                             <button
                               type="button"
+                              aria-label={callDate ? `Change date, currently ${format(callDate, 'EEE d MMM yyyy')} — open calendar` : 'Pick a date — open calendar'}
                               className={cn(
                                 'flex h-9 flex-1 items-center gap-2 rounded-md border px-3 text-sm transition-colors',
                                 'border-slate-200 dark:border-white/10 bg-white dark:bg-white/5',
@@ -325,7 +333,7 @@ export default function EnquiryDetailPage() {
                   <div className="flex items-start justify-between mb-3">
                     <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-white/30">Notes</p>
                     {!editingNotes && isAdmin && (
-                      <button onClick={() => setEditingNotes(true)} className="text-slate-400 dark:text-white/30 hover:text-slate-700 dark:hover:text-white transition-colors">
+                      <button onClick={() => setEditingNotes(true)} aria-label="Edit notes" className="text-slate-400 dark:text-white/30 hover:text-slate-700 dark:hover:text-white transition-colors">
                         <Pencil size={15} />
                       </button>
                     )}
@@ -364,7 +372,7 @@ export default function EnquiryDetailPage() {
                     <div className="flex items-center justify-between mb-4">
                       <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-white/30">Agenda</p>
                       {!editingAgenda && (
-                        <button onClick={() => setEditingAgenda(true)} className="text-slate-400 dark:text-white/30 hover:text-slate-700 dark:hover:text-white transition-colors">
+                        <button onClick={() => setEditingAgenda(true)} aria-label="Edit agenda" className="text-slate-400 dark:text-white/30 hover:text-slate-700 dark:hover:text-white transition-colors">
                           <Pencil size={15} />
                         </button>
                       )}
@@ -445,6 +453,11 @@ export default function EnquiryDetailPage() {
                       </form>
                     ) : (
                       <div className="space-y-3">
+                        {!enquiry.next_action && !enquiry.next_action_by && !enquiry.due_date && (
+                          <p className="text-sm italic" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                            No agenda set — click edit to add next steps.
+                          </p>
+                        )}
                         <AgendaRow label="Next Action"    value={agendaForm.next_action} />
                         <AgendaRow label="Next Action By" value={agendaForm.next_action_by} />
                         <AgendaRow label="Due Date"       value={agendaForm.due_date_day ? `${format(agendaForm.due_date_day, 'EEE, d MMM yyyy')}${agendaForm.due_date_time ? ` at ${agendaForm.due_date_time}` : ''}` : ''} />
@@ -465,7 +478,7 @@ function linkify(text: string) {
   const urlRegex = /(https?:\/\/[^\s]+)/g
   const parts = text.split(urlRegex)
   return parts.map((part, i) =>
-    urlRegex.test(part) ? (
+    part.startsWith('http') ? (
       <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-violet-600 dark:text-violet-400 underline underline-offset-2 hover:opacity-80 break-all">
         {part}
       </a>

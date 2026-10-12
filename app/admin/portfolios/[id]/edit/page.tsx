@@ -205,6 +205,11 @@ export default function EditPortfolioPage({
               {extractingColor ? 'Extracting…' : 'Extract Color'}
             </Button>
           </div>
+          {formData.imageUrl && (
+            <div className="mt-2 rounded-md overflow-hidden border border-slate-200 dark:border-white/10 max-h-48">
+              <img src={formData.imageUrl} alt="Image preview" className="w-full object-cover max-h-48" />
+            </div>
+          )}
         </div>
 
         {/* Color Fields */}

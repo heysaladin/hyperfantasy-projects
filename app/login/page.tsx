@@ -34,7 +34,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black text-slate-900 dark:text-white transition-colors">
-      <form onSubmit={handleLogin} className="space-y-4 w-full max-w-sm">
+      <form onSubmit={handleLogin} aria-label="Admin login form" className="space-y-4 w-full max-w-sm">
         <h1 className="text-2xl font-bold">Admin Login</h1>
 
         {error && (

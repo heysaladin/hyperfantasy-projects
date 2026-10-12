@@ -37,6 +37,7 @@ function getPageNumbers(current: number, total: number): (number | '...')[] {
 
 export default function AdminBlogsPage() {
   const [blogs, setBlogs] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [deleteId, setDeleteId] = useState<string | null>(null)
@@ -47,9 +48,11 @@ export default function AdminBlogsPage() {
   }, [])
 
   const fetchBlogs = async () => {
+    setLoading(true)
     const res = await fetch('/api/blogs')
     const data = await res.json()
     setBlogs(Array.isArray(data) ? data : [])
+    setLoading(false)
   }
 
   const filtered = blogs.filter((b: any) => {
@@ -111,123 +114,134 @@ export default function AdminBlogsPage() {
         />
       </div>
 
-      {/* Mobile: card list */}
-      <div className="sm:hidden space-y-3 mb-5">
-        {paginatedData.length === 0 ? (
-          <div className="py-10 text-center text-slate-500 dark:text-white/40 border border-slate-200 dark:border-white/10 rounded-lg">
-            {search ? 'No blogs match your search' : 'No blogs found'}
-          </div>
-        ) : paginatedData.map((blog: any) => (
-          <div key={blog.id} className="border border-slate-200 dark:border-white/10 rounded-lg p-4 bg-white dark:bg-white/[0.02]">
-            <div className="flex justify-between items-start gap-2 mb-2">
-              <div className="flex-1 min-w-0">
-                <div className="font-medium text-sm leading-snug line-clamp-2">{blog.title}</div>
-                {blog.excerpt && (
-                  <div className="text-xs text-slate-500 dark:text-white/40 mt-0.5 line-clamp-1">{blog.excerpt}</div>
-                )}
-              </div>
-              <span className={`shrink-0 px-2 py-0.5 text-xs rounded ${
-                blog.isPublished
-                  ? 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400'
-                  : 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400'
-              }`}>
-                {blog.isPublished ? 'Published' : 'Draft'}
-              </span>
-            </div>
-            {blog.slug && (
-              <div className="text-xs text-slate-400 dark:text-white/30 mb-2 truncate">{blog.slug}</div>
-            )}
-            {Array.isArray(blog.tags) && blog.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mb-3">
-                {blog.tags.map((tag: string) => (
-                  <span key={tag} className="text-xs px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-white/60">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-            <div className="flex gap-2 justify-end">
-              <Link href={`/admin/blogs/${blog.id}/edit`}>
-                <Button variant="outline" size="sm">
-                  <Pencil size={14} />
-                  <span className="ml-1.5 text-xs">Edit</span>
-                </Button>
-              </Link>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setDeleteId(blog.id)}
-                className="text-red-500 border-red-200 dark:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/10"
-              >
-                <Trash2 size={14} />
-                <span className="ml-1.5 text-xs">Delete</span>
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Desktop: table */}
-      <div className="hidden sm:block border border-slate-300 dark:border-white/10 rounded-lg overflow-hidden mb-6">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[560px]">
-            <thead className="bg-slate-100 dark:bg-white/5 border-b border-slate-300 dark:border-white/10">
-              <tr>
-                <th className="text-left p-4 font-semibold">Title</th>
-                <th className="text-left p-4 font-semibold">Slug</th>
-                <th className="text-left p-4 font-semibold">Tags</th>
-                <th className="text-left p-4 font-semibold">Status</th>
-                <th className="text-right p-4 font-semibold">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedData.map((blog: any) => (
-                <tr key={blog.id} className="border-b border-slate-200 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/5">
-                  <td className="p-4">
-                    <div className="font-medium">{blog.title}</div>
-                    <div className="text-sm text-slate-600 dark:text-white/60 line-clamp-1">{blog.excerpt}</div>
-                  </td>
-                  <td className="p-4 text-slate-600 dark:text-white/60 text-sm">{blog.slug || '-'}</td>
-                  <td className="p-4 text-slate-600 dark:text-white/60 text-sm">
-                    {Array.isArray(blog.tags) ? blog.tags.join(', ') : blog.tags || '-'}
-                  </td>
-                  <td className="p-4">
-                    <span className={`px-2 py-1 text-xs rounded ${
-                      blog.isPublished
-                        ? 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400'
-                        : 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400'
-                    }`}>
-                      {blog.isPublished ? 'Published' : 'Draft'}
-                    </span>
-                  </td>
-                  <td className="p-4">
-                    <div className="flex gap-2 justify-end">
-                      <Link href={`/admin/blogs/${blog.id}/edit`}>
-                        <Button variant="outline" size="sm">
-                          <Pencil size={16} />
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setDeleteId(blog.id)}
-                      >
-                        <Trash2 size={16} />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {paginatedData.length === 0 && (
-            <div className="p-8 text-center text-slate-500 dark:text-white/40">
-              {search ? 'No blogs match your search' : 'No blogs found'}
-            </div>
-          )}
+      {loading ? (
+        <div className="space-y-3 mb-5">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-16 rounded-lg bg-slate-100 dark:bg-white/5 animate-pulse" />
+          ))}
         </div>
-      </div>
+      ) : (
+        <>
+          {/* Mobile: card list */}
+          <div className="sm:hidden space-y-3 mb-5">
+            {paginatedData.length === 0 ? (
+              <div className="py-10 text-center text-slate-500 dark:text-white/40 border border-slate-200 dark:border-white/10 rounded-lg">
+                {search ? 'No blogs match your search' : 'No blogs found'}
+              </div>
+            ) : paginatedData.map((blog: any) => (
+              <div key={blog.id} className="border border-slate-200 dark:border-white/10 rounded-lg p-4 bg-white dark:bg-white/[0.02]">
+                <div className="flex justify-between items-start gap-2 mb-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-sm leading-snug line-clamp-2">{blog.title}</div>
+                    {blog.excerpt && (
+                      <div className="text-xs text-slate-500 dark:text-white/40 mt-0.5 line-clamp-1">{blog.excerpt}</div>
+                    )}
+                  </div>
+                  <span className={`shrink-0 px-2 py-0.5 text-xs rounded ${
+                    blog.isPublished
+                      ? 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400'
+                      : 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400'
+                  }`}>
+                    {blog.isPublished ? 'Published' : 'Draft'}
+                  </span>
+                </div>
+                {blog.slug && (
+                  <div className="text-xs text-slate-400 dark:text-white/30 mb-2 truncate">{blog.slug}</div>
+                )}
+                {Array.isArray(blog.tags) && blog.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {blog.tags.map((tag: string) => (
+                      <span key={tag} className="text-xs px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-white/60">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="flex gap-2 justify-end">
+                  <Link href={`/admin/blogs/${blog.id}/edit`}>
+                    <Button variant="outline" size="sm">
+                      <Pencil size={14} />
+                      <span className="ml-1.5 text-xs">Edit</span>
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setDeleteId(blog.id)}
+                    className="text-red-500 border-red-200 dark:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/10"
+                  >
+                    <Trash2 size={14} />
+                    <span className="ml-1.5 text-xs">Delete</span>
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: table */}
+          <div className="hidden sm:block border border-slate-300 dark:border-white/10 rounded-lg overflow-hidden mb-6">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[560px]">
+                <thead className="bg-slate-100 dark:bg-white/5 border-b border-slate-300 dark:border-white/10">
+                  <tr>
+                    <th className="text-left p-4 font-semibold">Title</th>
+                    <th className="text-left p-4 font-semibold">Slug</th>
+                    <th className="text-left p-4 font-semibold">Tags</th>
+                    <th className="text-left p-4 font-semibold">Status</th>
+                    <th className="text-right p-4 font-semibold">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginatedData.map((blog: any) => (
+                    <tr key={blog.id} className="border-b border-slate-200 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/5">
+                      <td className="p-4">
+                        <div className="font-medium">{blog.title}</div>
+                        <div className="text-sm text-slate-600 dark:text-white/60 line-clamp-1">{blog.excerpt}</div>
+                      </td>
+                      <td className="p-4 text-slate-600 dark:text-white/60 text-sm">{blog.slug || '-'}</td>
+                      <td className="p-4 text-slate-600 dark:text-white/60 text-sm">
+                        {Array.isArray(blog.tags) ? blog.tags.join(', ') : blog.tags || '-'}
+                      </td>
+                      <td className="p-4">
+                        <span className={`px-2 py-1 text-xs rounded ${
+                          blog.isPublished
+                            ? 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400'
+                            : 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400'
+                        }`}>
+                          {blog.isPublished ? 'Published' : 'Draft'}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex gap-2 justify-end">
+                          <Link href={`/admin/blogs/${blog.id}/edit`}>
+                            <Button variant="outline" size="sm">
+                              <Pencil size={16} />
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setDeleteId(blog.id)}
+                            className="text-red-500 border-red-200 dark:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/10"
+                          >
+                            <Trash2 size={16} />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {paginatedData.length === 0 && (
+                <div className="p-8 text-center text-slate-500 dark:text-white/40">
+                  {search ? 'No blogs match your search' : 'No blogs found'}
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Pagination */}
       {totalPages > 1 && (

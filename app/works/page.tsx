@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { prisma } from '@/lib/prisma'
 
 function extractPlainText(value: string): string {
   if (!value) return ''
@@ -23,12 +24,14 @@ function extractPlainText(value: string): string {
 }
 
 async function getPortfolios() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/portfolios`, {
-    cache: 'no-store'
-  })
-  if (!res.ok) return []
-  const portfolios = await res.json()
-  return portfolios.filter((p: any) => p.isVisible)
+  try {
+    return await prisma.portfolio.findMany({
+      where: { isVisible: true },
+      orderBy: { orderIndex: 'desc' },
+    })
+  } catch {
+    return []
+  }
 }
 
 export const metadata = {
@@ -67,7 +70,7 @@ export default async function WorksPage() {
                   {portfolio.imageUrl ? (
                     <Image
                       src={portfolio.imageUrl}
-                      alt={portfolio.title}
+                      alt=""
                       width={600}
                       height={400}
                       className="object-cover w-full h-full transition group-hover:scale-105"
@@ -89,9 +92,9 @@ export default async function WorksPage() {
                   )}
                   
                   {/* Title */}
-                  <h3 className="mt-2 text-xl font-semibold group-hover:text-slate-600 dark:group-hover:text-white/60 transition">
+                  <h2 className="mt-2 text-xl font-semibold group-hover:text-slate-600 dark:group-hover:text-white/60 transition">
                     {portfolio.title}
-                  </h3>
+                  </h2>
                   
                   {/* Description */}
                   <p className="mt-2 text-sm text-slate-600 dark:text-white/60 line-clamp-2">

@@ -113,7 +113,7 @@ function TestimonialCard({ t, ghost }: { t: typeof testimonials[number]; ghost?:
   return (
     <div
       className={`rounded-2xl p-7 shrink-0 flex flex-col ${ghost ? 'border border-black/5 dark:border-white/5' : 'hf-card border border-black/10 dark:border-white/10'}`}
-      style={{ width: 340 }}
+      style={{ width: 'clamp(280px, 85vw, 340px)' }}
     >
       <div className="flex gap-0.5 mb-5" role="img" aria-label={`Rating: ${t.rating} out of 5`}>
         {Array.from({ length: Math.floor(t.rating) }).map((_, j) => (
@@ -175,25 +175,15 @@ async function getServiceGallery(tagSets: string[][]) {
   )
 }
 
-const PINNED_WORK_IDS = [
-  'ec7824ad-3313-456d-ae6d-b95eec96bfb1',
-  'd2ae0651-0693-42c3-b2d0-5d87760d2564',
-  '9969f4b8-0147-4f4d-bb39-2157ee0d79cb',
-]
-
 export default async function Home() {
   const cookingItems = getCookingItems()
   const cookingCols = cookingItems.length === 1 ? 'grid-cols-1' : cookingItems.length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3'
 
-  const [portfoliosTop, portfoliosPinned, svcGalleries, articles, uiuxGallery] = await Promise.all([
+  const [portfolios, svcGalleries, articles, uiuxGallery] = await Promise.all([
     prisma.portfolio.findMany({
-      where: { isVisible: true, imageUrl: { not: null } },
-      orderBy: [{ isFeatured: 'desc' }, { orderIndex: 'desc' }],
-      take: 3,
-      select: { id: true, title: true, description: true, imageUrl: true, category: true },
-    }),
-    prisma.portfolio.findMany({
-      where: { id: { in: PINNED_WORK_IDS }, imageUrl: { not: null } },
+      where: { isVisible: true, isFeatured: true, imageUrl: { not: null } },
+      orderBy: { orderIndex: 'desc' },
+      take: 6,
       select: { id: true, title: true, description: true, imageUrl: true, category: true },
     }),
     getServiceGallery(SERVICES.map(s => s.galleryTags)),
@@ -205,12 +195,6 @@ export default async function Home() {
     }),
     getUiuxGallery(),
   ])
-  // Merge: top 3 first, then pinned (deduped)
-  const topIds = new Set(portfoliosTop.map(p => p.id))
-  const portfolios = [
-    ...portfoliosTop,
-    ...portfoliosPinned.filter(p => !topIds.has(p.id)),
-  ]
   svcGalleries[0] = uiuxGallery
 
   const clientTestimonials = testimonials.filter(t => t.client === true)
@@ -260,6 +244,7 @@ export default async function Home() {
           display:inline-flex; align-items:center; gap:8px; transition:opacity .2s;
         }
         .grad-btn:hover { opacity:.85; }
+        .grad-btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
         .ghost-btn {
           border:1px solid rgba(0,0,0,.22); border-radius:48px;
           padding:12px 24px; font-size:14px; font-weight:500;
@@ -552,7 +537,7 @@ export default async function Home() {
         .hf-cta-bg { background:#f5f4ff; }
       `}</style>
 
-      <main className="hf-page">
+      <div className="hf-page">
 
         {/* ─────────────────────────────────────── */}
         {/* 01 · HERO                               */}
@@ -619,20 +604,20 @@ export default async function Home() {
           <div className="marquee-wrapper" dir="ltr">
             <div className="marquee-track" style={{ animationDuration: '35.4333s' }}>
               {[
-                { src: '/lab/heysaladin/logos/logo-05.svg', alt: 'Logo 5' },
-                { src: '/lab/heysaladin/logos/logo-04.svg', alt: 'Logo 4' },
-                { src: '/lab/heysaladin/logos/logo-01.svg', alt: 'Logo 1' },
-                { src: '/lab/heysaladin/logos/logo-02.svg', alt: 'Logo 2' },
-                { src: '/lab/heysaladin/logos/logo-03.png', alt: 'Logo 3' },
-                { src: '/lab/heysaladin/logos/logo-06.svg', alt: 'Logo 6' },
-                { src: '/lab/heysaladin/logos/logo-07.png', alt: 'Logo 7' },
-                { src: '/lab/heysaladin/logos/logo-05.svg', alt: 'Logo 5' },
-                { src: '/lab/heysaladin/logos/logo-04.svg', alt: 'Logo 4' },
-                { src: '/lab/heysaladin/logos/logo-01.svg', alt: 'Logo 1' },
-                { src: '/lab/heysaladin/logos/logo-02.svg', alt: 'Logo 2' },
-                { src: '/lab/heysaladin/logos/logo-03.png', alt: 'Logo 3' },
-                { src: '/lab/heysaladin/logos/logo-06.svg', alt: 'Logo 6' },
-                { src: '/lab/heysaladin/logos/logo-07.png', alt: 'Logo 7' },
+                { src: '/lab/heysaladin/logos/logo-05.svg', alt: 'Client logo' },
+                { src: '/lab/heysaladin/logos/logo-04.svg', alt: 'Client logo' },
+                { src: '/lab/heysaladin/logos/logo-01.svg', alt: 'Client logo' },
+                { src: '/lab/heysaladin/logos/logo-02.svg', alt: 'Client logo' },
+                { src: '/lab/heysaladin/logos/logo-03.png', alt: 'Client logo' },
+                { src: '/lab/heysaladin/logos/logo-06.svg', alt: 'Client logo' },
+                { src: '/lab/heysaladin/logos/logo-07.png', alt: 'Client logo' },
+                { src: '/lab/heysaladin/logos/logo-05.svg', alt: 'Client logo' },
+                { src: '/lab/heysaladin/logos/logo-04.svg', alt: 'Client logo' },
+                { src: '/lab/heysaladin/logos/logo-01.svg', alt: 'Client logo' },
+                { src: '/lab/heysaladin/logos/logo-02.svg', alt: 'Client logo' },
+                { src: '/lab/heysaladin/logos/logo-03.png', alt: 'Client logo' },
+                { src: '/lab/heysaladin/logos/logo-06.svg', alt: 'Client logo' },
+                { src: '/lab/heysaladin/logos/logo-07.png', alt: 'Client logo' },
               ].map((logo, i) => (
                 <Image
                   key={i}
@@ -657,9 +642,9 @@ export default async function Home() {
               {/* Left: prose */}
               <ScrollReveal>
                 <span className="hf-label">About Us</span>
-                <p className="hf-title hf-h2" style={{ marginBottom: '1.5rem' }}>
+                <h2 className="hf-title hf-h2" style={{ marginBottom: '1.5rem' }}>
                   No bloated agency structure — just trusted senior specialists assembled per project.
-                </p>
+                </h2>
                 <p className="hf-body"
                   style={{ fontSize: 15, fontWeight: 300, lineHeight: 1.8, marginBottom: '2rem' }}>
                   Hyperfantasy is a creative collective based in East Java, Indonesia. We work with growth-stage startups and established brands across 4 countries — delivering senior-quality work without the overhead.
@@ -734,7 +719,7 @@ export default async function Home() {
 
               <ScrollReveal>
                 <div className="mt-14 flex justify-center">
-                  <Link href="/projects" className="ghost-btn dark:text-white text-slate-800">
+                  <Link href="/works" className="ghost-btn dark:text-white text-slate-800">
                     See all works <ArrowUpRight size={14} aria-hidden="true" />
                   </Link>
                 </div>
@@ -771,7 +756,7 @@ export default async function Home() {
                     {/* Header: number + title */}
                     <div className="svc-block-header">
                       <span className="svc-num">{num}</span>
-                      <Link href={href}>
+                      <Link href={href} aria-label={`${label} — Meet the team`} className="hover:underline">
                         <h3 className="svc-title hf-title">{label}</h3>
                       </Link>
                     </div>
@@ -998,7 +983,7 @@ export default async function Home() {
           </section>
         )}
 
-      </main>
+      </div>
 
       <HomeFloatingCTA ctaBtnId="hf-cta-btn" scrollThreshold={300} />
     </div>

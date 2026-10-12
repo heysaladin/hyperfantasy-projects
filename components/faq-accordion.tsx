@@ -20,11 +20,15 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
 
       {/* Right: accordion list */}
       <div className="faq-list">
-        {items.map(({ q, a }, i) => (
+        {items.map(({ q, a }, i) => {
+          const panelId = `faq-panel-${i}`
+          return (
           <div key={q} className="faq-item">
             <button
+              id={`faq-btn-${i}`}
               onClick={() => setOpen(open === i ? null : i)}
               aria-expanded={open === i}
+              aria-controls={panelId}
               className="faq-toggle hf-title"
             >
               <span className="faq-question">{q}</span>
@@ -33,13 +37,14 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
                 <div className={`faq-icon-v${open === i ? ' faq-icon-v-hidden' : ''}`} />
               </div>
             </button>
-            <div className={`faq-content${open === i ? ' open' : ''}`}>
+            <div id={panelId} aria-labelledby={`faq-btn-${i}`} className={`faq-content${open === i ? ' open' : ''}`}>
               <div className="faq-content-inner">
                 <p>{a}</p>
               </div>
             </div>
           </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
